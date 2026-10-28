@@ -1,0 +1,19 @@
+Comment,Issue,Status,Location / action
+R1.1,Episode overlap,Addressed,"III-C, Table III, IV-D; whole recordings and all constituent episodes assigned together."
+R1.2,Hyperparameter sensitivity,Addressed,"IV-D and Appendix D/Fig. 10; depth, dropout and learning-rate perturbations, three repeats."
+R1.3,Repeated runs and uncertainty,Addressed,Mean and sample SD across three recording holdouts; overlapping repeats explicitly acknowledged.
+R1.4,Transfer asymmetry,Addressed with limits,"V-D and VII-A; both directions, all budgets, target-only controls and prediction biases; no causal mechanism claimed."
+R2.1,Realistic attack coverage and compromised monitors,Scope limitation,III-B and VII-C; only additive feedback bias and trusted monitoring measured. Other attacks remain untested.
+R2.2,Dynamic operating conditions,Not experimentally addressed,VII-C explicitly states fixed operating settings and no dedicated speed ramps/load steps; no new data collection.
+R2.3,Recent methods,Partly addressed,"V-B adds MultiRocket (2022), retains original baselines and states unequal optimization budgets; not an exhaustive comparison to 2025–2026 models."
+R2.4,Weak PCC severity and errors,Addressed by corrected evidence and narrower claims,"V-A/V-E, Fig. 5, Appendix C and Fig. 9; exact recall, any-attack recall, false alarms and competing baseline metrics."
+R3.1,PCC acronym introduction,Addressed,Abstract defines point-of-common-coupling (PCC) on first occurrence.
+R3.2,Severity labels for cases 21–30,Addressed,"III-B, Eq. 2 and Table III; maximum bias makes these cases high, with counts 5400/7200/14400."
+R3.3,Window versus recording split,Addressed,"III-C and Table III; 10/4/4 whole recordings, all 60054 windows, no within-repeat recording or episode overlap."
+R3.4,Reversed confusion-matrix labels,Addressed,"Fig. 5 regenerated from final labeled predictions, with normal/attack axes and pooled-repeat caption."
+R3.5,Validation hyperparameter selection,Addressed,"IV-D and Table IV; original sampled 100 candidates, validation-only ranking, fixed tie order, test untouched during selection."
+R3.6,Low cross-domain accuracy,Addressed with limits,"V-C/V-D and VII-A; both accuracy and BA, prediction-class biases, supervised adaptation and target-only controls."
+R3.7,RMS examples and feature definitions,Addressed,"Fig. 8 and Appendix A/B; acquisition units, different RMS windows, HF window/stride 250/29, no physical-harm interpretation."
+R3.8,HF computational burden,Addressed,"VI-C and Table XI; PCC LF+Time BA 80.03% versus full 80.29%, processing 12.32 versus 22.37 ms."
+R3.9,Topology and modulation dependence,Scope limitation,"VII-C; dependence acknowledged, factors not varied independently, no broader robustness claim."
+AE/Co-EIC,Data reliability and applicability,Addressed in scope; external validation absent,"Corrected targets, full tail policy, recording split audit, repeat variability, qualified conclusions; no new installation data."

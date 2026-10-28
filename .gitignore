@@ -1,0 +1,9 @@
+# Local compilation products; keep the revised source, PDF, figures and data.
+/main_revised.aux
+/main_revised.bbl
+/main_revised.blg
+/main_revised.log
+/main_revised.out
+/missfont.log
+/revision_materials/*_build.log
+**/__pycache__/

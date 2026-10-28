@@ -1,0 +1,19 @@
+{
+  "original_source_unchanged": true,
+  "original_main_sha256": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a",
+  "revised_main_sha256": "3f13ea1e48d3e5853be81e6238e5e4b26356766249631182490a6c791c77723b",
+  "all_original_headings_preserved": true,
+  "unique_labels": true,
+  "references_resolved": true,
+  "no_overfull_boxes": true,
+  "pdf_pages": 15,
+  "paper_figures": 10,
+  "minimum_figure_font_pt": 9.5,
+  "fonts_embedded": true,
+  "validated_main_repeats": 12,
+  "search_rows": 1200,
+  "validation_winners_verified": true,
+  "recording_allocations_verified": true,
+  "pooled_confusion_counts_verified": true,
+  "limitations": "No claim of independent external validation, dynamic operating tests, new attack families or new topology/modulation experiments."
+}
