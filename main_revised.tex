@@ -84,7 +84,7 @@ Two measurement streams were used throughout this study. The first stream corres
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure1_platform.pdf}
-\caption{Shared-rectifier, two-branch inverter-fed drive platform and monitoring locations. Dashed red paths identify the attacked controller-current feedback; green dashed taps provide separate monitoring measurements assumed trusted.}
+\caption{Shared-rectifier, two-branch inverter-fed drive platform and monitoring locations, retaining the original apparatus illustration. Motor-terminal currents and PCC voltage/current provide the monitoring inputs. The attack modifies controller-current feedback; the monitoring measurements are assumed trusted.}
 \label{fig:system_schematic}
 \end{figure*}
 
@@ -153,7 +153,7 @@ Electrical measurements were acquired from the testbed using a National Instrume
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure2_feature_example.pdf}
-\caption{Descriptive motor-current and PCC-current examples around the first scheduled attack onset in the first alphabetic held-out ACIM recording for seed 1234. LF/TD frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. The vertical line marks the documented onset; feature trajectories are shown at frame centers for illustration, not as causal detector outputs. Signal amplitude is in recorded acquisition units.}
+\caption{Original motor-current (left) and PCC-current (right) signal and feature illustrations, retained from the archived vector plots. LF frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. Zero denotes the display reference time; its alignment with an attack onset is not established by the archived plot provenance. These descriptive traces are not held-out detector outputs. Signal amplitude is in recorded acquisition units.}
 \label{fig:lfhf_motor_pcc_examples}
 \end{figure*}
 
@@ -226,7 +226,7 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure3_architecture.pdf}
-\caption{Implemented InceptionTime classifier. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
+\caption{Original InceptionTime schematic with convolution lengths corrected to 39, 19, and 9. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
 \label{fig:inceptiontime_architecture}
 \end{figure*}
 
@@ -237,7 +237,7 @@ The proposed pipeline supports online monitoring from trusted motor-terminal cur
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure4_pipeline.pdf}
-\caption{Monitoring pipeline and evaluation boundaries. A 0.2-s acquisition precedes feature computation and inference. Normalization and model fitting use training data; model selection and feature ranking use validation data. Test recordings are reserved for evaluation. Automatic mitigation is not evaluated.}
+\caption{Original monitoring pipeline with corrected sensing and acquisition labels. Motor-terminal currents or PCC voltage/current enter a 2,000-sample (0.2-s) raw window, followed by the 61-step feature representation and task-specific inference. Regression is an auxiliary injected-bias estimate. The interface provides alerts, logs, and visualization; automatic mitigation is not evaluated.}
 \label{fig:Online-algorithem}
 \end{figure*}
 
@@ -316,7 +316,7 @@ MOTOR & Severity & $87.64\pm8.87$ & $90.81\pm4.29$ & $86.09\pm9.44$ & $90.81\pm4
 MOTOR & Motor type & $99.94\pm0.11$ & $99.94\pm0.11$ & $99.94\pm0.10$ & $99.94\pm0.11$ & $99.94\pm0.11$ \\
 \hline
 \end{tabular}
-\par\smallskip\begin{minipage}{\linewidth}\footnotesize Three recording-disjoint holdouts. Severity classes are normal/low/medium/high maximum phase bias. Macro recall equals balanced accuracy; both are retained for consistency with the reported metric set.\end{minipage}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize Three recording-disjoint holdouts. SD denotes sample standard deviation across repeats, not a minimum--maximum range or confidence interval; every individual classification score is bounded by 100\%. Severity classes are normal/low/medium/high maximum phase bias. Macro recall equals balanced accuracy; both are retained for consistency with the reported metric set.\end{minipage}
 \end{table*}
 
 \subsection{Comparison with Deep and Classical ML Baselines}

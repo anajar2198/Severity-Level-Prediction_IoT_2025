@@ -1,8 +1,14 @@
 {
+  "artwork": "preserved_original",
   "width_in": 7.16,
-  "height_in": 2.75,
-  "minimum_text_pt": 10.0,
-  "font_family": "Nimbus Roman",
-  "png_dpi": 600,
-  "physical_size_preserved": true
+  "height_in": 2.2655494361395228,
+  "minimum_text_pt": null,
+  "minimum_added_label_pt": 6.5,
+  "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+  "sources": [
+    "figs/diagram2.png"
+  ],
+  "corrections": [
+    "Original platform artwork restored; replaced unsupported linear/nonlinear sensing labels with signal descriptions."
+  ]
 }

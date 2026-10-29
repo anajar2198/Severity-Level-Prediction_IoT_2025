@@ -1,8 +1,17 @@
 {
+  "artwork": "preserved_original",
   "width_in": 7.16,
-  "height_in": 4.6,
-  "minimum_text_pt": 9.5,
-  "font_family": "Nimbus Roman",
-  "png_dpi": 600,
-  "physical_size_preserved": true
+  "height_in": 3.681686248068812,
+  "minimum_text_pt": null,
+  "minimum_added_label_pt": 7,
+  "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+  "sources": [
+    "figs_revised/original_sources/tdms_lfhf_window_example_acim_179p9s_separate.pdf",
+    "figs_revised/original_sources/tdms_lfhf_window_example_pcc_179p9s_separate.pdf"
+  ],
+  "corrections": [
+    "Restored original seven-panel vector plots, including their original LF window=500, stride=25 label and -200 to +200 ms axes.",
+    "Original vector curves were retained unchanged; the later presentation PNGs differ and are not used.",
+    "Onset alignment could not be verified from archived provenance, so zero is labeled reference time rather than a validated attack onset."
+  ]
 }
