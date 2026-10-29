@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "source_data": "Existing TDMS recordings only; no new acquisition",
+  "target": "maximum absolute phase bias from documented schedule, not physical harm",
+  "tail_policy": "Include all 6054 post-schedule windows as normal: author confirms bias zero and motor kept running. Preserve timestamps and separate post_schedule_normal identity. For adaptation sampling only, link terminal segment to its parent recording case30 group; do not relabel it as attack.",
+  "split": "Whole recordings; therefore whole episodes too; 10/4/4 recording train/val/test",
+  "seeds": [
+    1234,
+    2234,
+    3234
+  ],
+  "search": "Exact original 100 candidates for each binary/severity x motor/PCC x seed = 1200 fits; no test evaluation during search",
+  "selection": "Validation balanced accuracy; deterministic original candidate order breaks ties",
+  "training": "Original Inception implementation, inverse-frequency CE, Adam, ReduceLROnPlateau factor .5 patience 3 min_lr 1e-6; 60 epoch cap and 10 early-stop patience",
+  "normalization": "Training recordings only; std below 1e-8 replaced by 1 as original script",
+  "ablations": "All seven feature families, same selected architecture within task/stream/split; all report regardless of performance",
+  "pruning": "Binary; validation permutation ranking, 3 repeats, all validation windows; top 75/50/25% and 15/10 per channel; test never used for ranking",
+  "transfer": "Original 100-candidate space searched on source validation only: 2400 source fits, plus 192 fine-tune/target-only fits. Preserve 20 target epochs and LR scale .2; no target validation labels. Historical mixed-domain-selected architecture is not reused as a newly tuned transfer model.",
+  "historical_control": "Evaluate each original paper configuration on corrected labels and recording split separately from the new validation-selected winner.",
+  "baselines": "Original sktime ResNet and LSTMFCN implementations/settings, flattened RF and XGBoost with original validation grids. MultiRocket retrained as an additional grouped baseline on all60054 windows.",
+  "figures": "Row-normalized four-class confusion, collapsed 2-class confusion, actual-severity x predicted-normal/attack table; held-out timelines; importance; raw RMS examples",
+  "figure_style": "All generated paper figures use shared Times-family style, >=9.5 pt at final 3.5 or7.16 inch width, embedded vector PDF and600dpi PNG. Original raster diagrams need font audit at assembly.",
+  "reporting": "Keep one historical-vs-final main comparison; random-window diagnostic excluded from main replacement tables. Report false alarms/misses and severity-conditioned detection recall alongside exact classification.",
+  "limitation": "Retrospective reused dataset; holdouts are operating-combination recordings, not prospective external collection. Three splits share underlying recordings across repeats."
+}
