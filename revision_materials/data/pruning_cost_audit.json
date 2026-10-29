@@ -1,0 +1,43 @@
+{
+  "finding": "Extraction skips unused LF/HF/TD families per channel, but computes all statistics within each retained family before selecting output columns. This is family-level selection, not individual-feature selection.",
+  "call_counts_per_2000_sample_window": [
+    {
+      "stream": "pcc",
+      "variant": "full",
+      "retained": 74,
+      "compute_low_features": 122,
+      "compute_time_features": 122,
+      "compute_hf_features": 122,
+      "maximum_absolute_feature_difference": 0.0
+    },
+    {
+      "stream": "pcc",
+      "variant": "top25",
+      "retained": 18,
+      "compute_low_features": 122,
+      "compute_time_features": 122,
+      "compute_hf_features": 122,
+      "maximum_absolute_feature_difference": 0.0
+    },
+    {
+      "stream": "motor",
+      "variant": "full",
+      "retained": 222,
+      "compute_low_features": 366,
+      "compute_time_features": 366,
+      "compute_hf_features": 366,
+      "maximum_absolute_feature_difference": 0.0
+    },
+    {
+      "stream": "motor",
+      "variant": "top25",
+      "retained": 56,
+      "compute_low_features": 366,
+      "compute_time_features": 366,
+      "compute_hf_features": 244,
+      "maximum_absolute_feature_difference": 0.0
+    }
+  ],
+  "equivalence": "Selected outputs match corresponding full-feature columns within rtol=1e-5, atol=1e-6.",
+  "scope": "The audit describes the archived implementation. Existing saved runtimes remain unchanged. It does not measure an optimized individual-feature implementation."
+}

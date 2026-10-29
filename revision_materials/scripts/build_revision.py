@@ -209,6 +209,8 @@ The motor-type results are included in Table~\ref{tab:all_tasks_in_domain}. For 
 s=s.replace(r'\end{document}',extra+'\n'+r'\end{document}')
 # Clean source-only whitespace without altering section order.
 s=re.sub(r'\n{4,}','\n\n\n',s)
+from apply_author_comments import apply
+s=apply(s)
 (P/'main_revised.tex').write_text(s)
 # Assert all original active headings remain in their original order.
 orig='\n'.join(x for x in (P/'main.tex').read_text().splitlines() if not x.lstrip().startswith('%'))

@@ -33,7 +33,7 @@ False-data-injection attack, point of common coupling, inverter-fed motor drives
  
 \IEEEPARstart{F}{DIA} detection and severity assessment are important in networked motor-drive systems, where manipulated sensor feedback can degrade control performance and cause unsafe operation~\cite{Ghaderi2021A}. Increasing drive connectivity makes timely detection of sensor-oriented cyber attacks essential for resilient operation~\cite{Yang2022Fast,Yang2024Enhanced}.
 Current signals are attractive for FDIA monitoring because they are easy to acquire, strongly coupled to electromechanical dynamics, and have been shown to reveal sensor-integrity attacks in motor drives~\cite{7944701, YangVulnerability}. However, most existing studies emphasize terminal-side sensing, operate on a single machine domain, or assume sufficient labeled data for supervised training. These assumptions limit practicality in heterogeneous deployments where different motor types, sensing locations, and data availability constraints all affect performance.
-Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection, four-level injected-bias assessment, cross-domain transfer, and processing cost for converter-fed industrial loads connected at a shared electrical interface. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) electrical features with an InceptionTime classifier, and compares motor-terminal and PCC sensing.
+Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection (\texttt{fdia2}), four-level injected-bias assessment (\texttt{severity4}), cross-domain transfer, and processing cost for converter-fed industrial loads connected at a shared electrical interface. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) electrical features with an InceptionTime classifier, and compares motor-terminal and PCC sensing.
 
 \subsection{Challenges at PCC in Heterogeneous Multi-Motor Systems}
 \label{sec:pcc_challenges}
@@ -47,7 +47,7 @@ The main contributions of this work are as follows:
 \begin{itemize}
 \item \textbf{Evaluated} nonintrusive PCC-based FDIA detection on a heterogeneous ACIM/PMSM laboratory platform using whole-recording holdouts that also keep all constituent episodes disjoint.
 \item \textbf{Quantified} the distinction between exact injected-bias classification and detecting an attack of a given bias level, reporting classwise recall together with normal false alarms and repeated-holdout variability.
-\item \textbf{Compared} source-only transfer, supervised adaptation, and target-only training, and measured the accuracy--processing-cost tradeoff of LF/HF/TD representations and validation-ranked feature subsets.
+\item \textbf{Compared} source-only transfer and supervised adaptation, and measured the accuracy--processing-cost tradeoff of LF/HF/TD representations and validation-ranked feature subsets.
 \end{itemize}
 
 The remainder of this paper is organized as follows: Section~\ref{sec:relatedWorks} reviews related literature. Section~\ref{sec:system_data} describes the physical system and dataset construction, while Section~\ref{sec:method} details the proposed FDIA detection framework and feature pipeline. Experimental results and cross-domain adaptations are reported in Section~\ref{sec:results}. Section~\ref{sec:realtime} analyzes real-time deployment and latency, followed by a discussion of tradeoffs in Section~\ref{sec:discussion}. Section~\ref{sec:conclusion} concludes the paper.
@@ -84,7 +84,7 @@ Two measurement streams were used throughout this study. The first stream corres
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure1_platform.pdf}
-\caption{Shared-rectifier, two-branch inverter-fed drive platform and monitoring locations, retaining the original apparatus illustration. Motor-terminal currents and PCC voltage/current provide the monitoring inputs. The attack modifies controller-current feedback; the monitoring measurements are assumed trusted.}
+\caption{Shared-rectifier, two-branch inverter-fed drive platform and monitoring locations. Motor-terminal currents and PCC voltage/current provide the monitoring inputs. The attack modifies controller-current feedback; the monitoring measurements are assumed trusted.}
 \label{fig:system_schematic}
 \end{figure*}
 
@@ -153,7 +153,7 @@ Electrical measurements were acquired from the testbed using a National Instrume
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure2_feature_example.pdf}
-\caption{Original motor-current (left) and PCC-current (right) signal and feature illustrations, retained from the archived vector plots. LF frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. Zero denotes the display reference time; its alignment with an attack onset is not established by the archived plot provenance. These descriptive traces are not held-out detector outputs. Signal amplitude is in recorded acquisition units.}
+\caption{Motor-current (left) and PCC-current (right) signal and feature illustrations. LF frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. Zero denotes the display reference time. These descriptive traces illustrate feature extraction and do not establish attack-onset timing or detector performance. Signal amplitude is in recorded acquisition units.}
 \label{fig:lfhf_motor_pcc_examples}
 \end{figure*}
 
@@ -177,32 +177,36 @@ PCC-side   & PCC voltage and current & 2 \\
 \footnotesize
 \caption{Dataset dimensions and recording-disjoint evaluation protocols.}
 \label{tab:evaluation_protocols}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}p{0.35\columnwidth}p{0.61\columnwidth}@{}}
 \hline
-Parameter & Value / configuration \\
-\hline
-Complete windows & 60,054 (0.2 s each) \\
-Recordings / episodes & 18 / 540 scheduled \\
-Post-schedule normal windows & 6,054 \\
-Motor distribution & ACIM 30,204; PMSM 29,850 \\
-Binary classes & Normal 33,054; attack 27,000 \\
-Severity classes & Normal 33,054; low 5,400 \\
- & Medium 7,200; high 14,400 \\
-Features / channel & 18 LF + 11 HF + 8 TD \\
-Motor input & $61\times222$ (6 channels) \\
-PCC input & $61\times74$ (2 channels) \\
-Main split: train / val. / test & 10 / 4 / 4 recordings \\
-Seed 1234 windows & 33,718 / 13,279 / 13,057 \\
-Seed 2234 windows & 33,275 / 13,250 / 13,529 \\
-Seed 3234 windows & 33,560 / 13,227 / 13,267 \\
-Transfer: source train / val. & 6 / 3 recordings \\
-Transfer: target pool / test & 6 / 3 recordings \\
-Target episode-group budgets & 2 / 9 / 18 / 36 of 180 \\
-\hline
-\end{tabular}
-\par\smallskip\begin{minipage}{\linewidth}\footnotesize Both motor types occur in every main partition. No recording or episode crosses partitions within a repeat. Tail segments follow their parent recordings.\end{minipage}
+Parameter & Value / configuration \\\hline
+\hline\multicolumn{2}{c}{\textit{Data dimensions}} \\\hline
+Complete windows & 60,054; 2,000 samples (0.2 s) each \\
+Recordings / episodes & 18 recordings; 540 scheduled episodes \\
+Motor distribution & ACIM: 30,204; PMSM: 29,850 \\
+Normal / attack windows & 33,054 normal; 27,000 attack \\
+Normal tail windows & 6,054; included with parent recording \\
+\hline\multicolumn{2}{c}{\textit{Input configuration}} \\\hline
+Features per channel & 18 LF; 11 HF; 8 TD \\
+Temporal feature steps & 61 per outer window \\
+Motor input & $61\times222$; six current channels \\
+PCC input & $61\times74$; voltage and current \\
+\hline\multicolumn{2}{c}{\textit{Severity labels (\texttt{severity4})}} \\\hline
+Normal / low & 33,054 / 5,400 windows \\
+Medium / high & 7,200 / 14,400 windows \\
+\hline\multicolumn{2}{c}{\textit{Protocol 1: mixed-motor holdouts}} \\\hline
+Recordings per motor & 5 training; 2 validation; 2 test \\
+Repeat 1 (seed 1234) & 33,718 training; 13,279 validation; 13,057 test windows \\
+Repeat 2 (seed 2234) & 33,275 training; 13,250 validation; 13,529 test windows \\
+Repeat 3 (seed 3234) & 33,560 training; 13,227 validation; 13,267 test windows \\
+\hline\multicolumn{2}{c}{\textit{Protocol 2: cross-motor adaptation}} \\\hline
+Source recordings & 6 training; 3 validation \\
+Target recordings & 6 adaptation-pool; 3 held-out test \\
+Target adaptation budgets & 1/5/10/20\%: 2/9/18/36 complete episode groups, respectively, from 180 groups \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Each recording and all its episodes remain in one partition within a repeat.\end{minipage}
 \end{table}
 
 \section{The Proposed Method}
@@ -213,7 +217,7 @@ Target episode-group budgets & 2 / 9 / 18 / 36 of 180 \\
 
 
 To represent both slow electromechanical behavior and faster attack-induced disturbances, a two-scale LF/HF feature pipeline was applied independently to each measured channel. For every sample, a 2{,}000-point outer window was first extracted from the raw 10~kHz recording. Within this outer window, two parallel sliding analyses were performed. The LF branch uses a 500-sample window with a stride of 25 samples, while the HF branch uses a 250-sample window with a stride of 29 samples. The LF and HF settings both produce 61 time steps, enabling concatenation into one temporal feature tensor. 
-Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates representative attack-onset responses and the corresponding LF/HF windows. In both cases, the raw signal is shown around the attack-transition instant, and representative LF and HF windows are overlaid to illustrate the two-scale extraction procedure. The motor-side signals exhibit stronger and more localized variations, whereas PCC-side responses are more distributed due to their aggregated nature.
+Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates the motor-current and PCC-current waveforms together with representative LF/HF windows. Each trace is plotted relative to a display reference time. The overlaid frames show the two temporal scales used for feature extraction, while the lower panels show how selected features vary along the signal. These examples illustrate the extraction procedure; detection and severity performance are evaluated separately on held-out recordings.
 
 In total, 37 features were extracted per channel, including 18 LF spectral features, 11 HF spectral/envelope features, and 8 TD features. The LF branch targets slow electromechanical changes, fundamental-frequency behavior, harmonic distortion, sideband effects, and low-band energy redistribution. The HF branch captures higher-frequency redistribution and envelope-related changes that may appear during small current-feedback FDIAs. The TD features provide complementary sensitivity to amplitude variation, impulsiveness, waveform asymmetry, and short-term signal complexity.
 Their relative contributions are evaluated through fixed-family ablations; improved separability is assessed empirically rather than assumed for every feature family.
@@ -226,7 +230,7 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure3_architecture.pdf}
-\caption{Original InceptionTime schematic with convolution lengths corrected to 39, 19, and 9. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
+\caption{InceptionTime architecture for \texttt{fdia2} and \texttt{severity4}, with convolution lengths 39, 19, and 9. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
 \label{fig:inceptiontime_architecture}
 \end{figure*}
 
@@ -237,7 +241,7 @@ The proposed pipeline supports online monitoring from trusted motor-terminal cur
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure4_pipeline.pdf}
-\caption{Original monitoring pipeline with corrected sensing and acquisition labels. Motor-terminal currents or PCC voltage/current enter a 2,000-sample (0.2-s) raw window, followed by the 61-step feature representation and task-specific inference. Regression is an auxiliary injected-bias estimate. The interface provides alerts, logs, and visualization; automatic mitigation is not evaluated.}
+\caption{Monitoring pipeline for motor-side and PCC-side sensing. Motor-terminal currents or PCC voltage/current enter a 2,000-sample (0.2-s) raw window, followed by the 61-step feature representation and task-specific inference. Regression is an auxiliary injected-bias estimate. The interface provides alerts, logs, and visualization; automatic mitigation is not evaluated.}
 \label{fig:Online-algorithem}
 \end{figure*}
 
@@ -248,38 +252,38 @@ A fixed sample of 100 candidate configurations was evaluated independently for e
 
 Reported test classification metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged; balanced accuracy is the mean class recall. Because the same recordings can recur across repeats, these standard deviations describe split/initialization sensitivity rather than uncertainty from independent physical replications. Test results were not used to select configurations or feature subsets. One-factor sensitivity experiments changed depth to 3/9, dropout to 0.1/0.4, or learning rate to $3\times10^{-4}/3\times10^{-3}$ around each selected configuration; all other settings were retained (Fig.~\ref{fig:hyperparameter_sensitivity}).
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Top five severity configurations by validation balanced accuracy, seed 1234.}
+\caption{Top five configurations by validation balanced accuracy on \texttt{severity4}, seed 1234.}
 \label{tab:search_top5_combined}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccccccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lcccccccc@{}}
 \hline
-Stream & Rank & D & F & BN & Dr & LR & WD & BS & Val. BA (\%) \\
-\hline
-MOTOR & 1 & 3 & 16 & 8 & 0.50 & 0.001 & 0.0001 & 64 & 93.26 \\
-MOTOR & 2 & 3 & 24 & 8 & 0.20 & 0.0005 & 5e-05 & 64 & 92.51 \\
-MOTOR & 3 & 6 & 24 & 16 & 0.35 & 0.001 & 5e-05 & 128 & 92.48 \\
-MOTOR & 4 & 3 & 32 & 8 & 0.20 & 0.001 & 5e-05 & 128 & 92.37 \\
-MOTOR & 5 & 4 & 16 & 8 & 0.50 & 0.001 & 5e-05 & 128 & 92.21 \\
-PCC & 1 & 6 & 32 & 32 & 0.50 & 0.001 & 0.0001 & 64 & 52.25 \\
-PCC & 2 & 6 & 48 & 32 & 0.35 & 0.001 & 5e-05 & 64 & 51.94 \\
-PCC & 3 & 3 & 16 & 32 & 0.50 & 0.001 & 5e-05 & 64 & 51.44 \\
-PCC & 4 & 4 & 48 & 32 & 0.50 & 0.001 & 0.0001 & 128 & 51.26 \\
-PCC & 5 & 6 & 24 & 32 & 0.35 & 0.0005 & 0.0001 & 128 & 51.14 \\
-\hline
-\end{tabular}
-\par\smallskip\begin{minipage}{\linewidth}\footnotesize D: depth; F: filters per branch; BN: bottleneck width; Dr: dropout; LR: learning rate; WD: weight decay; BS: batch size. Test scores are not used for ranking. All 12 selected task/stream/repeat configurations are supplied in the revision materials.\end{minipage}
-\end{table*}
+Rank & D & F & BN & Dr & LR & WD & BS & Val. BA \\\hline
+\hline\multicolumn{9}{c}{\textit{MOTOR stream}} \\\hline
+1 & 3 & 16 & 8 & 0.50 & 0.001 & $10^{-4}$ & 64 & \textbf{93.26} \\
+2 & 3 & 24 & 8 & 0.20 & 0.0005 & $5\!\times\!10^{-5}$ & 64 & 92.51 \\
+3 & 6 & 24 & 16 & 0.35 & 0.001 & $5\!\times\!10^{-5}$ & 128 & 92.48 \\
+4 & 3 & 32 & 8 & 0.20 & 0.001 & $5\!\times\!10^{-5}$ & 128 & 92.37 \\
+5 & 4 & 16 & 8 & 0.50 & 0.001 & $5\!\times\!10^{-5}$ & 128 & 92.21 \\
+\hline\multicolumn{9}{c}{\textit{PCC stream}} \\\hline
+1 & 6 & 32 & 32 & 0.50 & 0.001 & $10^{-4}$ & 64 & \textbf{52.25} \\
+2 & 6 & 48 & 32 & 0.35 & 0.001 & $5\!\times\!10^{-5}$ & 64 & 51.94 \\
+3 & 3 & 16 & 32 & 0.50 & 0.001 & $5\!\times\!10^{-5}$ & 64 & 51.44 \\
+4 & 4 & 48 & 32 & 0.50 & 0.001 & $10^{-4}$ & 128 & 51.26 \\
+5 & 6 & 24 & 32 & 0.35 & 0.0005 & $10^{-4}$ & 128 & 51.14 \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize D: depth; F: filters; BN: bottleneck; Dr: dropout; LR: learning rate; WD: weight decay; BS: batch size. Bold: highest validation BA within each stream. Test scores are not used for ranking.\end{minipage}
+\end{table}
 
 \subsection{Domain Adaptation Strategy: Source-Only vs Few-Shot Fine-Tuning}
 \label{sec:domain_adaptation}
 
 Source-only transfer was evaluated in both directions, ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, six source recordings were used for training and three for validation. The same 100-candidate search was performed using source validation only, independently of mixed-domain model selection. Six target recordings formed the adaptation pool and the remaining three formed the target test set. Thus, no source or target recording crosses its fitting/evaluation boundary.
 
-Nominal adaptation budgets of 1\%, 5\%, 10\%, and 20\% select 2, 9, 18, or 36 complete episode groups from the 180-group target pool; the first realized group fraction is 1.11\%. For sampling only, each post-schedule normal tail is attached to its parent recording's final episode group while retaining its normal label and actual timestamp. Consequently, window fractions can differ from nominal group fractions. Fine-tuning updates the source model for 20 fixed epochs at 0.2 times its selected learning rate, with source normalization frozen. No target validation labels or target-test labels are used. Target-only controls are trained from random initialization on exactly the same labeled target subsets for 20 epochs, using the selected architecture, its original learning rate, and normalization fitted on that subset. These are controls under the stated training budget, not exhaustive target-only optimization. All conditions use three seeds.
+Nominal adaptation budgets of 1\%, 5\%, 10\%, and 20\% select 2, 9, 18, or 36 complete episode groups from the 180-group target pool; the first realized group fraction is 1.11\%. For sampling only, each post-schedule normal tail is attached to its parent recording's final episode group while retaining its normal label and actual timestamp. Consequently, window fractions can differ from nominal group fractions. Fine-tuning updates the source model for 20 fixed epochs at 0.2 times its selected learning rate, with source normalization frozen. No target validation labels or target-test labels are used. All conditions use three seeds.
 
 \section{Experimental Results}
 \label{sec:results}
@@ -297,27 +301,27 @@ R_{\mathrm{attack}|k}=\frac{\sum_{j=1}^{3}C_{kj}}{\sum_{j=0}^{3}C_{kj}},\qquad k
 \end{equation}
 where $C$ is the confusion matrix. Exact-severity recall is $C_{kk}/\sum_j C_{kj}$. These measures answer different questions: an attack can be detected while its magnitude bin is incorrect. The same PCC severity model has a 37.23\% mean normal false-alarm rate and 71.40\% mean accuracy after collapsing its predictions to normal/attack. It is distinct from the separately trained binary detector. Fig.~\ref{fig:severity_detection_decisions} and Table~\ref{tab:severity_detection_recall} report these complementary quantities without replacing four-class performance.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Mixed ACIM/PMSM performance on held-out recordings (mean $\pm$ SD, \%).}
+\caption{Mixed ACIM/PMSM performance on held-out recordings (\%).}
 \label{tab:all_tasks_in_domain}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{1.7pt}
+\begin{tabular}{@{}lccccc@{}}
 \hline
-Stream & Task & Accuracy & Balanced acc. & Precision & Recall & F1 \\
-\hline
-PCC & Detection & $80.78\pm2.95$ & $80.29\pm3.03$ & $81.04\pm3.14$ & $80.29\pm3.03$ & $80.42\pm2.96$ \\
-PCC & Severity & $61.00\pm1.32$ & $55.62\pm2.94$ & $52.93\pm2.36$ & $55.62\pm2.94$ & $52.96\pm2.15$ \\
-PCC & Motor type & $94.40\pm9.70$ & $94.35\pm9.79$ & $95.35\pm8.06$ & $94.35\pm9.79$ & $94.27\pm9.92$ \\
-MOTOR & Detection & $87.41\pm11.13$ & $88.26\pm9.99$ & $89.90\pm7.84$ & $88.26\pm9.99$ & $87.23\pm11.39$ \\
-MOTOR & Severity & $87.64\pm8.87$ & $90.81\pm4.29$ & $86.09\pm9.44$ & $90.81\pm4.29$ & $86.06\pm8.95$ \\
-MOTOR & Motor type & $99.94\pm0.11$ & $99.94\pm0.11$ & $99.94\pm0.10$ & $99.94\pm0.11$ & $99.94\pm0.11$ \\
-\hline
-\end{tabular}
-\par\smallskip\begin{minipage}{\linewidth}\footnotesize Three recording-disjoint holdouts. SD denotes sample standard deviation across repeats, not a minimum--maximum range or confidence interval; every individual classification score is bounded by 100\%. Severity classes are normal/low/medium/high maximum phase bias. Macro recall equals balanced accuracy; both are retained for consistency with the reported metric set.\end{minipage}
-\end{table*}
+Task & Acc. & BA & Prec. & Recall & F1 \\\hline
+\hline\multicolumn{6}{c}{\textit{PCC stream}} \\\hline
+\texttt{fdia2} & \shortstack{80.78\\($\pm$2.95)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{81.04\\($\pm$3.14)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{80.42\\($\pm$2.96)} \\
+\texttt{severity4} & \shortstack{61.00\\($\pm$1.32)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.93\\($\pm$2.36)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.96\\($\pm$2.15)} \\
+Motor type & \shortstack{94.40\\($\pm$9.70)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{95.35\\($\pm$8.06)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{94.27\\($\pm$9.92)} \\
+\hline\multicolumn{6}{c}{\textit{MOTOR stream}} \\\hline
+\texttt{fdia2} & \shortstack{\textbf{87.41}\\($\pm$11.13)} & \shortstack{\textbf{88.26}\\($\pm$9.99)} & \shortstack{\textbf{89.90}\\($\pm$7.84)} & \shortstack{\textbf{88.26}\\($\pm$9.99)} & \shortstack{\textbf{87.23}\\($\pm$11.39)} \\
+\texttt{severity4} & \shortstack{\textbf{87.64}\\($\pm$8.87)} & \shortstack{\textbf{90.81}\\($\pm$4.29)} & \shortstack{\textbf{86.09}\\($\pm$9.44)} & \shortstack{\textbf{90.81}\\($\pm$4.29)} & \shortstack{\textbf{86.06}\\($\pm$8.95)} \\
+Motor type & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.10)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Cells show mean above ($\pm$ sample SD), over three holdouts; this is not a range or confidence interval. BA: balanced accuracy. Precision, recall, and F1 are macro-averaged. Bold compares streams for the same task and metric, not different tasks.\end{minipage}
+\end{table}
 
 \subsection{Comparison with Deep and Classical ML Baselines}
 \label{sec:model_comparison}
@@ -326,107 +330,109 @@ ResNet, LSTM-FCN, Random Forest, XGBoost, and MultiRocket~\cite{tan2022multirock
 
 As shown in Table~\ref{tab:model_comparison_hard_tasks}, InceptionTime has the highest mean PCC balanced accuracy for both tasks, and the highest mean accuracy and macro F1 for binary detection. For severity, XGBoost has higher raw accuracy (70.45\% versus 61.00\%), while LSTM-FCN has slightly higher macro F1 (53.23\% versus 52.96\%). InceptionTime's severity advantage is confined to mean balanced accuracy (55.62\% versus at most 52.38\% among the evaluated alternatives). Unequal class counts make these distinctions material; no statistical-significance claim is made from three overlapping repeated holdouts.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{PCC baseline comparison on identical recording splits (mean $\pm$ SD, \%).}
+\caption{PCC baseline comparison on \texttt{fdia2} and \texttt{severity4} (\%).}
 \label{tab:model_comparison_hard_tasks}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lccc@{}}
 \hline
-Task & Method & Accuracy & Bal. acc. & Macro F1 \\
-\hline
-Det. & InceptionTime & $80.78\pm2.95$ & $80.29\pm3.03$ & $80.42\pm2.96$ \\
-Det. & ResNet & $73.91\pm5.78$ & $73.99\pm5.33$ & $73.76\pm5.66$ \\
-Det. & LSTM-FCN & $72.57\pm4.89$ & $72.52\pm4.31$ & $72.35\pm4.66$ \\
-Det. & Random Forest & $70.43\pm1.00$ & $68.69\pm0.74$ & $68.45\pm0.85$ \\
-Det. & XGBoost & $75.37\pm0.81$ & $73.84\pm1.11$ & $73.97\pm1.17$ \\
-Det. & MultiRocket & $70.10\pm2.13$ & $69.55\pm2.82$ & $69.35\pm2.39$ \\
-Sev. & InceptionTime & $61.00\pm1.32$ & $55.62\pm2.94$ & $52.96\pm2.15$ \\
-Sev. & ResNet & $65.18\pm5.35$ & $50.41\pm5.44$ & $51.15\pm5.71$ \\
-Sev. & LSTM-FCN & $66.60\pm1.72$ & $52.38\pm2.12$ & $53.23\pm1.94$ \\
-Sev. & Random Forest & $67.36\pm0.17$ & $43.49\pm2.18$ & $45.07\pm2.59$ \\
-Sev. & XGBoost & $70.45\pm0.74$ & $47.17\pm2.02$ & $49.67\pm2.17$ \\
-Sev. & MultiRocket & $58.41\pm3.34$ & $44.92\pm3.46$ & $44.28\pm2.52$ \\
-\hline
-\end{tabular}
-
-\end{table*}
+Method & Accuracy & BA & Macro F1 \\\hline
+\hline\multicolumn{4}{c}{\textit{\texttt{fdia2}}} \\\hline
+InceptionTime & \shortstack{\textbf{80.78}\\($\pm$2.95)} & \shortstack{\textbf{80.29}\\($\pm$3.03)} & \shortstack{\textbf{80.42}\\($\pm$2.96)} \\
+ResNet & \shortstack{73.91\\($\pm$5.78)} & \shortstack{73.99\\($\pm$5.33)} & \shortstack{73.76\\($\pm$5.66)} \\
+LSTM-FCN & \shortstack{72.57\\($\pm$4.89)} & \shortstack{72.52\\($\pm$4.31)} & \shortstack{72.35\\($\pm$4.66)} \\
+Rand. Forest & \shortstack{70.43\\($\pm$1.00)} & \shortstack{68.69\\($\pm$0.74)} & \shortstack{68.45\\($\pm$0.85)} \\
+XGBoost & \shortstack{75.37\\($\pm$0.81)} & \shortstack{73.84\\($\pm$1.11)} & \shortstack{73.97\\($\pm$1.17)} \\
+MultiRocket & \shortstack{70.10\\($\pm$2.13)} & \shortstack{69.55\\($\pm$2.82)} & \shortstack{69.35\\($\pm$2.39)} \\
+\hline\multicolumn{4}{c}{\textit{\texttt{severity4}}} \\\hline
+InceptionTime & \shortstack{61.00\\($\pm$1.32)} & \shortstack{\textbf{55.62}\\($\pm$2.94)} & \shortstack{52.96\\($\pm$2.15)} \\
+ResNet & \shortstack{65.18\\($\pm$5.35)} & \shortstack{50.41\\($\pm$5.44)} & \shortstack{51.15\\($\pm$5.71)} \\
+LSTM-FCN & \shortstack{66.60\\($\pm$1.72)} & \shortstack{52.38\\($\pm$2.12)} & \shortstack{\textbf{53.23}\\($\pm$1.94)} \\
+Rand. Forest & \shortstack{67.36\\($\pm$0.17)} & \shortstack{43.49\\($\pm$2.18)} & \shortstack{45.07\\($\pm$2.59)} \\
+XGBoost & \shortstack{\textbf{70.45}\\($\pm$0.74)} & \shortstack{47.17\\($\pm$2.02)} & \shortstack{49.67\\($\pm$2.17)} \\
+MultiRocket & \shortstack{58.41\\($\pm$3.34)} & \shortstack{44.92\\($\pm$3.46)} & \shortstack{44.28\\($\pm$2.52)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest mean for each metric within a task; it does not indicate statistical significance.\end{minipage}
+\end{table}
 
 \subsection{Cross-Domain Transfer Without Adaptation}
 \label{sec:cross_domain}
 
-Source-only binary transfer is unreliable on held-out target recordings (Table~\ref{tab:cross_domain_source_only}). Balanced accuracy is 50.60\% and 51.58\% for ACIM-to-PMSM motor and PCC sensing, respectively. In the reverse direction it is 36.08\% for motor and 56.00\% for PCC sensing. The below-chance motor result demonstrates systematic domain mismatch rather than useful transferable discrimination. Accuracy must be interpreted jointly with balanced accuracy because predicting the more common class can exceed 50\% raw accuracy without effective attack detection. Target-domain fine-tuning and matched target-only controls test whether labeled target episodes alleviate this mismatch.
+Source-only binary transfer is unreliable on held-out target recordings (Table~\ref{tab:cross_domain_source_only}). Balanced accuracy is 50.60\% and 51.58\% for ACIM-to-PMSM motor and PCC sensing, respectively. In the reverse direction it is 36.08\% for motor and 56.00\% for PCC sensing. The below-chance motor result demonstrates systematic domain mismatch rather than useful transferable discrimination. Accuracy must be interpreted jointly with balanced accuracy because predicting the more common class can exceed 50\% raw accuracy without effective attack detection. Target-domain fine-tuning tests whether labeled target episodes alleviate this mismatch.
 
 \begin{table}[t]
 \centering
 \footnotesize
-\caption{Source-only binary transfer (mean $\pm$ SD, \%).}
+\caption{Source-only \texttt{fdia2} transfer without target adaptation (\%).}
 \label{tab:cross_domain_source_only}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lccc@{}}
 \hline
-Stream & Direction & Accuracy & Bal. acc. \\
-\hline
-MOTOR & ACIM $\to$ PMSM & $55.21\pm1.14$ & $50.60\pm0.73$ \\
-MOTOR & PMSM $\to$ ACIM & $36.22\pm4.23$ & $36.08\pm4.11$ \\
-PCC & ACIM $\to$ PMSM & $55.88\pm0.64$ & $51.58\pm1.52$ \\
-PCC & PMSM $\to$ ACIM & $51.94\pm6.54$ & $56.00\pm5.69$ \\
-\hline
-\end{tabular}
-
+Direction & Accuracy & BA & Macro F1 \\\hline
+\hline\multicolumn{4}{c}{\textit{MOTOR stream}} \\\hline
+ACIM $\to$ PMSM & \shortstack{55.21\\($\pm$1.14)} & \shortstack{50.60\\($\pm$0.73)} & \shortstack{37.71\\($\pm$2.37)} \\
+PMSM $\to$ ACIM & \shortstack{36.22\\($\pm$4.23)} & \shortstack{36.08\\($\pm$4.11)} & \shortstack{33.89\\($\pm$4.62)} \\
+\hline\multicolumn{4}{c}{\textit{PCC stream}} \\\hline
+ACIM $\to$ PMSM & \shortstack{55.88\\($\pm$0.64)} & \shortstack{51.58\\($\pm$1.52)} & \shortstack{41.13\\($\pm$5.84)} \\
+PMSM $\to$ ACIM & \shortstack{51.94\\($\pm$6.54)} & \shortstack{56.00\\($\pm$5.69)} & \shortstack{43.62\\($\pm$11.38)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Directions are different target-domain tests, so no best direction is highlighted.\end{minipage}
 \end{table}
 
 \subsection{Domain Adaptation Results: 1/5/10/20\%}
 \label{sec:adaptation_results}
 
-Table~\ref{tab:domain_adaptation_anomaly2} reports binary balanced accuracy for all target budgets, including matched target-only controls. At 20\%, motor fine-tuning reaches 75.99\% for ACIM-to-PMSM and 92.63\% for PMSM-to-ACIM transfer. PCC fine-tuning reaches 56.30\% and 91.38\%, respectively, preserving a pronounced direction asymmetry.
+Table~\ref{tab:domain_adaptation_anomaly2} reports \texttt{fdia2} balanced accuracy before and after target-domain fine-tuning. At 20\%, motor fine-tuning reaches 75.99\% for ACIM-to-PMSM and 92.63\% for PMSM-to-ACIM transfer. PCC fine-tuning reaches 56.30\% and 91.38\%, respectively, preserving a pronounced direction asymmetry.
 
-Fine-tuning is not uniformly preferable to target-only training. For motor ACIM-to-PMSM transfer, the 20\% target-only control reaches 89.05\%, exceeding fine-tuning at 75.99\%. For PCC PMSM-to-ACIM transfer, fine-tuning reaches 91.38\%, compared with 83.60\% for target-only training. Thus, the value of source pretraining depends on sensing location, direction, and target-label budget. These observations concern the stated fixed-epoch controls and do not establish a universal advantage of transfer learning.
+The benefit is direction dependent. At the 1\% budget, motor ACIM-to-PMSM performance remains near the source-only result, whereas PMSM-to-ACIM performance improves substantially. Increasing the target budget generally helps, but the PCC ACIM-to-PMSM sequence is not monotonic. These comparisons measure improvement over the source-only model; they do not establish superiority over training directly on the same target labels.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Binary adaptation and matched target-only controls: balanced accuracy (mean $\pm$ SD, \%).}
+\caption{Few-shot \texttt{fdia2} adaptation by labeled target-domain fine-tuning: balanced accuracy (\%).}
 \label{tab:domain_adaptation_anomaly2}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{1.7pt}
+\begin{tabular}{@{}lccccc@{}}
 \hline
-Stream & Direction & Training & Source only & 1\% & 5\% & 10\% & 20\% \\
-\hline
-MOTOR & ACIM $\to$ PMSM & Fine-tune & $50.60\pm0.73$ & $50.43\pm1.74$ & $53.83\pm1.14$ & $57.51\pm7.24$ & $75.99\pm1.73$ \\
-MOTOR & ACIM $\to$ PMSM & Target only & -- & $51.23\pm3.07$ & $66.41\pm10.81$ & $82.76\pm3.04$ & $89.05\pm3.09$ \\
-MOTOR & PMSM $\to$ ACIM & Fine-tune & $36.08\pm4.11$ & $64.35\pm9.23$ & $73.93\pm8.78$ & $88.04\pm5.36$ & $92.63\pm3.72$ \\
-MOTOR & PMSM $\to$ ACIM & Target only & -- & $77.80\pm2.61$ & $78.23\pm6.74$ & $90.01\pm4.48$ & $92.15\pm6.15$ \\
-PCC & ACIM $\to$ PMSM & Fine-tune & $51.58\pm1.52$ & $54.01\pm0.12$ & $54.62\pm1.76$ & $54.04\pm1.35$ & $56.30\pm3.23$ \\
-PCC & ACIM $\to$ PMSM & Target only & -- & $50.07\pm0.60$ & $50.64\pm0.99$ & $50.55\pm0.91$ & $52.07\pm1.07$ \\
-PCC & PMSM $\to$ ACIM & Fine-tune & $56.00\pm5.69$ & $77.43\pm10.43$ & $84.22\pm4.62$ & $86.72\pm4.37$ & $91.38\pm2.06$ \\
-PCC & PMSM $\to$ ACIM & Target only & -- & $62.27\pm5.45$ & $73.89\pm3.26$ & $78.41\pm3.61$ & $83.60\pm2.49$ \\
-\hline
-\end{tabular}
-\par\smallskip\begin{minipage}{\linewidth}\footnotesize Budgets are nominal fractions of the target episode-group pool, not fractions of the entire target dataset. Source-only and adapted models share the source-selected configuration within each repeat.\end{minipage}
-\end{table*}
+Direction & \shortstack{Source\\only} & 1\% & 5\% & 10\% & 20\% \\\hline
+\hline\multicolumn{6}{c}{\textit{MOTOR stream}} \\\hline
+\shortstack{ACIM $\to$\\PMSM} & \shortstack{50.60\\($\pm$0.73)} & \shortstack{50.43\\($\pm$1.74)} & \shortstack{53.83\\($\pm$1.14)} & \shortstack{57.51\\($\pm$7.24)} & \shortstack{\textbf{75.99}\\($\pm$1.73)} \\
+\shortstack{PMSM $\to$\\ACIM} & \shortstack{36.08\\($\pm$4.11)} & \shortstack{64.35\\($\pm$9.23)} & \shortstack{73.93\\($\pm$8.78)} & \shortstack{88.04\\($\pm$5.36)} & \shortstack{\textbf{92.63}\\($\pm$3.72)} \\
+\hline\multicolumn{6}{c}{\textit{PCC stream}} \\\hline
+\shortstack{ACIM $\to$\\PMSM} & \shortstack{51.58\\($\pm$1.52)} & \shortstack{54.01\\($\pm$0.12)} & \shortstack{54.62\\($\pm$1.76)} & \shortstack{54.04\\($\pm$1.35)} & \shortstack{\textbf{56.30}\\($\pm$3.23)} \\
+\shortstack{PMSM $\to$\\ACIM} & \shortstack{56.00\\($\pm$5.69)} & \shortstack{77.43\\($\pm$10.43)} & \shortstack{84.22\\($\pm$4.62)} & \shortstack{86.72\\($\pm$4.37)} & \shortstack{\textbf{91.38}\\($\pm$2.06)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest observed mean within each direction and stream; no test-based configuration selection. Budgets refer to the target episode-group pool.\end{minipage}
+\end{table}
 
 \subsection{Error Analysis: Confusion Matrices and FP/FN Behavior}
 \label{sec:error_analysis}
 
-Fig.~\ref{fig:main_confusion_matrices} shows the full error distributions. Binary motor sensing combines high attack recall with a substantial and variable normal false-alarm rate; PCC sensing misses more attacks. For the PCC severity model, mistakes include both normal/attack confusion and confusion among nonzero bias bins. Therefore, the errors should not be characterized solely as confusion between adjacent levels. Exact-severity and any-attack recall are reported together in Appendix~\ref{app:severity_detection}.
+Fig.~\ref{fig:main_confusion_matrices} shows the full error distributions. Binary motor sensing combines high attack recall with a substantial and variable normal false-alarm rate; PCC sensing misses more attacks. For the PCC severity model, mistakes include both normal/attack confusion and confusion among nonzero bias bins. Therefore, the errors should not be characterized solely as confusion between adjacent levels. Fig.~\ref{fig:severity_detection_decisions} presents the complementary PCC decisions here. A low-bias attack predicted as medium or high is detected but its exact severity is incorrect. Normal false alarms must be considered alongside any-attack recall. Mean and SD values are listed in Appendix~\ref{app:severity_detection}.
 
-Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} shows the complete held-out ACIM recording, including the post-schedule normal tail. The recording was selected by a fixed alphabetical rule, not for visual agreement with the schedule. The trace exposes both successful detections and false alarms. A corresponding held-out PMSM trace is supplied with the revision materials.
+Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} shows a 200-s overview and a 22-s transition detail from a held-out ACIM recording. The recording was selected by a fixed alphabetical rule, not for visual agreement with the schedule. The trace exposes both successful detections and false alarms. The complete recording, including its normal tail, and a corresponding held-out PMSM trace are supplied with the revision materials.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure5_confusion_matrices.pdf}
-\caption{Confusion matrices for validation-selected full-feature models. Rows denote actual classes and columns predicted classes. Percentages are row-normalized from pooled predictions across the three recording holdouts; repeated appearances of a recording are not independent physical replications. Table~\ref{tab:all_tasks_in_domain} instead averages per-repeat metrics.}
+\caption{Confusion matrices for \texttt{fdia2} and \texttt{severity4}. Rows are actual and columns predicted classes. Percentages normalize pooled prediction counts within each row across three holdouts; repeated appearances of a recording are not independent replications. N/L/M/H denote normal/low/medium/high bias.}
 \label{fig:main_confusion_matrices}
-\end{figure*}
+\end{figure}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs_revised/pcc_severity_and_detection_confusions.pdf}
+\caption{PCC \texttt{severity4} outputs interpreted as (a) normal/any-attack decisions by actual class and (b) a collapsed binary decision. Row percentages pool three holdouts. These decisions come from the severity model, not the separately trained \texttt{fdia2} detector.}
+\label{fig:severity_detection_decisions}
+\end{figure}
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure6_heldout_acim.pdf}
-\caption{Binary detector outputs on the first alphabetic held-out ACIM recording for seed 1234, selected without inspecting performance. Predictions are placed at the end of each 0.2-s acquisition window. The full recording includes the zero-bias post-schedule interval; fluctuations and false alarms are shown without filtering.}
+\includegraphics[width=0.49\linewidth]{figs_revised/figure6_overview_original_style.pdf}\hfill\includegraphics[width=0.49\linewidth]{figs_revised/figure6_zoom_original_style.pdf}
+\caption{Held-out ACIM detection: schedule, motor RMS, motor decision, PCC RMS, and PCC decision. (a) First 200 s; (b) first 22 s, including the first low-bias attack. The recording is the first alphabetically among seed-1234 test recordings. Curves use saved held-out predictions at window ends; RMS uses 500-sample frames at stride 25. Green: attack probability; red: predicted label; dashed gray: true label; dotted line: 0.5 threshold. Shading denotes scheduled attacks. Complete-recording and PMSM plots accompany the paper.}
 \label{fig:case1_30_motor_pcc_detection_examples}
 \end{figure*}
 \section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
@@ -440,74 +446,66 @@ Runtime was measured on the Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU 
 
 Full-feature GPU-assisted processing takes 22.37~ms for PCC and 66.33~ms for motor sensing, with 95th percentiles of 23.93 and 67.55~ms. Both measured processing times are below the 200-ms window interval. Reciprocal median processing rates are approximately 44.69 and 15.08 windows/s, respectively; these are workstation processing capacities, not measured embedded worst-case guarantees. Acquisition, scheduling, and any alarm-persistence logic must be included in a deployed timing budget.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Full-feature processing latency, excluding 200-ms acquisition.}
+\caption{GPU-assisted per-window latency and processing rate.}
 \label{tab:runtime_latency}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lcccc@{}}
 \hline
-Stream & Execution & Stage & Median (ms) & 95th pct. (ms) \\
-\hline
-PCC & CPU & Extraction & 21.59 & 21.88 \\
-PCC & CPU & Norm./transfer/inference & 0.73 & 0.82 \\
-PCC & CPU & Total processing & 22.32 & 22.66 \\
-PCC & GPU-assisted & Extraction & 21.64 & 23.11 \\
-PCC & GPU-assisted & Norm./transfer/inference & 0.72 & 0.85 \\
-PCC & GPU-assisted & Total processing & 22.37 & 23.93 \\
-MOTOR & CPU & Extraction & 65.68 & 66.64 \\
-MOTOR & CPU & Norm./transfer/inference & 1.23 & 1.34 \\
-MOTOR & CPU & Total processing & 66.87 & 67.88 \\
-MOTOR & GPU-assisted & Extraction & 64.99 & 66.19 \\
-MOTOR & GPU-assisted & Norm./transfer/inference & 1.33 & 1.42 \\
-MOTOR & GPU-assisted & Total processing & 66.33 & 67.55 \\
-\hline
-\end{tabular}
-
-\end{table*}
+Statistic & \shortstack{Feature\\extract.\\(ms)} & \shortstack{Norm./transfer\\+ inference\\(ms)} & \shortstack{Total\\processing\\(ms)} & \shortstack{Rate\\(windows/s)} \\\hline
+\hline\multicolumn{5}{c}{\textit{PCC stream}} \\\hline
+Median & 21.64 & 0.72 & 22.37 & 44.69 \\
+95th pct. & 23.11 & 0.85 & 23.93 & -- \\
+\hline\multicolumn{5}{c}{\textit{MOTOR stream}} \\\hline
+Median & 64.99 & 1.33 & 66.33 & 15.08 \\
+95th pct. & 66.19 & 1.42 & 67.55 & -- \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Rate is the reciprocal of median total processing time. Stages are timed within each iteration; marginal percentiles need not sum. Acquisition (200 ms) is excluded. CPU measurements are supplied with the results.\end{minipage}
+\end{table}
 
 \subsection{Feature Pruning for Low-Latency Anomaly Detection}
 \label{sec:feature_pruning}
 
 Binary-model features were ranked by validation-set permutation importance: the decrease in balanced accuracy when one feature trajectory is permuted across validation windows, repeated three times. Test labels were not used for ranking. Within each split, global top-75\%, top-50\%, and top-25\% subsets and per-channel top-15/top-10 subsets were retrained with the full model's selected architecture and training protocol. Fig.~\ref{fig:top10_feature_importance} summarizes validation importance across repeats; correlated features can share predictive information, so these scores do not identify causal attack mechanisms.
 
-Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained features do not guarantee faster extraction. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), but processing remains 22.42~ms versus 22.37~ms for full features. The motor top-25\% subset retains 56 of 222 features, gives 86.83\% balanced accuracy versus 88.26\% for full input, and reduces processing from 66.33 to 56.41~ms (1.18$\times$). Selective extraction must still compute shared spectral intermediates when retained features depend on them, which limits savings. All subsets are reported; no test-best subset replaces the primary full-feature model.
+Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained features do not guarantee faster extraction. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), but processing remains 22.42~ms versus 22.37~ms for full features. The motor top-25\% subset retains 56 of 222 features, gives 86.83\% balanced accuracy versus 88.26\% for full input, and reduces processing from 66.33 to 56.41~ms (1.18$\times$). The extractor skips an LF, HF, or TD family only when that entire family is absent from a channel; otherwise it computes every statistic in that family before selecting the requested columns. In the seed-1234 PCC top-25\% subset, all three families remain active on both channels: each family routine is called 122 times per window, exactly as for full input. Motor top-25\% removes the HF family on two channels, reducing HF calls from 366 to 244. Thus, the current implementation provides family-level computational pruning, not individual-feature computation. The nearly unchanged PCC latency reflects this implementation limit; it does not establish that a feature-level optimized extractor could not be faster. All subsets are reported; no test-best subset replaces the primary full-feature model.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figs_revised/figure7_validation_feature_importance.pdf}
-\caption{Top ten features by mean validation permutation-importance decrease in balanced accuracy. Error bars show SD across three recording splits. Channels 1--3 and 4--6 are ACIM and PMSM phase currents, respectively; PCC channels 1 and 2 are voltage and current. Importance supports feature ranking rather than a causal interpretation.}
+\caption{Top ten channel-specific features ranked by mean validation permutation importance. Blue, orange, and green bars denote LF, HF, and time-domain features, respectively. Bar length is the mean balanced-accuracy decrease; black whiskers indicate one SD across three holdouts. Channels 1--3/4--6 are ACIM/PMSM currents; PCC channels 1/2 are voltage/current.}
 \label{fig:top10_feature_importance}
 \end{figure*}
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\footnotesize
-\caption{Binary feature pruning: mean $\pm$ SD performance and seed-1234 GPU-assisted processing.}
+\scriptsize
+\caption{Feature pruning for \texttt{fdia2}: performance and runtime.}
 \label{tab:feature_pruning_anomaly2_runtime}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{1.7pt}
+\begin{tabular}{@{}lcccccc@{}}
 \hline
-Stream & Subset & Features & Bal. acc. (\%) & Macro F1 (\%) & Median (ms) & 95th pct. (ms) & Speedup \\
-\hline
-PCC & Full & 74 & $80.29\pm3.03$ & $80.42\pm2.96$ & 22.37 & 23.93 & 1.00 \\
-PCC & Top 75\% & 56 & $78.28\pm3.07$ & $78.41\pm3.37$ & 22.46 & 24.83 & 1.00 \\
-PCC & Top 50\% & 37 & $78.87\pm2.79$ & $79.10\pm2.97$ & 22.58 & 24.02 & 0.99 \\
-PCC & Top 25\% & 18 & $80.29\pm2.14$ & $80.58\pm2.29$ & 22.42 & 23.43 & 1.00 \\
-PCC & 15/channel & 30 & $77.59\pm4.75$ & $77.74\pm4.94$ & 22.49 & 22.94 & 0.99 \\
-PCC & 10/channel & 20 & $80.47\pm2.79$ & $80.69\pm2.80$ & 22.68 & 29.62 & 0.99 \\
-MOTOR & Full & 222 & $88.26\pm9.99$ & $87.23\pm11.39$ & 66.33 & 67.55 & 1.00 \\
-MOTOR & Top 75\% & 166 & $87.95\pm11.38$ & $87.19\pm12.42$ & 67.02 & 68.80 & 0.99 \\
-MOTOR & Top 50\% & 111 & $89.28\pm11.33$ & $88.20\pm12.87$ & 66.49 & 70.36 & 1.00 \\
-MOTOR & Top 25\% & 56 & $86.83\pm10.93$ & $85.44\pm12.39$ & 56.41 & 57.21 & 1.18 \\
-MOTOR & 15/channel & 90 & $92.10\pm9.71$ & $91.44\pm10.88$ & 62.13 & 65.19 & 1.07 \\
-MOTOR & 10/channel & 60 & $88.18\pm9.28$ & $87.20\pm10.62$ & 56.77 & 58.14 & 1.17 \\
-\hline
-\end{tabular}
-
-\end{table*}
+Subset & No. & \shortstack{BA\\(\%)} & \shortstack{F1\\(\%)} & \shortstack{Extract.\\(ms)} & \shortstack{Total\\(ms)} & \shortstack{Speedup\\($\times$)} \\\hline
+\hline\multicolumn{7}{c}{\textit{PCC stream}} \\\hline
+Full & 74 & \shortstack{80.29\\($\pm$3.03)} & \shortstack{80.42\\($\pm$2.96)} & 21.64 & \textbf{22.37} & 1.00 \\
+75\% & 56 & \shortstack{78.28\\($\pm$3.07)} & \shortstack{78.41\\($\pm$3.37)} & 21.77 & 22.46 & 1.00 \\
+50\% & 37 & \shortstack{78.87\\($\pm$2.79)} & \shortstack{79.10\\($\pm$2.97)} & 21.83 & 22.58 & 0.99 \\
+25\% & 18 & \shortstack{80.29\\($\pm$2.14)} & \shortstack{80.58\\($\pm$2.29)} & 21.70 & 22.42 & 1.00 \\
+15/ch. & 30 & \shortstack{77.59\\($\pm$4.75)} & \shortstack{77.74\\($\pm$4.94)} & 21.80 & 22.49 & 0.99 \\
+10/ch. & 20 & \shortstack{\textbf{80.47}\\($\pm$2.79)} & \shortstack{\textbf{80.69}\\($\pm$2.80)} & 21.94 & 22.68 & 0.99 \\
+\hline\multicolumn{7}{c}{\textit{MOTOR stream}} \\\hline
+Full & 222 & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} & 64.99 & 66.33 & 1.00 \\
+75\% & 166 & \shortstack{87.95\\($\pm$11.38)} & \shortstack{87.19\\($\pm$12.42)} & 65.65 & 67.02 & 0.99 \\
+50\% & 111 & \shortstack{89.28\\($\pm$11.33)} & \shortstack{88.20\\($\pm$12.87)} & 65.14 & 66.49 & 1.00 \\
+25\% & 56 & \shortstack{86.83\\($\pm$10.93)} & \shortstack{85.44\\($\pm$12.39)} & 55.11 & \textbf{56.41} & 1.18 \\
+15/ch. & 90 & \shortstack{\textbf{92.10}\\($\pm$9.71)} & \shortstack{\textbf{91.44}\\($\pm$10.88)} & 60.80 & 62.13 & 1.07 \\
+10/ch. & 60 & \shortstack{88.18\\($\pm$9.28)} & \shortstack{87.20\\($\pm$10.62)} & 55.45 & 56.77 & 1.17 \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean above ($\pm$ SD). Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only whole unused feature families are skipped.\end{minipage}
+\end{table}
 
 \subsection{LF/HF/TD Ablation for Binary Anomaly Detection}
 \label{sec:lfhf_ablation}
@@ -516,35 +514,35 @@ All seven LF/HF/TD combinations were evaluated by retraining with the selected f
 
 For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.28~ms (4.07$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These are observed ablation results, not test-based selection of a new primary model. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Binary LF/HF/TD ablation (mean $\pm$ SD, \%).}
+\caption{LF/HF/TD ablation for \texttt{fdia2} (\%).}
 \label{tab:lfhf_ablation_anomaly2}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lccccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lcccc@{}}
 \hline
-Stream & Features & Number & Accuracy & Balanced acc. & Macro F1 \\
-\hline
-PCC & Full & 74 & $80.78\pm2.95$ & $80.29\pm3.03$ & $80.42\pm2.96$ \\
-PCC & LF only & 36 & $74.03\pm3.84$ & $73.56\pm3.13$ & $73.59\pm3.33$ \\
-PCC & HF only & 22 & $64.50\pm4.62$ & $64.49\pm4.56$ & $64.21\pm4.71$ \\
-PCC & Time only & 16 & $72.18\pm1.73$ & $70.66\pm1.77$ & $70.65\pm1.76$ \\
-PCC & LF + HF & 58 & $68.66\pm4.60$ & $68.15\pm4.26$ & $68.18\pm4.39$ \\
-PCC & LF + Time & 52 & $80.49\pm1.73$ & $80.03\pm1.79$ & $80.16\pm1.73$ \\
-PCC & HF + Time & 38 & $69.49\pm3.66$ & $67.85\pm3.11$ & $67.72\pm3.06$ \\
-MOTOR & Full & 222 & $87.41\pm11.13$ & $88.26\pm9.99$ & $87.23\pm11.39$ \\
-MOTOR & LF only & 108 & $81.61\pm3.08$ & $80.54\pm2.55$ & $80.94\pm2.77$ \\
-MOTOR & HF only & 66 & $63.32\pm4.96$ & $63.76\pm4.28$ & $63.14\pm4.81$ \\
-MOTOR & Time only & 48 & $92.61\pm5.51$ & $92.89\pm4.96$ & $92.58\pm5.50$ \\
-MOTOR & LF + HF & 174 & $80.33\pm7.88$ & $79.91\pm7.06$ & $80.05\pm7.60$ \\
-MOTOR & LF + Time & 156 & $90.70\pm8.32$ & $91.17\pm7.45$ & $90.65\pm8.35$ \\
-MOTOR & HF + Time & 114 & $93.87\pm4.56$ & $94.11\pm4.04$ & $93.85\pm4.54$ \\
-\hline
-\end{tabular}
-
-\end{table*}
+Features & No. & Accuracy & BA & Macro F1 \\\hline
+\hline\multicolumn{5}{c}{\textit{PCC stream}} \\\hline
+Full & 74 & \shortstack{\textbf{80.78}\\($\pm$2.95)} & \shortstack{\textbf{80.29}\\($\pm$3.03)} & \shortstack{\textbf{80.42}\\($\pm$2.96)} \\
+LF only & 36 & \shortstack{74.03\\($\pm$3.84)} & \shortstack{73.56\\($\pm$3.13)} & \shortstack{73.59\\($\pm$3.33)} \\
+HF only & 22 & \shortstack{64.50\\($\pm$4.62)} & \shortstack{64.49\\($\pm$4.56)} & \shortstack{64.21\\($\pm$4.71)} \\
+Time only & 16 & \shortstack{72.18\\($\pm$1.73)} & \shortstack{70.66\\($\pm$1.77)} & \shortstack{70.65\\($\pm$1.76)} \\
+LF + HF & 58 & \shortstack{68.66\\($\pm$4.60)} & \shortstack{68.15\\($\pm$4.26)} & \shortstack{68.18\\($\pm$4.39)} \\
+LF + Time & 52 & \shortstack{80.49\\($\pm$1.73)} & \shortstack{80.03\\($\pm$1.79)} & \shortstack{80.16\\($\pm$1.73)} \\
+HF + Time & 38 & \shortstack{69.49\\($\pm$3.66)} & \shortstack{67.85\\($\pm$3.11)} & \shortstack{67.72\\($\pm$3.06)} \\
+\hline\multicolumn{5}{c}{\textit{MOTOR stream}} \\\hline
+Full & 222 & \shortstack{87.41\\($\pm$11.13)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} \\
+LF only & 108 & \shortstack{81.61\\($\pm$3.08)} & \shortstack{80.54\\($\pm$2.55)} & \shortstack{80.94\\($\pm$2.77)} \\
+HF only & 66 & \shortstack{63.32\\($\pm$4.96)} & \shortstack{63.76\\($\pm$4.28)} & \shortstack{63.14\\($\pm$4.81)} \\
+Time only & 48 & \shortstack{92.61\\($\pm$5.51)} & \shortstack{92.89\\($\pm$4.96)} & \shortstack{92.58\\($\pm$5.50)} \\
+LF + HF & 174 & \shortstack{80.33\\($\pm$7.88)} & \shortstack{79.91\\($\pm$7.06)} & \shortstack{80.05\\($\pm$7.60)} \\
+LF + Time & 156 & \shortstack{90.70\\($\pm$8.32)} & \shortstack{91.17\\($\pm$7.45)} & \shortstack{90.65\\($\pm$8.35)} \\
+HF + Time & 114 & \shortstack{\textbf{93.87}\\($\pm$4.56)} & \shortstack{\textbf{94.11}\\($\pm$4.04)} & \shortstack{\textbf{93.85}\\($\pm$4.54)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest mean within each stream; these test comparisons do not select a replacement primary model.\end{minipage}
+\end{table}
 
 \section{Discussion}
 \label{sec:discussion}
@@ -553,8 +551,7 @@ MOTOR & HF + Time & 114 & $93.87\pm4.56$ & $94.11\pm4.04$ & $93.85\pm4.54$ \\
 
 The PCC results retain a strong direction asymmetry: at 20\% target labels, PMSM-to-ACIM fine-tuning reaches 91.38\% balanced accuracy, while ACIM-to-PMSM reaches 56.30\%. Source-only predictions also show different class biases: for PCC ACIM-to-PMSM, the mean attack miss rate is 92.71\%; in the reverse direction the normal false-alarm rate is 86.03\%. These biases show that source-domain decision boundaries and operating distributions do not transfer reliably. They do not isolate a causal mechanism for the asymmetry.
 
-The target-only comparison is essential. PCC PMSM-to-ACIM fine-tuning exceeds its matched target-only control, whereas motor ACIM-to-PMSM fine-tuning is worse than its control at 20\%. Source pretraining can therefore help or hinder adaptation under the stated budget. The results motivate target-domain calibration and direction-specific evaluation; they do not show that any pretrained motor model is suitable for another installation.
-
+The adaptation results therefore support direction-specific target calibration. In particular, the strong PCC PMSM-to-ACIM gain is not reproduced in the reverse direction. Source-only and fine-tuned results quantify the benefit of updating a source model with target labels; they do not isolate the contribution of source pretraining from the benefit of those labels.
 \subsection{PCC vs Motor Tradeoffs}
 \label{sec:pcc_vs_motor}
 
@@ -569,19 +566,19 @@ The evidence is limited to additive, piecewise-constant current-feedback bias on
 
 PCC signatures can depend on the shared rectifier, downstream inverter topology, control behavior, modulation, sensor transfer functions, and supply impedance. These factors were not varied independently in the dataset. Consequently, no robustness claim is made for other converter topologies, modulation strategies, grids, or installations. Whole-recording holdouts remove within-repeat recording/episode overlap, but remain a retrospective evaluation on reused data from the same apparatus. Three repeated holdouts do not provide independent hardware replication or a strong significance test.
 
-The adaptation study requires target labels and uses fixed training budgets; unsupervised adaptation and exhaustive target-only optimization are outside its scope. PCC severity remains weak, and normal false alarms are material even when attack recall is high. Finally, measured workstation processing times exclude acquisition and do not establish embedded worst-case latency or a tested closed-loop mitigation system.
+The adaptation study requires target labels and uses fixed training budgets; unsupervised adaptation is outside its scope. PCC severity remains weak, and normal false alarms are material even when attack recall is high. Finally, measured workstation processing times exclude acquisition and do not establish embedded worst-case latency or a tested closed-loop mitigation system.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure8_raw_rms.pdf}
-\caption{Representative held-out ACIM and PMSM recordings. Top: documented maximum injected phase bias; middle/bottom: RMS of one motor-current and PCC-current channel in recorded acquisition units. The displayed interval covers the scheduled episodes and zero-bias tail. These traces illustrate operating responses, not calibrated torque, and their visual differences are not evidence of a causal transfer mechanism.}
+\includegraphics[width=\linewidth]{figs_revised/figure8_original_style.pdf}
+\caption{First 200 s of prespecified held-out ACIM and PMSM recordings, showing the schedule and current RMS. Blue and red schedule blocks denote normal and attack intervals; numbers give maximum injected bias (\%). Middle/bottom: motor/PCC RMS over 500-sample frames at stride 25, in acquisition units. These are descriptive electrical traces, not calibrated torque measurements.}
 \label{fig:app_attack_process_examples}
 \end{figure*}
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper assessed nonintrusive FDIA monitoring in a heterogeneous ACIM/PMSM inverter-fed drive platform using recording- and episode-disjoint evaluation. Across three holdouts, binary accuracy was 87.41\% for motor-side sensing and 80.78\% for PCC sensing. Four-class injected-bias balanced accuracy was 90.81\% and 55.62\%, respectively, demonstrating a substantial limitation of PCC severity estimation. Severity-conditioned attack recall complements exact-bin recall but must be interpreted alongside false alarms. Cross-motor source-only transfer was unreliable, and supervised adaptation benefits depended on direction and sensing location; matched target-only controls prevented attributing every gain to pretraining. PCC LF+Time retained approximately full-feature binary balanced accuracy while reducing processing from 22.37 to 12.32~ms on the tested workstation. The results support further development of PCC monitoring for additive feedback-bias attacks while delimiting its accuracy, calibration, and deployment constraints.
+This paper assessed nonintrusive FDIA monitoring in a heterogeneous ACIM/PMSM inverter-fed drive platform using recording- and episode-disjoint evaluation. Across three holdouts, binary accuracy was 87.41\% for motor-side sensing and 80.78\% for PCC sensing. Four-class injected-bias balanced accuracy was 90.81\% and 55.62\%, respectively, demonstrating a substantial limitation of PCC severity estimation. Severity-conditioned attack recall complements exact-bin recall but must be interpreted alongside false alarms. Cross-motor source-only transfer was unreliable, and supervised adaptation benefits depended on direction and sensing location; the source-only comparison does not establish a universal benefit of pretraining. PCC LF+Time retained approximately full-feature binary balanced accuracy while reducing processing from 22.37 to 12.32~ms on the tested workstation. The results support further development of PCC monitoring for additive feedback-bias attacks while delimiting its accuracy, calibration, and deployment constraints.
 
 \bibliographystyle{ieeetr}
 \bibliography{ref_revised}
@@ -596,7 +593,7 @@ This appendix provides representative FDIA recordings, the extracted feature def
 \subsection{Representative FDIA Episodes}
 \label{app:fdia_episode_examples}
 
-Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses over each complete recording, including the normal post-schedule tail. RMS is computed over each 2,000-sample outer window for these descriptive plots. It must be distinguished from the TD RMS feature, which uses 500-sample subwindows, and from HF band-limited RMS.
+Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses during the first 200 s of each selected recording. RMS uses 500-sample frames at stride 25, matching the time-domain RMS definition. Complete-recording diagnostics retain the post-schedule normal tails.
 
 
 \subsection{Extracted Feature Set}
@@ -638,33 +635,28 @@ Total & 37 & -- & LF (18), HF (11), TD (8) \\
 \label{app:severity_detection}
 Table~\ref{tab:severity_detection_recall} separates correct bias-bin classification from detecting any attack. The repeated false-alarm entries belong to the same four-class model and do not depend on the actual attack level. Fig.~\ref{fig:severity_detection_decisions} presents the corresponding PCC decision matrices; pooled normal recall can differ slightly from the mean per-repeat recall because normal-window counts vary across holdouts.
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \footnotesize
-\caption{Four-class models: exact-severity recall, any-attack recall, and normal false alarms (mean $\pm$ SD, \%).}
+\caption{Exact-severity and any-attack recall from four-class predictions (\%).}
 \label{tab:severity_detection_recall}
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccc}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lccc@{}}
 \hline
-Stream & True bias & Exact recall & Any-attack recall & Normal false alarms \\
-\hline
-MOTOR & Low & $89.58\pm2.14$ & $95.58\pm4.15$ & $19.08\pm16.08$ \\
-MOTOR & Medium & $93.96\pm1.05$ & $99.71\pm0.04$ & $19.08\pm16.08$ \\
-MOTOR & High & $98.76\pm0.27$ & $99.65\pm0.29$ & $19.08\pm16.08$ \\
-PCC & Low & $38.33\pm7.04$ & $61.39\pm2.64$ & $37.23\pm3.17$ \\
-PCC & Medium & $50.58\pm7.01$ & $85.08\pm6.52$ & $37.23\pm3.17$ \\
-PCC & High & $70.79\pm2.28$ & $88.09\pm7.22$ & $37.23\pm3.17$ \\
-\hline
-\end{tabular}
+True bias & \shortstack{Exact\\recall} & \shortstack{Any-attack\\recall} & \shortstack{Normal false\\alarms} \\\hline
+\hline\multicolumn{4}{c}{\textit{MOTOR stream}} \\\hline
+Low & \shortstack{89.58\\($\pm$2.14)} & \shortstack{95.58\\($\pm$4.15)} & \shortstack{19.08\\($\pm$16.08)} \\
+Medium & \shortstack{93.96\\($\pm$1.05)} & \shortstack{99.71\\($\pm$0.04)} & \shortstack{19.08\\($\pm$16.08)} \\
+High & \shortstack{98.76\\($\pm$0.27)} & \shortstack{99.65\\($\pm$0.29)} & \shortstack{19.08\\($\pm$16.08)} \\
+\hline\multicolumn{4}{c}{\textit{PCC stream}} \\\hline
+Low & \shortstack{38.33\\($\pm$7.04)} & \shortstack{61.39\\($\pm$2.64)} & \shortstack{37.23\\($\pm$3.17)} \\
+Medium & \shortstack{50.58\\($\pm$7.01)} & \shortstack{85.08\\($\pm$6.52)} & \shortstack{37.23\\($\pm$3.17)} \\
+High & \shortstack{70.79\\($\pm$2.28)} & \shortstack{88.09\\($\pm$7.22)} & \shortstack{37.23\\($\pm$3.17)} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). False alarms refer to the same normal class for all three attack levels. Different metrics are not competing methods, so none is highlighted as best.\end{minipage}
+\end{table}
 
-\end{table*}
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\linewidth]{figs_revised/pcc_severity_and_detection_confusions.pdf}
-\caption{PCC severity model evaluated as (a) exact four-class predictions, (b) normal/any-attack decisions for each actual bias class, and (c) a collapsed binary confusion matrix. Percentages pool the three holdouts and normalize each row. Panel (c) is derived from the severity model, not the separately trained binary detector.}
-\label{fig:severity_detection_decisions}
-\end{figure*}
 \subsection{Hyperparameter Sensitivity}
 \label{app:sensitivity}
 Fig.~\ref{fig:hyperparameter_sensitivity} reports all one-factor perturbations. PCC binary mean balanced accuracy ranges from 72.23\% to 78.33\% among these variants, compared with 80.29\% for the selected reference. PCC severity varies from 51.25\% to 55.71\%, compared with 55.62\%. Motor severity is more sensitive to the high learning rate, falling to 77.69\% mean balanced accuracy. Therefore, the comparison supports a persistent PCC severity limitation rather than insensitivity to every training setting.
@@ -677,7 +669,13 @@ Fig.~\ref{fig:hyperparameter_sensitivity} reports all one-factor perturbations. 
 \end{figure*}
 \subsection{Auxiliary Diagnostic Tasks}
 \label{app:auxiliary_diagnostics}
-The motor-type results are included in Table~\ref{tab:all_tasks_in_domain}. For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
+The motor-type results are included in Table~\ref{tab:all_tasks_in_domain}. For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. Fig.~\ref{fig:regression_diagnostics} shows prediction distributions at every tested bias level for each repeat. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figs_revised/regression_diagnostics.pdf}
+\caption{Attack-only injected-bias regression on held-out recordings. Points and whiskers show the median and 10th--90th percentiles of predictions at each true bias, separately for each holdout seed; slight horizontal offsets separate repeats. The dashed diagonal is ideal agreement. All held-out attack windows are included; repeated appearances across holdouts are not independent recordings.}
+\label{fig:regression_diagnostics}
+\end{figure*}
 \end{document}
 

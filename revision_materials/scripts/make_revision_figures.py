@@ -79,3 +79,6 @@ print('Re-exported saved result figures at compact dimensions without reducing f
 # Restore original artwork after regeneration, keeping original traces untouched.
 import subprocess
 subprocess.run([sys.executable,str(P/'revision_materials/scripts/preserve_original_figures.py')],check=True)
+
+# Apply author-requested presentation after the base figure build.
+subprocess.run([sys.executable,str(P/'revision_materials/scripts/make_author_review_figures.py')],check=True)
