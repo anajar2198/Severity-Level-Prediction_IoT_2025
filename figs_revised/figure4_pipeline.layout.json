@@ -1,8 +1,16 @@
 {
+  "artwork": "preserved_original",
   "width_in": 7.16,
-  "height_in": 2.3,
-  "minimum_text_pt": 10.0,
-  "font_family": "Nimbus Roman",
-  "png_dpi": 600,
-  "physical_size_preserved": true
+  "height_in": 2.2736435178793317,
+  "minimum_text_pt": null,
+  "minimum_added_label_pt": 7.5,
+  "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+  "sources": [
+    "figs/online_fdia_architecture.png"
+  ],
+  "corrections": [
+    "PCC measurement label now includes voltage and current.",
+    "Acquisition output is a raw 2,000-sample window; the 61-step representation belongs to feature extraction.",
+    "Removed supervisory-command claim; automatic mitigation was not evaluated."
+  ]
 }

@@ -1,0 +1,76 @@
+{
+  "figures": [
+    {
+      "figure": "figure1_platform",
+      "artwork": "preserved_original",
+      "width_in": 7.16,
+      "height_in": 2.2655494361395228,
+      "minimum_text_pt": null,
+      "minimum_added_label_pt": 6.5,
+      "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+      "sources": [
+        "figs/diagram2.png"
+      ],
+      "corrections": [
+        "Original platform artwork restored; replaced unsupported linear/nonlinear sensing labels with signal descriptions."
+      ]
+    },
+    {
+      "figure": "figure3_architecture",
+      "artwork": "preserved_original",
+      "width_in": 7.16,
+      "height_in": 1.8041549390162177,
+      "minimum_text_pt": null,
+      "minimum_added_label_pt": 8,
+      "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+      "sources": [
+        "figs/inceptiontime_architecture_lfhf.png"
+      ],
+      "corrections": [
+        "Corrected convolution kernel lengths to 39, 19, and 9; retained all original shapes, connections, and layout."
+      ]
+    },
+    {
+      "figure": "figure4_pipeline",
+      "artwork": "preserved_original",
+      "width_in": 7.16,
+      "height_in": 2.2736435178793317,
+      "minimum_text_pt": null,
+      "minimum_added_label_pt": 7.5,
+      "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+      "sources": [
+        "figs/online_fdia_architecture.png"
+      ],
+      "corrections": [
+        "PCC measurement label now includes voltage and current.",
+        "Acquisition output is a raw 2,000-sample window; the 61-step representation belongs to feature extraction.",
+        "Removed supervisory-command claim; automatic mitigation was not evaluated."
+      ]
+    },
+    {
+      "figure": "figure2_feature_example",
+      "artwork": "preserved_original",
+      "width_in": 7.16,
+      "height_in": 3.681686248068812,
+      "minimum_text_pt": null,
+      "minimum_added_label_pt": 7,
+      "font_note": "Original embedded artwork retains its original typography; no blanket minimum-font claim is made. Added labels use Times-compatible Nimbus Roman.",
+      "sources": [
+        "figs_revised/original_sources/tdms_lfhf_window_example_acim_179p9s_separate.pdf",
+        "figs_revised/original_sources/tdms_lfhf_window_example_pcc_179p9s_separate.pdf"
+      ],
+      "corrections": [
+        "Restored original seven-panel vector plots, including their original LF window=500, stride=25 label and -200 to +200 ms axes.",
+        "Original vector curves were retained unchanged; the later presentation PNGs differ and are not used.",
+        "Onset alignment could not be verified from archived provenance, so zero is labeled reference time rather than a validated attack onset."
+      ]
+    }
+  ],
+  "source_sha256": {
+    "figs/diagram2.png": "24cd3167b5c9c4de9ca9cdf2e0bd2a8d236ee1dbbc8dfd8fb769f59729f6b1e0",
+    "figs/inceptiontime_architecture_lfhf.png": "b2b4aec8796041a2cfd093ac2d61f11cd736c278684d87e33b11743d4399c2dd",
+    "figs/online_fdia_architecture.png": "12c26b776f2f548004bf477aeddf487277e531c6387313077dc1e877f36ac7d3",
+    "figs_revised/original_sources/tdms_lfhf_window_example_acim_179p9s_separate.pdf": "8a74c03f116467ade8a04433c97a31c34ee51155e014167113ad4882ff815340",
+    "figs_revised/original_sources/tdms_lfhf_window_example_pcc_179p9s_separate.pdf": "430a72b8f2b706b491f9b9a4f805d10c9d53004c2351ca84acb09d462177f2d8"
+  }
+}

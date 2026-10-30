@@ -1,0 +1,12 @@
+{
+  "protected_original_files": 56,
+  "protected_original_files_unchanged": true,
+  "existing_experiment_data_files": 29,
+  "existing_experiment_data_unchanged": true,
+  "all_tables_single_column": true,
+  "author_annotations_archived_not_in_clean_paper": true,
+  "target_only_controls_preserved_outside_paper": true,
+  "pcc_decision_figure_in_main_error_analysis": true,
+  "regression_plot_saved_predictions_verified": 36000,
+  "pruning_call_counts_and_output_equivalence_verified": true
+}

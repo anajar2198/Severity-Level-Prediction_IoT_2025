@@ -34,5 +34,5 @@
       "seed": 1234
     }
   ],
-  "note": "All new data plots use saved results or existing recordings. No new fitting. PCC current uses DEFAULT_PCC_CHANNELS[1]; channel 0 is voltage. Figures 1/3/4 are conceptual diagrams of the existing apparatus/implemented pipeline."
+  "note": "All new data plots use saved results or existing recordings. No new fitting. PCC current uses DEFAULT_PCC_CHANNELS[1]; channel 0 is voltage. Figures 1–4 now retain original artwork; their source and correction records are in original_figure_restoration.json. The source_recordings list applies to Figures 6 and 8, not restored Figure 2."
 }

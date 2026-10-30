@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "line": 87,
+    "comment": "restore the previous version of this figure from main.tex If anything needs to be revised in the figure let me know.",
+    "status": "addressed",
+    "location": "Figures 1\u20134 / Fig. 1",
+    "response": "Restored original platform artwork with only neutral signal-label corrections; main.tex and original assets unchanged."
+  },
+  {
+    "id": 2,
+    "line": 156,
+    "comment": "I think previous version of figure in the main file was better. bring back that one. also these lines are not clear. what 6/3 means I believe you can increase the wording\n\nSeed 1234 windows 33,718 / 13,279 / 13,057\nSeed 2234 windows 33,275 / 13,250 / 13,529\nSeed 3234 windows 33,560 / 13,227 / 13,267\nTransfer: source train / val. 6 / 3 recordings\nTransfer: target pool / test 6 / 3 recordings\nTarget episode-group budgets 2 / 9 / 18 / 36 of 180",
+    "status": "addressed",
+    "location": "Fig. 2; Table III; III-C",
+    "response": "Restored original seven-panel vector illustration and expanded split allocations into named training, validation, test, and adaptation counts. Time zero remains a display reference because onset provenance is unverified."
+  },
+  {
+    "id": 3,
+    "line": 171,
+    "comment": "totally I liked the severity4 and fdia2 more than this version. Is there any way to use similar thing or better way to show task?",
+    "status": "addressed",
+    "location": "Introduction; Tables IV\u2013XI; Fig. 3",
+    "response": "Restored and defined fdia2 and severity4 task identifiers."
+  },
+  {
+    "id": 4,
+    "line": 187,
+    "comment": "for this figure check the style of previous version and use that. Do that for all tables. Try to keep same style since it is much easier to read. If anyother or data is added you can add them in appropriate column and row.",
+    "status": "addressed",
+    "location": "Tables I\u2013XIII",
+    "response": "Restored grouped single-column table presentation; retained new results and added rows where needed."
+  },
+  {
+    "id": 5,
+    "line": 239,
+    "comment": "previous version of figures was much better. tell me to revise them if it needs any revise in any block.",
+    "status": "addressed",
+    "location": "Fig. 3",
+    "response": "Preserved original architecture diagram; corrected kernels to 39/19/9. Necessary original-figure label changes are documented."
+  },
+  {
+    "id": 6,
+    "line": 264,
+    "comment": "all the tables that fits in the column should only be shown in the column. not whole width. for this table use the previous style as well. it was much better since PCC and motor was seperated from each other.",
+    "status": "addressed",
+    "location": "Table IV",
+    "response": "Single-column search table with separate motor/PCC group rows and validation BA explicitly labeled."
+  },
+  {
+    "id": 7,
+    "line": 313,
+    "comment": "remove PCC and motor column and bring them in row. make it fit in a column not full width",
+    "status": "addressed",
+    "location": "Table V",
+    "response": "PCC and motor use section rows. All five metrics retained in one column with mean and SD stacked for legibility."
+  },
+  {
+    "id": 8,
+    "line": 314,
+    "comment": "I think in all tables we need to bold the numbers which is better than others. or somehow show the best.",
+    "status": "addressed",
+    "location": "Tables IV\u2013VI, VIII, X\u2013XI",
+    "response": "Bold marks the best comparable mean or lowest latency, with the comparison specified. Different tasks/directions are not treated as directly comparable, and no significance claim is added."
+  },
+  {
+    "id": 9,
+    "line": 343,
+    "comment": "make this paper like previous version the same style. remove the task column and make it a row at top.",
+    "status": "addressed",
+    "location": "Table VI",
+    "response": "Removed task column; fdia2 and severity4 are section headings, following the original table."
+  },
+  {
+    "id": 10,
+    "line": 376,
+    "comment": "for this table we should bring another metric like F1? what do you think?",
+    "status": "addressed",
+    "location": "Table VII",
+    "response": "Added saved macro F1 beside accuracy and balanced accuracy; no model rerun."
+  },
+  {
+    "id": 11,
+    "line": 403,
+    "comment": "we are talking about adaptation not learning from scratch\nI believe we need to delete target only. delete training column and use the style of main.tex file.",
+    "status": "addressed",
+    "location": "IV-E; V-D; VII-A; Table VIII; Conclusion",
+    "response": "Removed target-only rows and training column from the manuscript. Kept original controls in supporting CSVs. Adaptation claims compare fine-tuning with source-only, not superiority to training from scratch."
+  },
+  {
+    "id": 12,
+    "line": 436,
+    "comment": "these figures are too large. I think we can fit them in one column. Do that for us. I believe we should bring the information about the revised figure pcc\\_severity\\_and\\_detection\\_confusions.pdf to here. the reason is that you are presenting PCC results here and reviewers do not have mood to study that in another place and it may make question for them. So I believe we need to add that confusion matrices here.",
+    "status": "addressed",
+    "location": "V-E; Figs. 5\u20136",
+    "response": "Re-exported confusion plots at actual single-column size with 9.5-point labels. Moved severity-conditioned and collapsed PCC matrices beside the main error analysis."
+  },
+  {
+    "id": 13,
+    "line": 443,
+    "comment": "Check my previous version of figure do exactly like that. find the source code generated that and use exactly the same thing. its visualization is much better.",
+    "status": "addressed",
+    "location": "Fig. 7; plotting provenance",
+    "response": "Located and reused make_dual_plot from plot_dual_stream_detection_over_signal.py; original five layers/colors, 200-s overview and 0\u201322-s zoom use saved held-out predictions and corrected schedules."
+  },
+  {
+    "id": 14,
+    "line": 460,
+    "comment": "bring this table in exactly previous version. just update numbers you can have median and 95th percentile column . your table structures are really hard for reviewers to follow.",
+    "status": "addressed",
+    "location": "Table IX",
+    "response": "Restored stage columns and stream section rows. Median and 95th-percentile timings are explicit; reciprocal-median rate is shown. CPU results remain in supporting CSVs."
+  },
+  {
+    "id": 15,
+    "line": 495,
+    "comment": "this figure is not good at all. check previous version figure. it had better colors and visualization. do the same thing but you can use the new line. I dont know what is the bar and line here.",
+    "status": "addressed",
+    "location": "Fig. 8",
+    "response": "Restored side-by-side colored LF/HF/TD bars. Caption defines bar length and black SD whiskers. The exact final styling script for the original image was not found; visible styling was reproduced from the image."
+  },
+  {
+    "id": 16,
+    "line": 503,
+    "comment": "the first comment is that use the same style of the my previous table. it was much better. specifically for PCC and motor column. make it row. Also I think the way you designed this test is wrong. what is the problem here is that with 25 percent of features extraction, I dont see any speedups. If we calculate less features it should be faster. find the source of problem.",
+    "status": "addressed",
+    "location": "VI-B; Table X; pruning_cost_audit.json",
+    "response": "Restored original grouped pruning table and investigated cost. The existing extractor computes all statistics within each retained family. PCC full and top25 each make 122 LF, 122 HF, and 122 TD calls per window; selected outputs match full columns exactly. Measured timings are unchanged; individual-feature optimization is not claimed."
+  },
+  {
+    "id": 17,
+    "line": 538,
+    "comment": "make the style like before. I liked that more. stream column.",
+    "status": "addressed",
+    "location": "Table XI",
+    "response": "Removed stream column; restored PCC/motor grouped rows and highlighted best means within each stream."
+  },
+  {
+    "id": 18,
+    "line": 593,
+    "comment": "for this figure use the same format I have used in previous version.",
+    "status": "addressed",
+    "location": "Fig. 9; Appendix A",
+    "response": "Restored schedule/continuous-RMS format and colors for both motors, with corrected held-out recordings and 500-sample/25-stride RMS."
+  },
+  {
+    "id": 19,
+    "line": 700,
+    "comment": "do we have any figure from the regression results? I think it is good to add here.",
+    "status": "addressed",
+    "location": "Appendix E; Fig. 11",
+    "response": "Added regression diagnostics for every tested bias and all three holdouts; medians and 10th\u201390th prediction percentiles derive from all saved attack-window predictions."
+  }
+]

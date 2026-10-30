@@ -1,0 +1,65 @@
+AUTHOR COMMENT RESPONSES — 29 OCTOBER 2026
+
+All 19 comments are preserved in comments.json and in the annotated source snapshot. main.tex and the 54 original figure assets are unchanged. The revised source keeps the original title, authors, eight main sections and subsection order.
+
+1. Figures 1–4 / Fig. 1
+Restored original platform artwork with only neutral signal-label corrections; main.tex and original assets unchanged.
+
+2. Fig. 2; Table III; III-C
+Restored original seven-panel vector illustration and expanded split allocations into named training, validation, test, and adaptation counts. Time zero remains a display reference because onset provenance is unverified.
+
+3. Introduction; Tables IV–XI; Fig. 3
+Restored and defined fdia2 and severity4 task identifiers.
+
+4. Tables I–XIII
+Restored grouped single-column table presentation; retained new results and added rows where needed.
+
+5. Fig. 3
+Preserved original architecture diagram; corrected kernels to 39/19/9. Necessary original-figure label changes are documented.
+
+6. Table IV
+Single-column search table with separate motor/PCC group rows and validation BA explicitly labeled.
+
+7. Table V
+PCC and motor use section rows. All five metrics retained in one column with mean and SD stacked for legibility.
+
+8. Tables IV–VI, VIII, X–XI
+Bold marks the best comparable mean or lowest latency, with the comparison specified. Different tasks/directions are not treated as directly comparable, and no significance claim is added.
+
+9. Table VI
+Removed task column; fdia2 and severity4 are section headings, following the original table.
+
+10. Table VII
+Added saved macro F1 beside accuracy and balanced accuracy; no model rerun.
+
+11. IV-E; V-D; VII-A; Table VIII; Conclusion
+Removed target-only rows and training column from the manuscript. Kept original controls in supporting CSVs. Adaptation claims compare fine-tuning with source-only, not superiority to training from scratch.
+
+12. V-E; Figs. 5–6
+Re-exported confusion plots at actual single-column size with 9.5-point labels. Moved severity-conditioned and collapsed PCC matrices beside the main error analysis.
+
+13. Fig. 7; plotting provenance
+Located and reused make_dual_plot from plot_dual_stream_detection_over_signal.py; original five layers/colors, 200-s overview and 0–22-s zoom use saved held-out predictions and corrected schedules.
+
+14. Table IX
+Restored stage columns and stream section rows. Median and 95th-percentile timings are explicit; reciprocal-median rate is shown. CPU results remain in supporting CSVs.
+
+15. Fig. 8
+Restored side-by-side colored LF/HF/TD bars. Caption defines bar length and black SD whiskers. The exact final styling script for the original image was not found; visible styling was reproduced from the image.
+
+16. VI-B; Table X; pruning_cost_audit.json
+Restored original grouped pruning table and investigated cost. The existing extractor computes all statistics within each retained family. PCC full and top25 each make 122 LF, 122 HF, and 122 TD calls per window; selected outputs match full columns exactly. Measured timings are unchanged; individual-feature optimization is not claimed.
+
+17. Table XI
+Removed stream column; restored PCC/motor grouped rows and highlighted best means within each stream.
+
+18. Fig. 9; Appendix A
+Restored schedule/continuous-RMS format and colors for both motors, with corrected held-out recordings and 500-sample/25-stride RMS.
+
+19. Appendix E; Fig. 11
+Added regression diagnostics for every tested bias and all three holdouts; medians and 10th–90th prediction percentiles derive from all saved attack-window predictions.
+
+REMAINING AUTHOR CHECKS
+Figure 2: verify the original time alignment only if an attack-onset claim is desired; the current caption makes no such claim. Small inherited labels in the original figures should be reviewed at actual print size.
+The draft is 14 pages including references and appendix. Final journal length requirements may require a separate trimming pass.
+No new recordings or model training were performed. The pruning audit diagnoses the current implementation; a genuinely individual-feature extractor would require implementation and new timing verification before any speedup claim.
