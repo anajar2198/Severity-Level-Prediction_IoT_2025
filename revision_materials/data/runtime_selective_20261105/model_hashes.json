@@ -1,0 +1,386 @@
+[
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/pcc/1234/d3_f32_b8_dr0p35_lr0p001_wd0p0001_bs64",
+    "model_sha256": "9867030fdcf19d17364fb9b7d7db2077e7abd2326fa4e35fe2f0646ee0e67f60",
+    "normalization_sha256": "24d3b53a2592ce9d5956fc3539c62671c3a5845b50fead0714c94afe86732bea"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/1234/top75",
+    "model_sha256": "e3449592cdf6d55300f41aa0db983f6b64688b4438ae91564a53faba865e8a2d",
+    "normalization_sha256": "e4392b3cbc88093b7e025d1ea895d6ac1d06b081fc44657a1fefb3de1c45d7e5"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/1234/top50",
+    "model_sha256": "b8c243de26c0ad755c4ebb5dd53aba66f0ea6c4efd378ad1e40d91d078f3c4cb",
+    "normalization_sha256": "8b59bbed1434c17d3be17517e85c4a07d980b66cd5418a9dfea972f88e441f76"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/1234/top25",
+    "model_sha256": "391e00a60ec6cda85fcc758311179f45be3735720e0868ffbbb4bb15ac098655",
+    "normalization_sha256": "772bf8653ac9cfd0d83773851bf71e03cffe7d8a5e1ab3519b0f1eea1af3821d"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/1234/per_channel15",
+    "model_sha256": "f5a4210bcd2e9d0d3f3b727c662493a2514e7e76d2de4aef4a643a7ed6fd2a49",
+    "normalization_sha256": "9e8945d95c6813d1850fcb9878ccb3b382c9d83229fe42a264d8b48f3d82ed68"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/1234/per_channel10",
+    "model_sha256": "085de600bbe814324d3a7921bdc7eae427538d977becafc26b1a35c618c03bcf",
+    "normalization_sha256": "ea7a2aa95f96d8ce769ca2c49606e0247e26a8ab1b9c2c3cee1ee090c5e1f420"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "lf_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/lf_only",
+    "model_sha256": "e27854a3b9a81c237d231bc24bebe88834a1ffec61f1739b71db363805cd5cfa",
+    "normalization_sha256": "1db8c360673372042e4d5d3c23ceb7e6e214c7234a185256d4f8abba918401be"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "hf_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/hf_only",
+    "model_sha256": "a657a4c4087fc78cebf338035d1be967ab9fe9fb4060b99166132e57abfd68c0",
+    "normalization_sha256": "d78d240daaf4608a68f43a18bb0fdc025fe9434716340c649ce6c76a5d206d19"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "time_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/time_only",
+    "model_sha256": "cbf30033baf149a55624b70ca322a9bc533a67db9bf7ff881fe74f4b20321a1a",
+    "normalization_sha256": "b1a5dfb24fa260a8ca52dd8103e1e46928bc1b40d02203bbdbb04ff3d48a713c"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "lf_hf",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/lf_hf",
+    "model_sha256": "bdd19220233ebe0de5a1776ea0eb7a32ba770039c8f55761e3ebfee3bea0a2af",
+    "normalization_sha256": "b2eedb693dba9ce5ca2ce4c660c6727419f76182c0c2a70ad0d30b5644749ca6"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "lf_time",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/lf_time",
+    "model_sha256": "a230b7808582a5eb5db4c4e6f37a7347f98af1a08dac288bf8088f5631300054",
+    "normalization_sha256": "862d85ef8f241d587329da36f44e8e9b6b7921befe00e2fe6a06c0667ba09b7b"
+  },
+  {
+    "stream": "pcc",
+    "seed": 1234,
+    "variant": "hf_time",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/pcc/1234/hf_time",
+    "model_sha256": "3f4c2ba778e6946a9d1a852f61ca3a432a42cf36a7d4a1284a0a0d144b594fae",
+    "normalization_sha256": "c8abea0f08d4b0ca337a085f045cd6d7725a13da30f65443543acec56424aa4a"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/pcc/2234/d3_f32_b8_dr0p35_lr0p001_wd0p0001_bs64",
+    "model_sha256": "8eac6d10e7f5b69c1552b8ba3436f274f966f826a2fd0b3d4ea19ba4ed44de41",
+    "normalization_sha256": "14119bc13d46813c82777e01075e4e757a1460b927067942984d27cd573ed45e"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/2234/top75",
+    "model_sha256": "878bedd8ad9e11c099863ac8274b7c86f37a607693f344c10370e9d1aee88c10",
+    "normalization_sha256": "50d1110710fdba16799e76cbce33dbfc025a238eb7f2463e7d56a02da675627d"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/2234/top50",
+    "model_sha256": "c84603e47517dc3c6b47412ab0ff9ce8d08b73c977b864e807ff4901d430d5fc",
+    "normalization_sha256": "e7ace5911bb16f1e1d204d6cd30752e0d74820cc28fd5096afb1d2fc03744241"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/2234/top25",
+    "model_sha256": "cb5fdcb1cfd405e5ed4c1a1504ca2ff829ab8ae67eaaac972c9e273897cbd002",
+    "normalization_sha256": "1a556c28ad32610f52017c1446c94a63dd8289f0dd737c7ba043545abacb491c"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/2234/per_channel15",
+    "model_sha256": "421a47121d69e00c53acb9f12363c55d05e6fbf347fb26844c5f0f04284324f5",
+    "normalization_sha256": "c4796915b96f2d8f5234f54b0c9e2dba71c26c367fbc7da5d4de040c1877f483"
+  },
+  {
+    "stream": "pcc",
+    "seed": 2234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/2234/per_channel10",
+    "model_sha256": "96705159e0bf7bda1236bd4abd772897665029d95e42091d3034303af9ab639d",
+    "normalization_sha256": "ca6e0a04565846debe6d14664738c4e30828b1701af8ea1852b323f0d1ce4b5a"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/pcc/3234/d4_f48_b8_dr0p5_lr0p001_wd0p0001_bs64",
+    "model_sha256": "2f45619b3eced262d927b69c0f5b375c8d30e7a152bf1264e662cd751f8e9eef",
+    "normalization_sha256": "d1694d967efb97a564f68d1ee308720581c88f62e01d7013a4ae368e28c41051"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/3234/top75",
+    "model_sha256": "01b1dd165b25212ba939bfd589fb175bba551568226ea8fe2b6832df1e78362c",
+    "normalization_sha256": "c1b3abe06005a4ba12db2868ef08fbf3e99ed7cce2cb2ce775efea058d8ce179"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/3234/top50",
+    "model_sha256": "f8601533af5599773cc1eac96792132c67402df4aa035806cf39588ebba7f689",
+    "normalization_sha256": "2c729d62f6e2e947ed4a45b28d0034b6dfb9de3e3d6dca5c0f3eac771d21e590"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/3234/top25",
+    "model_sha256": "674c85311aad8e8ca0ff9d7b1a3c33d147508847cdc4269a3b2e937275f1268b",
+    "normalization_sha256": "1835c06c64f48c1d3d2f6269703dab022dd61973bc2a583f25ae0e0f0c3b9ea6"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/3234/per_channel15",
+    "model_sha256": "f4f28cae35c8383d014b1ae3c7ba724cd18961963a25d48269844aae17e17a54",
+    "normalization_sha256": "b934f592332e3ba4600be46379a595bdc9f71a676d55aa43182668b9ede28055"
+  },
+  {
+    "stream": "pcc",
+    "seed": 3234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/pcc/3234/per_channel10",
+    "model_sha256": "d303e62f8d74e2cdb8b46d2e9bfecfcb6627a3abd2947ef28d19a66f7deace61",
+    "normalization_sha256": "76db6f30b64d32082535223a913efb2f1d13fea63b968ffd0bdc836acd2228a7"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/motor/1234/d6_f48_b16_dr0p35_lr0p001_wd5e-05_bs64",
+    "model_sha256": "16c2593654946b4d3579112baea2bf762fb6fc59dc82dd187282b0ac2d17ec94",
+    "normalization_sha256": "9ab587fb40f582cf010912238e3359dea71f00ceccc2c966a2fd2c77de5f74aa"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/1234/top75",
+    "model_sha256": "f1783203ee71ff1df875e6c156aca5934b57f621ef8f983be73694be9a14e7cd",
+    "normalization_sha256": "7231788e486ba306b481980238e14af91e45fd6df3cf7eecdae8e30ff0792ec9"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/1234/top50",
+    "model_sha256": "aafa58c8612adf044b952c64710b64f3794e0a39166e29a6f7e30ea667bfd971",
+    "normalization_sha256": "693390a2490030b523bffcc00811bea36237028e39c6ae658b7f1de6446ac4c5"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/1234/top25",
+    "model_sha256": "d0469afb08b7e4d2a593fc05a3da88f65d092152bfda38a269aa35b905b88456",
+    "normalization_sha256": "800c41c4575f5c38de7c3427032aa8cc012ac014f5f344d3075a2dd6e0564177"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/1234/per_channel15",
+    "model_sha256": "ed41b9ad367fa76e2532a2ea8b4d7a24098279457b5112d8e8de06bcd997c322",
+    "normalization_sha256": "178ff0db5c1f17f42b81824339891d7f1cbe8f31d7aa61221500d0a66d9a0f5b"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/1234/per_channel10",
+    "model_sha256": "7f6dbe68f787b07c6e57bc812138dc5d356fc05ac99bcdf8f46bb91eb3fab6b7",
+    "normalization_sha256": "8843d3dc787f1e30719fa839d4a63855c86ceadb91751df2a30c48a904ba8283"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "lf_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/lf_only",
+    "model_sha256": "95136abffa11c4ed8d4b6ca0e7c34ff0708f5364364a1b954399176564a5d9ca",
+    "normalization_sha256": "d1b6ef22d0c29c43be6ffa0836914a530f637c48073a96e312272dab8c09586a"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "hf_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/hf_only",
+    "model_sha256": "0dc4e1ed2bc40c0bb7fb1d6049fa0c8114dc788caa05565b20abd33bb458b192",
+    "normalization_sha256": "30f6aa8db83c08959c8997df56bb0f46c8e57a9e0f9afa3f4a03a11b9c11317c"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "time_only",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/time_only",
+    "model_sha256": "8e1c2de4af4aef93f12a0851a35e040658c1c7c580897486c3a643d1f66c0731",
+    "normalization_sha256": "9074eef68ea19701733fc9ce8579d2704107c75001a4ea7d3a15096f934f8a1f"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "lf_hf",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/lf_hf",
+    "model_sha256": "92c8ab1d0f5cbb8cd0fd20d6b2e5041c9588436be4e02d74684784ee9dcb2b34",
+    "normalization_sha256": "c141ec52b3751fbd24d5e3be09fe241d5b0f59d91b05cbb676c2e02380c598fb"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "lf_time",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/lf_time",
+    "model_sha256": "38ebeb897ef77ab98db17d563269b78f0793943f8beebeaa5d846037f504075c",
+    "normalization_sha256": "e806b6093dbac56ddc18cc5e1aa0a57b76dcbf6fd6715df5763efb7d0de74493"
+  },
+  {
+    "stream": "motor",
+    "seed": 1234,
+    "variant": "hf_time",
+    "model": "reviewer_revision/full_paper_rerun/ablations/binary/motor/1234/hf_time",
+    "model_sha256": "57f76d4841a72ddd3fd08eed1b52eacad8a05d661d12ae51afcd849f45e6762f",
+    "normalization_sha256": "9c1dee9e6679c787e88d425a2b8c9acc0130e2f0237c66888690acb202bdba5e"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/motor/2234/d3_f48_b32_dr0p35_lr0p001_wd0p0001_bs64",
+    "model_sha256": "6ca994afe9023e08fe9cc5fc08ec01df6241572042429cb3489126872359850d",
+    "normalization_sha256": "da9568b375a79db859c23265a11968c85d1964d383c9d7c8657c2690e985319a"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/2234/top75",
+    "model_sha256": "7af4004978d95cb79c3ae0e0e7975e661c7814a4eb94dd8d67008b0d8458de60",
+    "normalization_sha256": "ae6fdfc5132b8c1f3a5bfe0c24e80b976477075f5793619a7f45031fb6abc226"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/2234/top50",
+    "model_sha256": "330d8762d48cc680810184600f73da0fd95176cedb52b3bf110ae73622fb1cd3",
+    "normalization_sha256": "be200badbcf0b92cbb8303de34054ac809169046c950a1fb79e53fa358b67664"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/2234/top25",
+    "model_sha256": "a39624f042f377808635cb65e052d40d7cf889d9b64d8fc591b291a280c29fda",
+    "normalization_sha256": "e619c36ce8fe3684f1ddd4c98744db7100fcf8a0f45d7932a57b952688898a02"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/2234/per_channel15",
+    "model_sha256": "3297f0ba7f48657dc1ec0f9fe4cb4cf8fca2bde028e14b7601b51ea345426d5f",
+    "normalization_sha256": "ee06a242c408d48b8a6ca931e14ad966ec1b1fb7b51f8865c6e93cb7e11c27a9"
+  },
+  {
+    "stream": "motor",
+    "seed": 2234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/2234/per_channel10",
+    "model_sha256": "12dd0ce0edeeeb6cbf94b88d95adab25e4db675c4d15ae269c58883294a3bce3",
+    "normalization_sha256": "047c05a07185a2883741f54ec0e347db592bb5e9e4f90e6fab09565ae9184b8e"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "full",
+    "model": "reviewer_revision/full_paper_rerun/search/binary/motor/3234/d6_f24_b16_dr0p35_lr0p001_wd0p0001_bs128",
+    "model_sha256": "806894f940f597102ee8bcb90b4aedbd301477b10935b438d01f2ff715487b98",
+    "normalization_sha256": "933ea22c0bc5be4e607508be2c3479bf12040a2af5d66f38824658bf8bd6575a"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "top75",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/3234/top75",
+    "model_sha256": "916c735790b611701897b38a21a4cc5592ca2a2bd7d832bd1d6d869e7c6890f4",
+    "normalization_sha256": "b137859341f82d3a32d974b0d85a8f37d5d01f57dcadcbe611b51af8db429256"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "top50",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/3234/top50",
+    "model_sha256": "2263a9cd0fd1f681afa23f5e569c5866b3c6ed9ed081ddda3a513ad7d41ba162",
+    "normalization_sha256": "7ae5201b0a90ef6d5e3a3bd359d2c03205f8737115288df28ff0256598feb2f6"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "top25",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/3234/top25",
+    "model_sha256": "3e94736118772be3d0b96c295e412d98dff28902ee655ce84fe734b22e51f5da",
+    "normalization_sha256": "5a9fc641a893717da6d33d295dd35971f67c767bb6099c8732fd61927c83b633"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "per_channel15",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/3234/per_channel15",
+    "model_sha256": "bbd050abb8398cf04f9f5901252d55570dd7422c7041b8168e0df5e5f16eaccd",
+    "normalization_sha256": "fcc2dab713751c54ab6897c5dc27ffed3ecdc342c52560f7ad298d498120c6bb"
+  },
+  {
+    "stream": "motor",
+    "seed": 3234,
+    "variant": "per_channel10",
+    "model": "reviewer_revision/full_paper_rerun/pruning/motor/3234/per_channel10",
+    "model_sha256": "abc1b46abe290a3e59f55a85eadead1e5ac630465341aa5aade1ed3a0a5a8203",
+    "normalization_sha256": "29fe455515099f5e7788133265da7bbe41026c3e04c17ac1ab4593a3ffbba2eb"
+  }
+]

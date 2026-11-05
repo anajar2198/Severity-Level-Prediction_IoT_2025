@@ -1,0 +1,15 @@
+{
+  "original_main_unchanged": true,
+  "classification_summaries_unchanged": true,
+  "models_and_normalization_hashes_verified": 48,
+  "feature_equality_checks": 913,
+  "timing_samples_reaggregated": 7200,
+  "table_x_performance_cells_preserved": true,
+  "section_structure_and_figure_paths_preserved": true,
+  "revised_pdf_pages": 14,
+  "revised_and_diff_latex_compilation_passed": true,
+  "overfull_boxes": false,
+  "undefined_references": false,
+  "table_x_visual_check_passed": true,
+  "main_revised_sha256": "c6ddf2216bfdb5b354e433b47de3206ae38f58b7d91829df811b1936279713c0"
+}

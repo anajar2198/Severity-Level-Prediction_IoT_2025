@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "comparison": "Exact array equality; no numerical tolerance",
+  "checks": 913,
+  "values_compared": 3335936,
+  "max_absolute_difference": 0.0,
+  "recordings": 18,
+  "contexts": [
+    "normal",
+    "attack",
+    "post-schedule normal"
+  ],
+  "saved_input_tensor_comparison": "Exact equality at model input precision (float32); extractor-to-extractor equality at float64",
+  "all_pruning_subsets_and_seeds_verified": true,
+  "unused_calculation_guards_passed": true,
+  "model_logits_exact": true,
+  "retraining": false
+}

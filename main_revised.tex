@@ -28,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-This paper presents a nonintrusive monitoring framework for false-data-injection attacks (FDIAs) in heterogeneous inverter-fed motor drives. The framework combines low-frequency, high-frequency, and time-domain electrical features with an InceptionTime classifier to detect attacks and classify the injected current-feedback bias. Motor-terminal currents and point-of-common-coupling (PCC) voltage and current are evaluated as separate sensing configurations. Experimental data are obtained from an alternating current induction motor (ACIM) and a permanent magnet synchronous motor (PMSM) under three speed and three load settings. Eighteen recordings are evaluated using three training--validation--test partitions with no shared recordings or attack episodes within a partition. Mean detection accuracy is 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing; four-class severity balanced accuracy is 90.81\% and 55.62\%, respectively. The PCC severity classifier detects 61.39\%, 85.08\%, and 88.09\% of low-, medium-, and high-bias attacks, with a 37.23\% false-alarm rate. These detection rates include attacks assigned to an incorrect severity class. Supervised PMSM-to-ACIM adaptation achieves 91.38\% PCC balanced accuracy using 20\% of the target episode groups; ACIM-to-PMSM transfer remains less effective. For PCC detection, omitting high-frequency features reduces processing time from 22.37 to 12.32~ms with similar balanced accuracy. The results establish the sensing and computational tradeoffs of the proposed framework and identify the remaining limitations of PCC severity classification and cross-motor transfer.
+This paper presents a nonintrusive monitoring framework for false-data-injection attacks (FDIAs) in heterogeneous inverter-fed motor drives. The framework combines low-frequency, high-frequency, and time-domain electrical features with an InceptionTime classifier to detect attacks and classify the injected current-feedback bias. Motor-terminal currents and point-of-common-coupling (PCC) voltage and current are evaluated as separate sensing configurations. Experimental data are obtained from an alternating current induction motor (ACIM) and a permanent magnet synchronous motor (PMSM) under three speed and three load settings. Eighteen recordings are evaluated using three training--validation--test partitions with no shared recordings or attack episodes within a partition. Mean detection accuracy is 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing; four-class severity balanced accuracy is 90.81\% and 55.62\%, respectively. The PCC severity classifier detects 61.39\%, 85.08\%, and 88.09\% of low-, medium-, and high-bias attacks, with a 37.23\% false-alarm rate. These detection rates include attacks assigned to an incorrect severity class. Supervised PMSM-to-ACIM adaptation achieves 91.38\% PCC balanced accuracy using 20\% of the target episode groups; ACIM-to-PMSM transfer remains less effective. For PCC detection, omitting high-frequency features reduces processing time from 23.03 to 12.69~ms with similar balanced accuracy. The results establish the sensing and computational tradeoffs of the proposed framework and identify the remaining limitations of PCC severity classification and cross-motor transfer.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -662,9 +662,9 @@ Practical PCC monitoring requires processing each measurement window within the 
 \subsection{Inference Latency and Throughput on CPU/GPU}
 \label{sec:latency_throughput}
 
-Runtime was measured on the Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the seed-1234 binary models. Each variant used 10 warm-up executions and 50 timed repetitions. The benchmark separates feature extraction, normalization/transfer/inference, and full processing, reporting median and 95th-percentile latency (Table~\ref{tab:runtime_latency}). The reported processing time excludes the 200-ms acquisition window and is distinct from the delay between attack onset and alarm generation. CPU and GPU-assisted versions use the same selected models.
+Runtime was measured on the Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the seed-1234 binary models. Each variant used 10 warm-up executions and 50 timed repetitions, with variant order randomized within each repetition. Full, pruned, and ablated inputs used the same selective feature-extraction implementation. The benchmark separates feature extraction, normalization/transfer/inference, and full processing, reporting median and 95th-percentile latency (Table~\ref{tab:runtime_latency}). The reported processing time excludes the 200-ms acquisition window and is distinct from the delay between attack onset and alarm generation. CPU and GPU-assisted versions use the same selected models.
 
-Full-feature GPU-assisted processing takes 22.37~ms for PCC and 66.33~ms for motor sensing, with 95th percentiles of 23.93 and 67.55~ms. Both measured processing times are below the 200-ms window interval. Reciprocal median processing rates are approximately 44.69 and 15.08 windows/s, respectively; these are workstation processing capacities, not measured embedded worst-case guarantees. Acquisition, scheduling, and any alarm-persistence logic must be included in a deployed timing budget.
+Full-feature GPU-assisted processing takes 23.03~ms for PCC and 67.81~ms for motor sensing, with 95th percentiles of 25.03 and 76.98~ms. Both measured processing times are below the 200-ms window interval. Reciprocal median processing rates are approximately 43.42 and 14.75 windows/s, respectively; these are workstation processing capacities, not measured embedded worst-case guarantees. Acquisition, scheduling, and any alarm-persistence logic must be included in a deployed timing budget.
 
 \begin{table}[t]
 \centering
@@ -677,11 +677,11 @@ Full-feature GPU-assisted processing takes 22.37~ms for PCC and 66.33~ms for mot
 \hline
 Statistic & \shortstack{Feature\\extract.\\(ms)} & \shortstack{Norm./transfer\\+ inference\\(ms)} & \shortstack{Total\\processing\\(ms)} & \shortstack{Rate\\(windows/s)} \\\hline
 \hline\multicolumn{5}{c}{\textit{PCC stream}} \\\hline
-Median & 21.64 & 0.72 & 22.37 & 44.69 \\
-95th pct. & 23.11 & 0.85 & 23.93 & -- \\
+Median & 22.30 & 0.78 & 23.03 & 43.42 \\
+95th pct. & 24.15 & 0.95 & 25.03 & -- \\
 \hline\multicolumn{5}{c}{\textit{MOTOR stream}} \\\hline
-Median & 64.99 & 1.33 & 66.33 & 15.08 \\
-95th pct. & 66.19 & 1.42 & 67.55 & -- \\
+Median & 66.38 & 1.42 & 67.81 & 14.75 \\
+95th pct. & 75.52 & 1.58 & 76.98 & -- \\
 \hline\end{tabular}
 \par\smallskip\begin{minipage}{\columnwidth}\scriptsize Rate is the reciprocal of median total processing time. Stages are timed within each iteration; marginal percentiles need not sum. Acquisition (200 ms) is excluded. CPU measurements are supplied with the results.\end{minipage}
 \end{table}
@@ -691,7 +691,7 @@ Median & 64.99 & 1.33 & 66.33 & 15.08 \\
 
 Binary-model features were ranked by validation-set permutation importance: the decrease in balanced accuracy when one feature trajectory is permuted across validation windows, repeated three times. Test labels were not used for ranking. Within each split, global top-75\%, top-50\%, and top-25\% subsets and per-channel top-15/top-10 subsets were retrained with the full model's selected architecture and training protocol. Fig.~\ref{fig:top10_feature_importance} summarizes validation importance across repeats; correlated features can share predictive information, so these scores do not identify causal attack mechanisms.
 
-Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained features do not guarantee faster extraction. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), but processing remains 22.42~ms versus 22.37~ms for full features. The motor top-25\% subset retains 56 of 222 features, gives 86.83\% balanced accuracy versus 88.26\% for full input, and reduces processing from 66.33 to 56.41~ms (1.18$\times$). The extractor skips an LF, HF, or TD family only when that entire family is absent from a channel; otherwise it computes every statistic in that family before selecting the requested columns. In the seed-1234 PCC top-25\% subset, all three families remain active on both channels: each family routine is called 122 times per window, exactly as for full input. Motor top-25\% removes the HF family on two channels, reducing HF calls from 366 to 244. Consequently, computation is reduced only when an entire feature family is omitted from a channel. This explains the negligible PCC speedup despite the reduction in feature count. Further reduction would require computing only the selected statistics within each family. The full-feature model remains the reference, and all evaluated subsets are reported.
+Table~\ref{tab:feature_pruning_anomaly2_runtime} quantifies the reduction in processing time obtained by selective feature computation. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), while reducing processing time from 23.03 to 12.44~ms (1.85$\times$). The motor top-25\% subset retains 56 of 222 features and reduces processing time from 67.81 to 27.87~ms (2.43$\times$), with balanced accuracy of 86.83\% compared with 88.26\% for the full input. For each subset, the extractor evaluates only the selected statistics and the intermediate calculations required to obtain them. Shared operations, such as the FFT, are retained when needed by a selected feature; unrelated harmonic, spectral, envelope, and time-domain calculations are omitted. The selected feature values and model outputs were verified against the original implementation, so the trained models and classification results are unchanged. Full and reduced subsets were timed using the same implementation and benchmark conditions. Speedup depends on the computational dependencies of the retained features as well as their number. All evaluated subsets are reported, and the full-feature model remains the reference.
 
 \begin{figure*}[t]
 \centering
@@ -710,29 +710,29 @@ Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained featu
 \hline
 Subset & No. & \shortstack{BA\\(\%)} & \shortstack{F1\\(\%)} & \shortstack{Extract.\\(ms)} & \shortstack{Total\\(ms)} & \shortstack{Speedup\\($\times$)} \\\hline
 \hline\multicolumn{7}{c}{\textit{PCC stream}} \\\hline
-Full & 74 & \mbox{80.29\,$\pm$\,3.03} & \mbox{80.42\,$\pm$\,2.96} & 21.64 & \textbf{22.37} & 1.00 \\
-75\% & 56 & \mbox{78.28\,$\pm$\,3.07} & \mbox{78.41\,$\pm$\,3.37} & 21.77 & 22.46 & 1.00 \\
-50\% & 37 & \mbox{78.87\,$\pm$\,2.79} & \mbox{79.10\,$\pm$\,2.97} & 21.83 & 22.58 & 0.99 \\
-25\% & 18 & \mbox{80.29\,$\pm$\,2.14} & \mbox{80.58\,$\pm$\,2.29} & 21.70 & 22.42 & 1.00 \\
-15/ch. & 30 & \mbox{77.59\,$\pm$\,4.75} & \mbox{77.74\,$\pm$\,4.94} & 21.80 & 22.49 & 0.99 \\
-10/ch. & 20 & \mbox{\textbf{80.47}\,$\pm$\,2.79} & \mbox{\textbf{80.69}\,$\pm$\,2.80} & 21.94 & 22.68 & 0.99 \\
+Full & 74 & \mbox{80.29\,$\pm$\,3.03} & \mbox{80.42\,$\pm$\,2.96} & 22.30 & 23.03 & 1.00 \\
+75\% & 56 & \mbox{78.28\,$\pm$\,3.07} & \mbox{78.41\,$\pm$\,3.37} & 19.65 & 20.33 & 1.13 \\
+50\% & 37 & \mbox{78.87\,$\pm$\,2.79} & \mbox{79.10\,$\pm$\,2.97} & 16.63 & 17.31 & 1.33 \\
+25\% & 18 & \mbox{80.29\,$\pm$\,2.14} & \mbox{80.58\,$\pm$\,2.29} & 11.81 & \textbf{12.44} & 1.85 \\
+15/ch. & 30 & \mbox{77.59\,$\pm$\,4.75} & \mbox{77.74\,$\pm$\,4.94} & 15.64 & 16.25 & 1.42 \\
+10/ch. & 20 & \mbox{\textbf{80.47}\,$\pm$\,2.79} & \mbox{\textbf{80.69}\,$\pm$\,2.80} & 12.07 & 12.68 & 1.82 \\
 \hline\multicolumn{7}{c}{\textit{MOTOR stream}} \\\hline
-Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 64.99 & 66.33 & 1.00 \\
-75\% & 166 & \mbox{87.95\,$\pm$\,11.38} & \mbox{87.19\,$\pm$\,12.42} & 65.65 & 67.02 & 0.99 \\
-50\% & 111 & \mbox{89.28\,$\pm$\,11.33} & \mbox{88.20\,$\pm$\,12.87} & 65.14 & 66.49 & 1.00 \\
-25\% & 56 & \mbox{86.83\,$\pm$\,10.93} & \mbox{85.44\,$\pm$\,12.39} & 55.11 & \textbf{56.41} & 1.18 \\
-15/ch. & 90 & \mbox{\textbf{92.10}\,$\pm$\,9.71} & \mbox{\textbf{91.44}\,$\pm$\,10.88} & 60.80 & 62.13 & 1.07 \\
-10/ch. & 60 & \mbox{88.18\,$\pm$\,9.28} & \mbox{87.20\,$\pm$\,10.62} & 55.45 & 56.77 & 1.17 \\
+Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 66.38 & 67.81 & 1.00 \\
+75\% & 166 & \mbox{87.95\,$\pm$\,11.38} & \mbox{87.19\,$\pm$\,12.42} & 56.28 & 57.70 & 1.18 \\
+50\% & 111 & \mbox{89.28\,$\pm$\,11.33} & \mbox{88.20\,$\pm$\,12.87} & 45.50 & 46.89 & 1.45 \\
+25\% & 56 & \mbox{86.83\,$\pm$\,10.93} & \mbox{85.44\,$\pm$\,12.39} & 26.57 & \textbf{27.87} & 2.43 \\
+15/ch. & 90 & \mbox{\textbf{92.10}\,$\pm$\,9.71} & \mbox{\textbf{91.44}\,$\pm$\,10.88} & 37.68 & 38.96 & 1.74 \\
+10/ch. & 60 & \mbox{88.18\,$\pm$\,9.28} & \mbox{87.20\,$\pm$\,10.62} & 28.48 & 29.80 & 2.28 \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean $\pm$ sample SD. Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only whole unused feature families are skipped.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean $\pm$ sample SD. Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only selected statistics and their required intermediate calculations are evaluated.\end{minipage}
 \end{table}
 
 \subsection{LF/HF/TD Ablation for Binary Anomaly Detection}
 \label{sec:lfhf_ablation}
 
-All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 22.37 to 12.32~ms (1.82$\times$). The small difference in balanced accuracy suggests that LF and TD features provide most of the useful information for PCC binary detection under the tested conditions.
+All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 23.03 to 12.69~ms (1.81$\times$). The small difference in balanced accuracy suggests that LF and TD features provide most of the useful information for PCC binary detection under the tested conditions.
 
-For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.28~ms (4.07$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These ablations quantify the contribution of each feature family relative to the full-feature reference; they are not used for model selection. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
+For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.33~ms (4.15$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These ablations quantify the contribution of each feature family relative to the full-feature reference; they are not used for model selection. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
 
 \begin{table}[t]
 \centering
@@ -899,7 +899,7 @@ The adaptation study requires target labels and uses fixed training budgets; uns
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper presented a nonintrusive FDIA monitoring framework for heterogeneous ACIM/PMSM inverter-fed drives. Motor-terminal and PCC measurements were evaluated independently using three training--validation--test partitions with disjoint recordings and episodes. Mean binary detection accuracy was 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing, while four-class severity balanced accuracy was 90.81\% and 55.62\%, respectively. The PCC results show that detecting an attack is less demanding than assigning its exact bias class; both measures must be considered together with the false-alarm rate. Direct cross-motor transfer was limited, and the improvement obtained by supervised adaptation depended on the transfer direction and sensing location. For PCC detection, LF and time-domain features retained approximately the full-feature balanced accuracy while reducing processing time from 22.37 to 12.32~ms on the tested workstation. These findings identify the practical tradeoffs among sensing location, severity resolution, target-domain adaptation, and processing time for additive current-feedback bias monitoring. Validation on additional installations and dynamic operating conditions remains necessary to establish broader applicability.
+This paper presented a nonintrusive FDIA monitoring framework for heterogeneous ACIM/PMSM inverter-fed drives. Motor-terminal and PCC measurements were evaluated independently using three training--validation--test partitions with disjoint recordings and episodes. Mean binary detection accuracy was 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing, while four-class severity balanced accuracy was 90.81\% and 55.62\%, respectively. The PCC results show that detecting an attack is less demanding than assigning its exact bias class; both measures must be considered together with the false-alarm rate. Direct cross-motor transfer was limited, and the improvement obtained by supervised adaptation depended on the transfer direction and sensing location. For PCC detection, LF and time-domain features retained approximately the full-feature balanced accuracy while reducing processing time from 23.03 to 12.69~ms on the tested workstation. These findings identify the practical tradeoffs among sensing location, severity resolution, target-domain adaptation, and processing time for additive current-feedback bias monitoring. Validation on additional installations and dynamic operating conditions remains necessary to establish broader applicability.
 
 \bibliographystyle{ieeetr}
 \bibliography{ref_revised}

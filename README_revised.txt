@@ -42,8 +42,19 @@ The paper retains its eight main sections and original subsection order. All tab
 
 Target-only rows and discussion were removed from the paper at the author's request. All original controls remain unchanged in revision_materials/data/transfer_summary.csv, with the complete protocol in the archived annotated source. Adaptation claims now compare fine-tuning with source-only and do not assert a universal benefit of source pretraining.
 
-The pruning audit found family-level extraction: retaining any LF/HF/TD feature activates every statistic in that family on that channel. For seed-1234 PCC full and top-25% input, each family function is called 122 times. Saved runtimes were not modified. Individual-feature optimized extraction was not implemented or benchmarked. See pruning_cost_audit.json and pruning_dependency_audit.csv.
+The original pruning audit found family-level extraction: retaining any LF/HF/TD feature activated every statistic in that family on that channel. That historical diagnosis is preserved in pruning_cost_audit.json and pruning_dependency_audit.csv. The 5 November 2026 correction implements individual-feature selection, verifies exact retained values, and replaces the manuscript runtime measurements; see the update below.
 
 New scripts: apply_author_comments.py (table/prose edits), make_author_review_figures.py (original-style held-out plots and regression), audit_pruning_cost.py (dependency/call-count audit). The original timeline function was located in plot_dual_stream_detection_over_signal.py and its body archived. The original importance image's exact final styling script was not found; its visible category colors and side-by-side layout were reproduced with saved validation importance.
 
 The author should verify Figure 2's time origin if it is to be described as an attack onset, and review the inherited small labels in Figures 1–4 at print size. The current caption uses a neutral display reference. Any journal-specific length reduction is a separate editorial step; no results should be removed solely because they are unfavorable.
+
+SELECTIVE PRUNING RUNTIME — 5 NOVEMBER 2026
+Table X now uses selective_feature_extraction.py: only requested statistics and their necessary intermediate calculations are evaluated. Full, pruned and ablated variants were benchmarked in the same run, with 10 warm-ups and 50 measured repetitions per variant/device; variant order was randomized per repetition. The complete measurements and protocol are in revision_materials/data/runtime_selective_20261105/. Current runtime.csv and runtime_reductions.csv use these measurements. The previous family-level CSVs are retained in that directory's previous_family_level/ subdirectory. No classification summary, feature ranking, model checkpoint or data split was changed.
+
+Table IX and all dependent timing statements in main_revised.tex use the same new full-feature baseline. Section order, table formatting and all figure assets are preserved. main.tex remains unchanged. Compile main_revised.tex for the current paper; an older tracked PDF may predate these source edits. diff.tex/diff.pdf compare the original manuscript with the current revised source.
+
+Reproduce using the original experiment workspace (TDMS recordings, saved tensors and trained models required):
+  python revision_materials/scripts/benchmark_selective_runtime.py --workspace "/path/to/Shushan Paper" --output "/path/to/new/runtime/results"
+The script verifies individual feature paths, all 18 recordings at normal/attack/post-schedule times, all three seeds' pruning subsets, and identical model logits. It then measures both CPU and GPU-assisted batch-one processing. It never trains models. The benchmark stops on an equivalence failure.
+
+refresh_selective_runtime.py applies the exported measurements to the current manuscript without rebuilding its layout. build_revision.py and apply_author_comments.py are historical assembly scripts; running them directly can overwrite later author edits.
