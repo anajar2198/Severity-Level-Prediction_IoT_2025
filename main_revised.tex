@@ -3,6 +3,13 @@
 \usepackage{array,graphicx,xcolor,booktabs,tabularx}
 \usepackage{url}
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+% Author-requested source-only revision, 2026-10-30.
+% Writing-style references already cited in this manuscript:
+% Yang et al., IEEE JESTIE, 2024, doi:10.1109/JESTIE.2023.3346802;
+% Yang et al., IEEE TTE, 2022, doi:10.1109/TTE.2021.3102452;
+% Yang et al., IEEE TII, 2020, doi:10.1109/TII.2019.2948056.
+% Figure corrections and compact layouts below are intentionally embedded here.
+% Compile this file directly; the older manuscript-generation script predates this pass.
 \begin{document}
 \title{Nonintrusive Cross-Motor Detection and Severity Assessment of False-Data-Injection Attacks in Heterogeneous Inverter-Fed Drives
 }
@@ -21,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-This paper evaluates false-data-injection attack (FDIA) detection and injected-bias severity assessment in heterogeneous inverter-fed drives using trusted motor-terminal or point-of-common-coupling (PCC) measurements. Low-frequency, high-frequency, and time-domain features are combined with an InceptionTime classifier. Laboratory data comprise 18 recordings from an alternating current induction motor (ACIM) and a permanent magnet synchronous motor (PMSM), covering three speeds and three load settings. Training, validation, and testing use disjoint recordings and episodes, with three repeated holdouts. Mean binary detection accuracy is 87.41\% for motor-side sensing and 80.78\% for PCC sensing; corresponding four-class severity balanced accuracies are 90.81\% and 55.62\%. The proposed model attains the highest mean PCC balanced accuracy among the evaluated baselines, although it does not lead every severity metric. The PCC severity model identifies 61.39\%, 85.08\%, and 88.09\% of low-, medium-, and high-bias attacks as attacks, respectively, with a 37.23\% normal false-alarm rate. Supervised PMSM-to-ACIM fine-tuning reaches 91.38\% PCC balanced accuracy at a nominal 20\% target adaptation budget, while the reverse direction remains difficult. Removing high-frequency features reduces PCC processing time from 22.37 to 12.32~ms with similar detection balanced accuracy. These results characterize the capabilities and limitations of PCC monitoring on the tested platform under additive feedback-bias attacks.
+This paper presents a nonintrusive monitoring framework for false-data-injection attacks (FDIAs) in heterogeneous inverter-fed motor drives. The framework combines low-frequency, high-frequency, and time-domain electrical features with an InceptionTime classifier to detect attacks and classify the injected current-feedback bias. Motor-terminal currents and point-of-common-coupling (PCC) voltage and current are evaluated as separate sensing configurations. Experimental data are obtained from an alternating current induction motor (ACIM) and a permanent magnet synchronous motor (PMSM) under three speed and three load settings. Eighteen recordings are evaluated using three training--validation--test partitions with no shared recordings or attack episodes within a partition. Mean detection accuracy is 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing; four-class severity balanced accuracy is 90.81\% and 55.62\%, respectively. The PCC severity classifier detects 61.39\%, 85.08\%, and 88.09\% of low-, medium-, and high-bias attacks, with a 37.23\% false-alarm rate. These detection rates include attacks assigned to an incorrect severity class. Supervised PMSM-to-ACIM adaptation achieves 91.38\% PCC balanced accuracy using 20\% of the target episode groups; ACIM-to-PMSM transfer remains less effective. For PCC detection, omitting high-frequency features reduces processing time from 22.37 to 12.32~ms with similar balanced accuracy. The results establish the sensing and computational tradeoffs of the proposed framework and identify the remaining limitations of PCC severity classification and cross-motor transfer.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -33,7 +40,7 @@ False-data-injection attack, point of common coupling, inverter-fed motor drives
  
 \IEEEPARstart{F}{DIA} detection and severity assessment are important in networked motor-drive systems, where manipulated sensor feedback can degrade control performance and cause unsafe operation~\cite{Ghaderi2021A}. Increasing drive connectivity makes timely detection of sensor-oriented cyber attacks essential for resilient operation~\cite{Yang2022Fast,Yang2024Enhanced}.
 Current signals are attractive for FDIA monitoring because they are easy to acquire, strongly coupled to electromechanical dynamics, and have been shown to reveal sensor-integrity attacks in motor drives~\cite{7944701, YangVulnerability}. However, most existing studies emphasize terminal-side sensing, operate on a single machine domain, or assume sufficient labeled data for supervised training. These assumptions limit practicality in heterogeneous deployments where different motor types, sensing locations, and data availability constraints all affect performance.
-Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection (\texttt{fdia2}), four-level injected-bias assessment (\texttt{severity4}), cross-domain transfer, and processing cost for converter-fed industrial loads connected at a shared electrical interface. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) electrical features with an InceptionTime classifier, and compares motor-terminal and PCC sensing.
+Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection (\texttt{fdia2}), four-class injected-bias assessment (\texttt{severity4}), cross-motor adaptation, and processing time for converter-fed industrial loads connected at a shared electrical interface. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) electrical features with an InceptionTime classifier. Separate models are trained for motor-terminal and PCC sensing. An auxiliary motor-type classifier (\texttt{motor2}) distinguishes ACIM and PMSM recording conditions.
 
 \subsection{Challenges at PCC in Heterogeneous Multi-Motor Systems}
 \label{sec:pcc_challenges}
@@ -45,9 +52,9 @@ The problem becomes more difficult in heterogeneous multi-motor settings. ACIM a
 The main contributions of this work are as follows:
 
 \begin{itemize}
-\item \textbf{Evaluated} nonintrusive PCC-based FDIA detection on a heterogeneous ACIM/PMSM laboratory platform using whole-recording holdouts that also keep all constituent episodes disjoint.
-\item \textbf{Quantified} the distinction between exact injected-bias classification and detecting an attack of a given bias level, reporting classwise recall together with normal false alarms and repeated-holdout variability.
-\item \textbf{Compared} source-only transfer and supervised adaptation, and measured the accuracy--processing-cost tradeoff of LF/HF/TD representations and validation-ranked feature subsets.
+\item A nonintrusive PCC-based FDIA monitoring framework is experimentally evaluated on a heterogeneous ACIM/PMSM drive platform. Motor-terminal and PCC sensing are assessed using separate models and complete recordings reserved for testing.
+\item Attack detection and injected-bias classification are evaluated separately to characterize sensitivity to low-, medium-, and high-bias attacks. Classwise detection rates, severity-classification recall, and false-alarm rates are reported over three recording partitions.
+\item Cross-motor transfer and supervised adaptation are evaluated in both directions. Feature-family ablation and validation-based feature selection quantify the tradeoff between detection performance and processing time.
 \end{itemize}
 
 The remainder of this paper is organized as follows: Section~\ref{sec:relatedWorks} reviews related literature. Section~\ref{sec:system_data} describes the physical system and dataset construction, while Section~\ref{sec:method} details the proposed FDIA detection framework and feature pipeline. Experimental results and cross-domain adaptations are reported in Section~\ref{sec:results}. Section~\ref{sec:realtime} analyzes real-time deployment and latency, followed by a discussion of tradeoffs in Section~\ref{sec:discussion}. Section~\ref{sec:conclusion} concludes the paper.
@@ -55,12 +62,12 @@ The remainder of this paper is organized as follows: Section~\ref{sec:relatedWor
 \section{Related Work}
 \label{sec:relatedWorks}
 
-FDIA detection has been studied extensively in smart grids and broader cyber-physical systems (CPS), but the assumptions in that literature do not transfer cleanly to inverter-fed motor drives. Many grid- and CPS-oriented approaches rely on state estimation, observer-based detection, invariant analysis, adaptive neuro-fuzzy models, or graph-based learning~\cite{7438916,basati2022fdi,nath2022quickest,beg2017fdia,sargolzaei2020fdia,10016905}. These studies demonstrate strong FDIA-detection capability at the system level, but they are generally not designed for drive-level current monitoring or for deployment at a shared point of common coupling (PCC).
+FDIA detection has been studied extensively in smart grids and broader cyber-physical systems (CPS), but their system models and measurement requirements differ from those of inverter-fed motor drives. Many grid- and CPS-oriented approaches rely on state estimation, observer-based detection, invariant analysis, adaptive neuro-fuzzy models, or graph-based learning~\cite{7438916,basati2022fdi,nath2022quickest,beg2017fdia,sargolzaei2020fdia,10016905}. These studies demonstrate strong FDIA-detection capability at the system level, but they are generally not designed for drive-level current monitoring or for deployment at a shared point of common coupling (PCC).
 
 Motor-drive-specific studies are more closely related to the present work. Prior work has shown that current signals can support effective FDIA detection in electric-drive systems and that transfer learning can improve performance when labeled data are limited~\cite{Yang2022Fast,Yang2024Enhanced}. Related industrial-IoT monitoring studies have also considered cyber-detection in machine-monitoring settings~\cite{423563247547}. However, these studies mainly rely on motor-terminal sensing, single-motor settings, or closely related operating domains, and therefore provide limited evidence for heterogeneous cross-motor transfer.
 
 
-The main gap is not FDIA detection in general, which has been widely studied in smart grids and cyber-physical systems, but nonintrusive PCC-based monitoring for heterogeneous inverter-fed motor-drive systems. In particular, the existing literature does not clearly establish: 1) how PCC sensing compares with motor-side sensing for low-severity current-feedback FDIAs, 2) whether PCC measurements support reliable multi-level severity assessment rather than only binary detection, given that attack signatures become weaker and less separable under signal aggregation and harmonic distortion, and 3) how detection performance transfers between heterogeneous ACIM and PMSM domains when labeled target-domain data are limited. The contribution is a comparative experimental assessment rather than a new neural-network architecture. This work addresses these three questions experimentally on a shared ACIM/PMSM platform using multi-scale features, in-domain evaluation, source-only cross-domain transfer, and few-shot target-domain adaptation.
+The main gap is not FDIA detection in general, which has been widely studied in smart grids and cyber-physical systems, but nonintrusive PCC-based monitoring for heterogeneous inverter-fed motor-drive systems. In particular, the existing literature does not clearly establish: 1) how PCC sensing compares with motor-side sensing for low-severity current-feedback FDIAs, 2) whether PCC measurements support reliable multi-level severity assessment rather than only binary detection, given that attack signatures become weaker and less separable under signal aggregation and harmonic distortion, and 3) how detection performance transfers between heterogeneous ACIM and PMSM domains when labeled target-domain data are limited. The emphasis of the present work is the experimental assessment of sensing location, attack magnitude, and cross-motor adaptation using a common classification framework. This work addresses these three questions experimentally on a shared ACIM/PMSM platform using multi-scale features, in-domain evaluation, source-only cross-domain transfer, and few-shot target-domain adaptation.
 
 
         
@@ -76,7 +83,7 @@ The main gap is not FDIA detection in general, which has been widely studied in 
 \label{sec:experimental_platform}
 
 Fig.~\ref{fig:system_schematic} illustrates the overall setup, including the shared PCC, the two drive branches, the ACIM and PMSM loads, the sensing locations, and the FDIA injection points in the control/feedback paths. The experimental platform consists of a heterogeneous two-motor industrial setup including one ACIM branch and one PMSM branch. Both branches are supplied from a common upstream electrical interface, enabling measurements at the PCC in addition to motor-side measurements. This setup enables comparison of motor-terminal and PCC sensing under heterogeneous ACIM/PMSM dynamics.
-The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. These episodes are not 540 independent motor installations. The experiments cover three speed operating points, namely 900, 1100, and 1300 rpm. 
+The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. All episodes were acquired on the same two-motor platform. The experiments cover three speed operating points, namely 900, 1100, and 1300 r/min.
 
 Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}. The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine. The measured signals and channel counts associated with the motor-side and PCC-side streams are summarized in Table~\ref{tab:measurement_streams}.
 
@@ -102,7 +109,7 @@ Let $\mathbf{i}_{abc}(t)=[i_a(t),i_b(t),i_c(t)]^\top$ denote the true three-phas
 \qquad t\in[t_{\mathrm{on}},t_{\mathrm{off}}],
 \label{eq:fdia_model}
 \end{equation}
-Here, \(\boldsymbol{\alpha}=[\alpha_a,\alpha_b,\alpha_c]^\top\) denotes the injected per-unit bias vector, with \(\boldsymbol{\alpha}=\mathbf{0}\) outside the attack interval. The tested nonzero bias magnitudes range from \(0.0005\) to \(0.0050~\mathrm{pu}\), corresponding to \(0.05\%\)--\(0.5\%\) current-feedback bias. Percentages refer to the nominal controller feedback base; no absolute ampere or torque calibration is inferred from them. The term severity denotes injected bias magnitude, not measured physical harm. Attack severity is measured by the largest absolute injected phase-current bias, 
+Here, \(\boldsymbol{\alpha}=[\alpha_a,\alpha_b,\alpha_c]^\top\) denotes the injected per-unit bias vector, with \(\boldsymbol{\alpha}=\mathbf{0}\) outside the attack interval. The tested nonzero bias magnitudes range from \(0.0005\) to \(0.0050~\mathrm{pu}\), corresponding to \(0.05\%\)--\(0.5\%\) current-feedback bias. The bias is normalized to the nominal controller current-feedback base. In this study, severity is defined by the injected bias magnitude; physical consequences such as shaft-torque deviation are not used as severity labels. Attack severity is measured by the largest absolute injected phase-current bias,
 \(s=\|\boldsymbol{\alpha}\|_\infty\).
 
 For binary FDIA detection, each window is labeled as
@@ -118,7 +125,7 @@ y_{\mathrm{severity4}} =
 \end{cases}
 \label{eq:severity_bins}
 \end{equation}
-The bins apply to the tested discrete bias values and are not standardized safety thresholds. Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 medium, and 14,400 high.
+The class boundaries partition the tested discrete bias values and do not represent equipment protection limits. Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 medium, and 14,400 high.
 Table~\ref{tab:cyberattack_dataset_structure} summarizes the swept single-phase, equal two-phase, and fixed-plus-swept two-phase FDIA cases. Across three speeds, three load settings, and two motor types, the dataset contains 540 total attack cases. Each recording contains 30 consecutive 20-s episodes, with 10~s normal operation followed by 10~s FDIA operation. After the scheduled 600~s, the injected bias was zero and the motor continued running. All 6,054 complete post-schedule windows are retained as normal, giving 33,054 normal and 27,000 attack windows in total.
 
 \begin{table}[t]
@@ -148,12 +155,26 @@ Cases & Phases & Bias Pattern & Total \\
 \subsection{Data Acquisition and Operating Conditions}
 \label{sec:data_acquisition}
 
-Electrical measurements were acquired from the testbed using a National Instruments cDAQ-9185 chassis and a custom data-collector interface board. The interface board routed synchronized motor-side and PCC-side analog channels to the acquisition system. Three brake-excitation settings were tested for each machine: 1--3~V for the ACIM branch and 2--4~V for the PMSM branch. Because torque was not directly measured, these brake-excitation voltages are used as load-condition labels. All channels were sampled at 10~kHz and stored in TDMS format. For learning-based analysis, each record was segmented into non-overlapping 0.2~s windows containing 2{,}000 samples. Non-overlap prevents reuse of raw samples between adjacent windows, but does not remove within-recording dependence. Therefore, each entire recording, including its 30 episodes and post-schedule normal segment, is assigned to one partition. For each motor, five recordings are used for training, two for validation, and two for testing. Three seeds (1234, 2234, and 3234) change both the recording assignment and initialization. All feature normalization statistics are fitted using training recordings only. For example, all windows from one ACIM speed/load recording stay together; an adjacent attack episode cannot appear in a different partition. The holdouts assess new recorded operating combinations on the same apparatus; recordings can recur across repeats. The resulting dataset dimensions, input configurations, severity-label distributions, and evaluation protocols are summarized in Table~\ref{tab:evaluation_protocols}.
+Electrical measurements were acquired from the testbed using a National Instruments cDAQ-9185 chassis and a custom data-collector interface board. The interface board routed synchronized motor-side and PCC-side analog channels to the acquisition system. Three brake-excitation settings were tested for each machine: 1--3~V for the ACIM branch and 2--4~V for the PMSM branch. Because torque was not directly measured, these brake-excitation voltages are used as load-condition labels. All channels were sampled at 10~kHz and stored in TDMS format. For learning-based analysis, each record was segmented into non-overlapping 0.2~s windows containing 2{,}000 samples. Non-overlap prevents reuse of raw samples between adjacent windows, but does not remove within-recording dependence. Therefore, each entire recording, including its 30 episodes and post-schedule normal segment, is assigned to one partition. For each motor, five recordings are used for training, two for validation, and two for testing. Three seeds (1234, 2234, and 3234) change both the recording assignment and initialization. All feature normalization statistics are fitted using training recordings only. All windows from a given speed/load recording, including adjacent attack episodes and the post-schedule normal interval, therefore remain in the same subset. The holdouts assess new recorded operating combinations on the same apparatus; recordings can recur across repeats. The resulting dataset dimensions, input configurations, severity-label distributions, and evaluation protocols are summarized in Table~\ref{tab:evaluation_protocols}.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure2_feature_example.pdf}
-\caption{Motor-current (left) and PCC-current (right) signal and feature illustrations. LF frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. Zero denotes the display reference time. These descriptive traces illustrate feature extraction and do not establish attack-onset timing or detector performance. Signal amplitude is in recorded acquisition units.}
+% Attack-onset interpretation confirmed by the author on 2026-10-30.
+\begingroup\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(515.52,265.0814)
+\put(0.0000,0){\includegraphics[width=252.76bp]{figs_revised/original_sources/tdms_lfhf_window_example_acim_179p9s_separate.pdf}}
+\put(0.0000,257.6497){\color[rgb]{1,1,1}\rule{252.7600bp}{7.4317bp}}
+\put(126.3800,261.3656){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont Motor current and feature illustration}}
+\put(133.0094,248.1524){\color[rgb]{1,1,1}\rule{47.2926bp}{7.0939bp}}
+\put(153.2777,251.5304){\makebox(0,0){\color[rgb]{0.7,0,0}\fontsize{7bp}{8bp}\selectfont Attack onset}}
+\put(262.7600,0){\includegraphics[width=252.76bp]{figs_revised/original_sources/tdms_lfhf_window_example_pcc_179p9s_separate.pdf}}
+\put(262.7600,257.6411){\color[rgb]{1,1,1}\rule{252.7600bp}{7.4314bp}}
+\put(389.1400,261.3568){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont PCC current and feature illustration}}
+\put(394.4211,247.5327){\color[rgb]{1,1,1}\rule{47.2910bp}{7.0937bp}}
+\put(414.6887,250.9106){\makebox(0,0){\color[rgb]{0.7,0,0}\fontsize{7bp}{8bp}\selectfont Attack onset}}
+\end{picture}}
+\endgroup
+\caption{Motor-current (left) and PCC-current (right) signal and feature illustrations. LF frames use 500 samples with stride 25; HF frames use 250 samples with stride 29. Zero denotes attack onset. The traces illustrate the electrical response and feature extraction around the onset; detector performance is evaluated separately on held-out recordings. Signal amplitude is in recorded acquisition units.}
 \label{fig:lfhf_motor_pcc_examples}
 \end{figure*}
 
@@ -217,7 +238,7 @@ Target adaptation budgets & 1/5/10/20\%: 2/9/18/36 complete episode groups, resp
 
 
 To represent both slow electromechanical behavior and faster attack-induced disturbances, a two-scale LF/HF feature pipeline was applied independently to each measured channel. For every sample, a 2{,}000-point outer window was first extracted from the raw 10~kHz recording. Within this outer window, two parallel sliding analyses were performed. The LF branch uses a 500-sample window with a stride of 25 samples, while the HF branch uses a 250-sample window with a stride of 29 samples. The LF and HF settings both produce 61 time steps, enabling concatenation into one temporal feature tensor. 
-Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates the motor-current and PCC-current waveforms together with representative LF/HF windows. Each trace is plotted relative to a display reference time. The overlaid frames show the two temporal scales used for feature extraction, while the lower panels show how selected features vary along the signal. These examples illustrate the extraction procedure; detection and severity performance are evaluated separately on held-out recordings.
+Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates the motor-current and PCC-current waveforms together with representative LF/HF windows. Time is referenced to the onset of the injected current-feedback bias. The overlaid frames show the two temporal scales used for feature extraction, while the lower panels show how selected features vary along the signal. These examples illustrate the extraction procedure; detection and severity performance are evaluated separately on held-out recordings.
 
 In total, 37 features were extracted per channel, including 18 LF spectral features, 11 HF spectral/envelope features, and 8 TD features. The LF branch targets slow electromechanical changes, fundamental-frequency behavior, harmonic distortion, sideband effects, and low-band energy redistribution. The HF branch captures higher-frequency redistribution and envelope-related changes that may appear during small current-feedback FDIAs. The TD features provide complementary sensitivity to amplitude variation, impulsiveness, waveform asymmetry, and short-term signal complexity.
 Their relative contributions are evaluated through fixed-family ablations; improved separability is assessed empirically rather than assumed for every feature family.
@@ -225,30 +246,66 @@ Their relative contributions are evaluated through fixed-family ablations; impro
 \subsection{Inception-Based Detection Model}
 \label{sec:inception_model}
 
-The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels of lengths 39, 19, and 9, residual shortcuts, global average pooling, and a dense output layer. Motor and PCC models used stream-specific hyperparameters selected by validation balanced accuracy. The Inception-based design is well suited to the proposed LF/HF representation because the extracted features retain temporal ordering across the 61-step sequence. This preserves temporal interactions among LF, HF, and TD features.
+The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels of lengths 39, 19, and 9, residual shortcuts, global average pooling, and a dense output layer. Motor-terminal and PCC measurements are represented by separate input tensors and processed by separately trained models. Hyperparameters are selected independently for each sensing configuration using validation balanced accuracy. The Inception-based design is well suited to the proposed LF/HF representation because the extracted features retain temporal ordering across the 61-step sequence. This preserves temporal interactions among LF, HF, and TD features.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure3_architecture.pdf}
-\caption{InceptionTime architecture for \texttt{fdia2} and \texttt{severity4}, with convolution lengths 39, 19, and 9. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
+\begingroup
+\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(515.5200,129.8992)
+
+\put(0,0){\includegraphics[width=515.52bp]{figs/inceptiontime_architecture_lfhf.png}}
+\put(154.5553,83.8346){\color[rgb]{0.933333,0.960784,0.988235}\rule{31.7166bp}{8.5584bp}}
+\put(170.4136,88.1138){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont k = 39}}
+\put(154.5553,58.4110){\color[rgb]{0.933333,0.960784,0.988235}\rule{31.7166bp}{8.5584bp}}
+\put(170.4136,62.6902){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont k = 19}}
+\put(154.5553,32.7357){\color[rgb]{0.933333,0.960784,0.988235}\rule{31.7166bp}{8.5584bp}}
+\put(170.4136,37.0149){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont k = 9}}
+
+\put(481.0000,37.0000){\color[rgb]{1,0.953,0.851}\rule{32.5000bp}{32.0000bp}}
+\put(497.2000,53.3000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont \shortstack{Class\\output}}}
+\end{picture}}
+\endgroup
+\caption{InceptionTime classifier with a task-specific output: two classes for \texttt{fdia2} or \texttt{motor2}, and four classes for \texttt{severity4}. The convolution lengths are 39, 19, and 9. Each task and sensing configuration uses a separately trained model. Each module has three temporal convolutions and a max-pooling projection branch, followed by concatenation, batch normalization (BN), and ReLU. A projected residual shortcut is added after each group of three modules; depth and other settings are selected separately for each task, stream, and repeat.}
 \label{fig:inceptiontime_architecture}
 \end{figure*}
 
 \subsection{Architecture of Online FDIA Detection and Attack-Severity Estimation}
 \label{sec:AnomalyDetection}
-The proposed pipeline supports online monitoring from trusted motor-terminal currents or PCC voltage/current measurements. Figure~\ref{fig:Online-algorithem} illustrates the overall architecture of the proposed monitoring pipeline. In the intended monitoring setting, fixed-length windows of electrical measurements are acquired from either the motor terminals or the PCC, passed through the LF/HF feature-extraction stage, and then evaluated by the selected learning model to produce anomaly or severity decisions. The measurement, feature-extraction, and inference stages are modular, allowing the same pipeline to operate with motor-side or PCC inputs and supporting feature pruning, reduced-input models, and cross-motor adaptation. The framework provides alarms, severity indicators, and logs for supervisory systems; automatic mitigation is outside the scope. The same architecture is used for binary detection and severity classification. Binary detection is the primary PCC deployment task; severity estimates provide secondary diagnostic information. The experimental results in later sections show that motor-terminal sensing provides cleaner discriminative signatures, whereas PCC sensing offers a less intrusive sensing option for the tested setup.
+Fig.~\ref{fig:Online-algorithem} shows the acquisition, feature-extraction, and inference stages of the proposed monitoring framework. Two independent sensing configurations are considered: six motor-terminal current channels, or the PCC voltage and current channels. The signals from these two configurations are not concatenated. For each configuration, a 2,000-sample measurement window is converted into a 61-step multivariate LF/HF/TD feature sequence, normalized using its training-set statistics, and applied to the corresponding trained model. Separate classification models provide binary FDIA decisions and severity classes; an auxiliary regression model estimates the injected bias. The monitoring interface reports alarms, severity indicators, and recorded events. Automatic mitigation is outside the experimental scope. Binary detection provides the primary PCC monitoring output, while severity classification supplies additional diagnostic information.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure4_pipeline.pdf}
-\caption{Monitoring pipeline for motor-side and PCC-side sensing. Motor-terminal currents or PCC voltage/current enter a 2,000-sample (0.2-s) raw window, followed by the 61-step feature representation and task-specific inference. Regression is an auxiliary injected-bias estimate. The interface provides alerts, logs, and visualization; automatic mitigation is not evaluated.}
+\begingroup
+\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(515.5200,186.7023)
+\put(0,23){\includegraphics[width=515.52bp]{figs/online_fdia_architecture.png}}
+\put(107.7356,143.6584){\color[rgb]{1,1,1}\rule{43.5473bp}{14.3480bp}}
+\put(129.5093,150.8324){\makebox(0,0){\color[rgb]{0.05,0.32,0.09}\fontsize{6bp}{7bp}\selectfont \bfseries \shortstack{Motor-terminal\\currents}}}
+\put(107.4839,81.7356){\color[rgb]{1,1,1}\rule{43.7991bp}{13.3411bp}}
+\put(129.3834,88.4061){\makebox(0,0){\color[rgb]{0.05,0.32,0.09}\fontsize{6bp}{7bp}\selectfont \bfseries \shortstack{PCC voltage\\and current}}}
+\put(169.9102,53.7948){\color[rgb]{1,1,1}\rule{50.8472bp}{16.1100bp}}
+\put(195.3337,61.8498){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{5.7bp}{6.7bp}\selectfont \shortstack{2,000-sample\\multichannel window}}}
+\put(233.8467,36.9296){\color[rgb]{1,1,1}\rule{61.6711bp}{10.5722bp}}
+\put(264.6823,42.2157){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{5.7bp}{6.7bp}\selectfont \shortstack{61-step multivariate\\feature sequence}}}
+\put(465.4280,58.3257){\color[rgb]{1,1,1}\rule{42.5405bp}{19.3823bp}}
+\put(486.6982,68.0169){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{5.7bp}{6.7bp}\selectfont \shortstack{Alerts, logs,\\visualization}}}
+\put(243.4120,151.2100){\color[rgb]{1,1,1}\rule{48.3300bp}{14.3480bp}}
+\put(267.5770,158.3839){\makebox(0,0){\color[rgb]{0.08,0.08,0.32}\fontsize{6bp}{7bp}\selectfont \bfseries \shortstack{LF/HF/TD Feature\\Extraction}}}
+\put(155.5000,102.0000){\color[rgb]{1,1,1}\rule{9.3000bp}{9.0000bp}}
+\put(160.1000,106.5000){\makebox(0,0){\color[rgb]{0.05,0.32,0.09}\fontsize{5.3bp}{6.3bp}\selectfont \bfseries OR}}
+\put(257.7600,15.5000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{7bp}{8bp}\selectfont Motor-terminal currents $\longrightarrow$ motor feature tensor $\longrightarrow$ motor model}}
+\put(257.7600,5.5000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{7bp}{8bp}\selectfont PCC voltage and current $\longrightarrow$ PCC feature tensor $\longrightarrow$ PCC model}}
+\end{picture}}
+\endgroup
+\caption{Independent monitoring pipelines for motor-terminal and PCC sensing. The OR junction denotes alternative inputs: the six motor-current channels and the two PCC channels are processed separately, with separate normalization and trained models. Each 2,000-sample (0.2-s) window produces a 61-step multivariate feature sequence for task-specific inference. Regression is an auxiliary injected-bias estimate. The interface provides alerts, logs, and visualization; automatic mitigation is not evaluated.}
 \label{fig:Online-algorithem}
 \end{figure*}
 
 \subsection{Training Details and Hyperparameters}
 \label{sec:training_details}
 
-A fixed sample of 100 candidate configurations was evaluated independently for each task (binary detection or four-class severity), sensing stream, and recording split, giving 1,200 main search fits. Candidate ranges were depth 3/4/6, filters 16/24/32/48, bottleneck width 8/16/32, dropout 0.20/0.35/0.50, learning rate $5\times10^{-4}$ or $10^{-3}$, weight decay $5\times10^{-5}$ or $10^{-4}$, and batch size 64 or 128. The sampled candidate set, rather than every Cartesian combination, was searched. Training used Adam, inverse-frequency weighted cross-entropy, a 60-epoch cap, and early stopping after 10 epochs without validation-balanced-accuracy improvement. A plateau scheduler halved the learning rate after three unimproved epochs, down to $10^{-6}$. Checkpoints and hyperparameters were selected only by validation balanced accuracy; ties followed the fixed candidate order. Table~\ref{tab:search_top5_combined} illustrates the ranking for one specified split.
+A fixed sample of 100 candidate configurations was evaluated independently for each task (binary detection or four-class severity), sensing stream, and recording split, giving 1,200 training runs for hyperparameter selection. Candidate ranges were depth 3/4/6, filters 16/24/32/48, bottleneck width 8/16/32, dropout 0.20/0.35/0.50, learning rate $5\times10^{-4}$ or $10^{-3}$, weight decay $5\times10^{-5}$ or $10^{-4}$, and batch size 64 or 128. The search evaluates the sampled configurations rather than the complete Cartesian product. Training used Adam, inverse-frequency weighted cross-entropy, a 60-epoch cap, and early stopping after 10 epochs without improvement in validation balanced accuracy. A plateau scheduler halved the learning rate after three unimproved epochs, down to $10^{-6}$. Checkpoints and hyperparameters were selected only by validation balanced accuracy; ties followed the fixed candidate order. Table~\ref{tab:search_top5_combined} illustrates the ranking for one specified split.
 
 Reported test classification metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged; balanced accuracy is the mean class recall. Because the same recordings can recur across repeats, these standard deviations describe split/initialization sensitivity rather than uncertainty from independent physical replications. Test results were not used to select configurations or feature subsets. One-factor sensitivity experiments changed depth to 3/9, dropout to 0.1/0.4, or learning rate to $3\times10^{-4}/3\times10^{-3}$ around each selected configuration; all other settings were retained (Fig.~\ref{fig:hyperparameter_sensitivity}).
 
@@ -281,7 +338,7 @@ Rank & D & F & BN & Dr & LR & WD & BS & Val. BA \\\hline
 \subsection{Domain Adaptation Strategy: Source-Only vs Few-Shot Fine-Tuning}
 \label{sec:domain_adaptation}
 
-Source-only transfer was evaluated in both directions, ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, six source recordings were used for training and three for validation. The same 100-candidate search was performed using source validation only, independently of mixed-domain model selection. Six target recordings formed the adaptation pool and the remaining three formed the target test set. Thus, no source or target recording crosses its fitting/evaluation boundary.
+Source-only transfer was evaluated in both directions, ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, six source recordings were used for training and three for validation. The same 100-candidate search was performed using source validation only, independently of mixed-domain model selection. Six target recordings formed the adaptation pool and the remaining three formed the target test set. Source validation recordings and target test recordings remain excluded from model fitting and adaptation, respectively.
 
 Nominal adaptation budgets of 1\%, 5\%, 10\%, and 20\% select 2, 9, 18, or 36 complete episode groups from the 180-group target pool; the first realized group fraction is 1.11\%. For sampling only, each post-schedule normal tail is attached to its parent recording's final episode group while retaining its normal label and actual timestamp. Consequently, window fractions can differ from nominal group fractions. Fine-tuning updates the source model for 20 fixed epochs at 0.2 times its selected learning rate, with source normalization frozen. No target validation labels or target-test labels are used. All conditions use three seeds.
 
@@ -290,16 +347,16 @@ Nominal adaptation budgets of 1\%, 5\%, 10\%, and 20\% select 2, 9, 18, or 36 co
 \subsection{In-Domain Baselines: Motor vs PCC}
 \label{sec:in_domain}
 
-Table~\ref{tab:all_tasks_in_domain} reports mixed-domain performance with both ACIM and PMSM represented in every partition but with entire recordings held out. Motor-side mean balanced accuracy exceeds PCC performance for detection (88.26\% versus 80.29\%) and severity (90.81\% versus 55.62\%). Motor detection is sensitive to the held-out operating combinations: accuracies across the three splits are 88.83\%, 97.77\%, and 75.64\%. This variability limits a claim of uniformly reliable performance across operating conditions.
+Table~\ref{tab:all_tasks_in_domain} summarizes performance when both motor types are represented in the training, validation, and test sets, with no shared recordings between these sets. Motor-terminal sensing achieves mean balanced accuracies of 88.26\% for FDIA detection and 90.81\% for severity classification; the corresponding PCC values are 80.29\% and 55.62\%. Motor-terminal measurements provide stronger separation of the injected-bias classes, whereas PCC sensing avoids dedicated instrumentation at each motor. The motor-terminal detection accuracies are 88.83\%, 97.77\%, and 75.64\% across the three test partitions, indicating substantial sensitivity to the recorded operating conditions.
 
-For the separate binary detectors, normal false-alarm rates are $21.15\pm21.77\%$ for motor sensing and $14.82\pm5.06\%$ for PCC sensing; missed-attack rates are $24.61\pm7.17\%$ for PCC and $2.32\pm1.79\%$ for motor sensing. Therefore, mean accuracy alone does not establish a deployment-ready alarm rate.
+For the separate binary detectors, normal false-alarm rates are $21.15\pm21.77\%$ for motor sensing and $14.82\pm5.06\%$ for PCC sensing; missed-attack rates are $24.61\pm7.17\%$ for PCC and $2.32\pm1.79\%$ for motor sensing. The false-alarm and missed-attack rates therefore remain relevant constraints on practical monitoring performance.
 
 For the four-class PCC model, exact low/medium/high recall is 38.33\%/50.58\%/70.79\%, whereas detecting those windows as any attack yields 61.39\%/85.08\%/88.09\%. The complementary severity-conditioned attack recall is defined as
 \begin{equation}
 R_{\mathrm{attack}|k}=\frac{\sum_{j=1}^{3}C_{kj}}{\sum_{j=0}^{3}C_{kj}},\qquad k\in\{1,2,3\},
 \label{eq:severity_conditioned_detection}
 \end{equation}
-where $C$ is the confusion matrix. Exact-severity recall is $C_{kk}/\sum_j C_{kj}$. These measures answer different questions: an attack can be detected while its magnitude bin is incorrect. The same PCC severity model has a 37.23\% mean normal false-alarm rate and 71.40\% mean accuracy after collapsing its predictions to normal/attack. It is distinct from the separately trained binary detector. Fig.~\ref{fig:severity_detection_decisions} and Table~\ref{tab:severity_detection_recall} report these complementary quantities without replacing four-class performance.
+where $C$ is the confusion matrix. Exact-severity recall is $C_{kk}/\sum_j C_{kj}$. The first metric measures detection irrespective of the predicted attack level, whereas exact-severity recall requires the correct bias class. The same PCC severity model has a 37.23\% mean normal false-alarm rate and 71.40\% mean accuracy after collapsing its predictions to normal/attack. It is distinct from the separately trained binary detector. Fig.~\ref{fig:severity_detection_decisions} and Table~\ref{tab:severity_detection_recall} report these complementary quantities without replacing four-class performance.
 
 \begin{table}[t]
 \centering
@@ -314,21 +371,21 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \hline\multicolumn{6}{c}{\textit{PCC stream}} \\\hline
 \texttt{fdia2} & \shortstack{80.78\\($\pm$2.95)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{81.04\\($\pm$3.14)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{80.42\\($\pm$2.96)} \\
 \texttt{severity4} & \shortstack{61.00\\($\pm$1.32)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.93\\($\pm$2.36)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.96\\($\pm$2.15)} \\
-Motor type & \shortstack{94.40\\($\pm$9.70)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{95.35\\($\pm$8.06)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{94.27\\($\pm$9.92)} \\
+\texttt{motor2} & \shortstack{94.40\\($\pm$9.70)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{95.35\\($\pm$8.06)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{94.27\\($\pm$9.92)} \\
 \hline\multicolumn{6}{c}{\textit{MOTOR stream}} \\\hline
-\texttt{fdia2} & \shortstack{\textbf{87.41}\\($\pm$11.13)} & \shortstack{\textbf{88.26}\\($\pm$9.99)} & \shortstack{\textbf{89.90}\\($\pm$7.84)} & \shortstack{\textbf{88.26}\\($\pm$9.99)} & \shortstack{\textbf{87.23}\\($\pm$11.39)} \\
-\texttt{severity4} & \shortstack{\textbf{87.64}\\($\pm$8.87)} & \shortstack{\textbf{90.81}\\($\pm$4.29)} & \shortstack{\textbf{86.09}\\($\pm$9.44)} & \shortstack{\textbf{90.81}\\($\pm$4.29)} & \shortstack{\textbf{86.06}\\($\pm$8.95)} \\
-Motor type & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.10)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} & \shortstack{\textbf{99.94}\\($\pm$0.11)} \\
+\texttt{fdia2} & \shortstack{87.41\\($\pm$11.13)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{89.90\\($\pm$7.84)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} \\
+\texttt{severity4} & \shortstack{87.64\\($\pm$8.87)} & \shortstack{90.81\\($\pm$4.29)} & \shortstack{86.09\\($\pm$9.44)} & \shortstack{90.81\\($\pm$4.29)} & \shortstack{86.06\\($\pm$8.95)} \\
+\texttt{motor2} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.10)} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.11)} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Cells show mean above ($\pm$ sample SD), over three holdouts; this is not a range or confidence interval. BA: balanced accuracy. Precision, recall, and F1 are macro-averaged. Bold compares streams for the same task and metric, not different tasks.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Cells show mean above ($\pm$ sample SD), over three holdouts; this is not a range or confidence interval. BA: balanced accuracy. Precision, recall, and F1 are macro-averaged.\end{minipage}
 \end{table}
 
 \subsection{Comparison with Deep and Classical ML Baselines}
 \label{sec:model_comparison}
 
-ResNet, LSTM-FCN, Random Forest, XGBoost, and MultiRocket~\cite{tan2022multirocket} were evaluated on the same splits and corrected targets. The LSTM-FCN baseline denotes the implementation actually used, without claiming an additional squeeze-and-excitation MLSTM-FCN architecture. ResNet used 40 epochs and batch size 64; LSTM-FCN used 40 epochs, batch size 128, eight LSTM units, dropout 0.5, and convolutional widths 64/128/64. Trees used the flattened $61\times F$ tensors: Random Forest compared 300/600 trees and unrestricted/20 depth with balanced-subsample weights; XGBoost compared depth 4 with learning rate 0.05 and depth 6 with learning rate 0.03, using 1,500 estimators and 0.8 row/column subsampling. MultiRocket used approximately 50,000 transformed features and ridge penalties 0.1/1/10/100. Available candidate settings were selected using validation balanced accuracy. Search budgets differ between model families, so this is a comparison under the stated settings rather than an equal-budget optimization study.
+ResNet, LSTM-FCN, Random Forest, XGBoost, and MultiRocket~\cite{tan2022multirocket} were evaluated on the same splits and corrected targets. The LSTM-FCN implementation combines convolutional and recurrent branches without squeeze-and-excitation blocks. ResNet used 40 epochs and batch size 64; LSTM-FCN used 40 epochs, batch size 128, eight LSTM units, dropout 0.5, and convolutional widths 64/128/64. Trees used the flattened $61\times F$ tensors: Random Forest compared 300/600 trees and unrestricted/20 depth with balanced-subsample weights; XGBoost compared depth 4 with learning rate 0.05 and depth 6 with learning rate 0.03, using 1,500 estimators and 0.8 row/column subsampling. MultiRocket used approximately 50,000 transformed features and ridge penalties 0.1/1/10/100. Available candidate settings were selected using validation balanced accuracy. Search budgets differ between model families, so this is a comparison under the stated settings rather than an equal-budget optimization study.
 
-As shown in Table~\ref{tab:model_comparison_hard_tasks}, InceptionTime has the highest mean PCC balanced accuracy for both tasks, and the highest mean accuracy and macro F1 for binary detection. For severity, XGBoost has higher raw accuracy (70.45\% versus 61.00\%), while LSTM-FCN has slightly higher macro F1 (53.23\% versus 52.96\%). InceptionTime's severity advantage is confined to mean balanced accuracy (55.62\% versus at most 52.38\% among the evaluated alternatives). Unequal class counts make these distinctions material; no statistical-significance claim is made from three overlapping repeated holdouts.
+As shown in Table~\ref{tab:model_comparison_hard_tasks}, InceptionTime has the highest mean PCC balanced accuracy for both tasks, and the highest mean accuracy and macro F1 for binary detection. For severity, XGBoost has higher raw accuracy (70.45\% versus 61.00\%), while LSTM-FCN has slightly higher macro F1 (53.23\% versus 52.96\%). InceptionTime's severity advantage is confined to mean balanced accuracy (55.62\% versus at most 52.38\% among the evaluated alternatives). These differences reflect the unequal class populations. The reported means describe performance over three repeated partitions; statistical significance is not established.
 
 \begin{table}[t]
 \centering
@@ -341,27 +398,27 @@ As shown in Table~\ref{tab:model_comparison_hard_tasks}, InceptionTime has the h
 \hline
 Method & Accuracy & BA & Macro F1 \\\hline
 \hline\multicolumn{4}{c}{\textit{\texttt{fdia2}}} \\\hline
-InceptionTime & \shortstack{\textbf{80.78}\\($\pm$2.95)} & \shortstack{\textbf{80.29}\\($\pm$3.03)} & \shortstack{\textbf{80.42}\\($\pm$2.96)} \\
-ResNet & \shortstack{73.91\\($\pm$5.78)} & \shortstack{73.99\\($\pm$5.33)} & \shortstack{73.76\\($\pm$5.66)} \\
-LSTM-FCN & \shortstack{72.57\\($\pm$4.89)} & \shortstack{72.52\\($\pm$4.31)} & \shortstack{72.35\\($\pm$4.66)} \\
-Rand. Forest & \shortstack{70.43\\($\pm$1.00)} & \shortstack{68.69\\($\pm$0.74)} & \shortstack{68.45\\($\pm$0.85)} \\
-XGBoost & \shortstack{75.37\\($\pm$0.81)} & \shortstack{73.84\\($\pm$1.11)} & \shortstack{73.97\\($\pm$1.17)} \\
-MultiRocket & \shortstack{70.10\\($\pm$2.13)} & \shortstack{69.55\\($\pm$2.82)} & \shortstack{69.35\\($\pm$2.39)} \\
+InceptionTime & \mbox{\textbf{80.78}\,$\pm$\,2.95} & \mbox{\textbf{80.29}\,$\pm$\,3.03} & \mbox{\textbf{80.42}\,$\pm$\,2.96} \\
+ResNet & \mbox{73.91\,$\pm$\,5.78} & \mbox{73.99\,$\pm$\,5.33} & \mbox{73.76\,$\pm$\,5.66} \\
+LSTM-FCN & \mbox{72.57\,$\pm$\,4.89} & \mbox{72.52\,$\pm$\,4.31} & \mbox{72.35\,$\pm$\,4.66} \\
+Rand. Forest & \mbox{70.43\,$\pm$\,1.00} & \mbox{68.69\,$\pm$\,0.74} & \mbox{68.45\,$\pm$\,0.85} \\
+XGBoost & \mbox{75.37\,$\pm$\,0.81} & \mbox{73.84\,$\pm$\,1.11} & \mbox{73.97\,$\pm$\,1.17} \\
+MultiRocket & \mbox{70.10\,$\pm$\,2.13} & \mbox{69.55\,$\pm$\,2.82} & \mbox{69.35\,$\pm$\,2.39} \\
 \hline\multicolumn{4}{c}{\textit{\texttt{severity4}}} \\\hline
-InceptionTime & \shortstack{61.00\\($\pm$1.32)} & \shortstack{\textbf{55.62}\\($\pm$2.94)} & \shortstack{52.96\\($\pm$2.15)} \\
-ResNet & \shortstack{65.18\\($\pm$5.35)} & \shortstack{50.41\\($\pm$5.44)} & \shortstack{51.15\\($\pm$5.71)} \\
-LSTM-FCN & \shortstack{66.60\\($\pm$1.72)} & \shortstack{52.38\\($\pm$2.12)} & \shortstack{\textbf{53.23}\\($\pm$1.94)} \\
-Rand. Forest & \shortstack{67.36\\($\pm$0.17)} & \shortstack{43.49\\($\pm$2.18)} & \shortstack{45.07\\($\pm$2.59)} \\
-XGBoost & \shortstack{\textbf{70.45}\\($\pm$0.74)} & \shortstack{47.17\\($\pm$2.02)} & \shortstack{49.67\\($\pm$2.17)} \\
-MultiRocket & \shortstack{58.41\\($\pm$3.34)} & \shortstack{44.92\\($\pm$3.46)} & \shortstack{44.28\\($\pm$2.52)} \\
+InceptionTime & \mbox{61.00\,$\pm$\,1.32} & \mbox{\textbf{55.62}\,$\pm$\,2.94} & \mbox{52.96\,$\pm$\,2.15} \\
+ResNet & \mbox{65.18\,$\pm$\,5.35} & \mbox{50.41\,$\pm$\,5.44} & \mbox{51.15\,$\pm$\,5.71} \\
+LSTM-FCN & \mbox{66.60\,$\pm$\,1.72} & \mbox{52.38\,$\pm$\,2.12} & \mbox{\textbf{53.23}\,$\pm$\,1.94} \\
+Rand. Forest & \mbox{67.36\,$\pm$\,0.17} & \mbox{43.49\,$\pm$\,2.18} & \mbox{45.07\,$\pm$\,2.59} \\
+XGBoost & \mbox{\textbf{70.45}\,$\pm$\,0.74} & \mbox{47.17\,$\pm$\,2.02} & \mbox{49.67\,$\pm$\,2.17} \\
+MultiRocket & \mbox{58.41\,$\pm$\,3.34} & \mbox{44.92\,$\pm$\,3.46} & \mbox{44.28\,$\pm$\,2.52} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest mean for each metric within a task; it does not indicate statistical significance.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. Bold: highest mean for each metric within a task; it does not indicate statistical significance.\end{minipage}
 \end{table}
 
 \subsection{Cross-Domain Transfer Without Adaptation}
 \label{sec:cross_domain}
 
-Source-only binary transfer is unreliable on held-out target recordings (Table~\ref{tab:cross_domain_source_only}). Balanced accuracy is 50.60\% and 51.58\% for ACIM-to-PMSM motor and PCC sensing, respectively. In the reverse direction it is 36.08\% for motor and 56.00\% for PCC sensing. The below-chance motor result demonstrates systematic domain mismatch rather than useful transferable discrimination. Accuracy must be interpreted jointly with balanced accuracy because predicting the more common class can exceed 50\% raw accuracy without effective attack detection. Target-domain fine-tuning tests whether labeled target episodes alleviate this mismatch.
+Table~\ref{tab:cross_domain_source_only} reports binary detection when a model trained on one motor type is applied directly to the other. For ACIM-to-PMSM transfer, balanced accuracy is 50.60\% with motor-terminal sensing and 51.58\% with PCC sensing. The reverse direction yields 36.08\% and 56.00\%, respectively. These results indicate limited transferability of the learned decision boundaries. The below-chance motor-terminal result in the PMSM-to-ACIM direction indicates systematic classification errors. Balanced accuracy is reported alongside accuracy because the unequal normal and attack populations can otherwise obscure this behavior. The following subsection evaluates adaptation using labeled target episodes.
 
 \begin{table}[t]
 \centering
@@ -374,13 +431,13 @@ Source-only binary transfer is unreliable on held-out target recordings (Table~\
 \hline
 Direction & Accuracy & BA & Macro F1 \\\hline
 \hline\multicolumn{4}{c}{\textit{MOTOR stream}} \\\hline
-ACIM $\to$ PMSM & \shortstack{55.21\\($\pm$1.14)} & \shortstack{50.60\\($\pm$0.73)} & \shortstack{37.71\\($\pm$2.37)} \\
-PMSM $\to$ ACIM & \shortstack{36.22\\($\pm$4.23)} & \shortstack{36.08\\($\pm$4.11)} & \shortstack{33.89\\($\pm$4.62)} \\
+ACIM $\to$ PMSM & \mbox{55.21\,$\pm$\,1.14} & \mbox{50.60\,$\pm$\,0.73} & \mbox{37.71\,$\pm$\,2.37} \\
+PMSM $\to$ ACIM & \mbox{36.22\,$\pm$\,4.23} & \mbox{36.08\,$\pm$\,4.11} & \mbox{33.89\,$\pm$\,4.62} \\
 \hline\multicolumn{4}{c}{\textit{PCC stream}} \\\hline
-ACIM $\to$ PMSM & \shortstack{55.88\\($\pm$0.64)} & \shortstack{51.58\\($\pm$1.52)} & \shortstack{41.13\\($\pm$5.84)} \\
-PMSM $\to$ ACIM & \shortstack{51.94\\($\pm$6.54)} & \shortstack{56.00\\($\pm$5.69)} & \shortstack{43.62\\($\pm$11.38)} \\
+ACIM $\to$ PMSM & \mbox{55.88\,$\pm$\,0.64} & \mbox{51.58\,$\pm$\,1.52} & \mbox{41.13\,$\pm$\,5.84} \\
+PMSM $\to$ ACIM & \mbox{51.94\,$\pm$\,6.54} & \mbox{56.00\,$\pm$\,5.69} & \mbox{43.62\,$\pm$\,11.38} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Directions are different target-domain tests, so no best direction is highlighted.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. Directions are different target-domain tests, so no best direction is highlighted.\end{minipage}
 \end{table}
 
 \subsection{Domain Adaptation Results: 1/5/10/20\%}
@@ -388,44 +445,207 @@ PMSM $\to$ ACIM & \shortstack{51.94\\($\pm$6.54)} & \shortstack{56.00\\($\pm$5.6
 
 Table~\ref{tab:domain_adaptation_anomaly2} reports \texttt{fdia2} balanced accuracy before and after target-domain fine-tuning. At 20\%, motor fine-tuning reaches 75.99\% for ACIM-to-PMSM and 92.63\% for PMSM-to-ACIM transfer. PCC fine-tuning reaches 56.30\% and 91.38\%, respectively, preserving a pronounced direction asymmetry.
 
-The benefit is direction dependent. At the 1\% budget, motor ACIM-to-PMSM performance remains near the source-only result, whereas PMSM-to-ACIM performance improves substantially. Increasing the target budget generally helps, but the PCC ACIM-to-PMSM sequence is not monotonic. These comparisons measure improvement over the source-only model; they do not establish superiority over training directly on the same target labels.
+The improvement depends on the transfer direction. At the 1\% budget, motor ACIM-to-PMSM performance remains near the source-only result, whereas PMSM-to-ACIM performance improves substantially. Increasing the target budget generally helps, but the PCC ACIM-to-PMSM sequence is not monotonic. The source-only model provides the reference for quantifying the improvement obtained by updating its parameters with labeled target episodes.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \footnotesize
 \caption{Few-shot \texttt{fdia2} adaptation by labeled target-domain fine-tuning: balanced accuracy (\%).}
 \label{tab:domain_adaptation_anomaly2}
 \renewcommand{\arraystretch}{1.15}
-\setlength{\tabcolsep}{1.7pt}
+\setlength{\tabcolsep}{6pt}
 \begin{tabular}{@{}lccccc@{}}
 \hline
-Direction & \shortstack{Source\\only} & 1\% & 5\% & 10\% & 20\% \\\hline
+Direction & Source only & 1\% & 5\% & 10\% & 20\% \\\hline
 \hline\multicolumn{6}{c}{\textit{MOTOR stream}} \\\hline
-\shortstack{ACIM $\to$\\PMSM} & \shortstack{50.60\\($\pm$0.73)} & \shortstack{50.43\\($\pm$1.74)} & \shortstack{53.83\\($\pm$1.14)} & \shortstack{57.51\\($\pm$7.24)} & \shortstack{\textbf{75.99}\\($\pm$1.73)} \\
-\shortstack{PMSM $\to$\\ACIM} & \shortstack{36.08\\($\pm$4.11)} & \shortstack{64.35\\($\pm$9.23)} & \shortstack{73.93\\($\pm$8.78)} & \shortstack{88.04\\($\pm$5.36)} & \shortstack{\textbf{92.63}\\($\pm$3.72)} \\
+ACIM $\to$ PMSM & \mbox{50.60\,$\pm$\,0.73} & \mbox{50.43\,$\pm$\,1.74} & \mbox{53.83\,$\pm$\,1.14} & \mbox{57.51\,$\pm$\,7.24} & \mbox{\textbf{75.99}\,$\pm$\,1.73} \\
+PMSM $\to$ ACIM & \mbox{36.08\,$\pm$\,4.11} & \mbox{64.35\,$\pm$\,9.23} & \mbox{73.93\,$\pm$\,8.78} & \mbox{88.04\,$\pm$\,5.36} & \mbox{\textbf{92.63}\,$\pm$\,3.72} \\
 \hline\multicolumn{6}{c}{\textit{PCC stream}} \\\hline
-\shortstack{ACIM $\to$\\PMSM} & \shortstack{51.58\\($\pm$1.52)} & \shortstack{54.01\\($\pm$0.12)} & \shortstack{54.62\\($\pm$1.76)} & \shortstack{54.04\\($\pm$1.35)} & \shortstack{\textbf{56.30}\\($\pm$3.23)} \\
-\shortstack{PMSM $\to$\\ACIM} & \shortstack{56.00\\($\pm$5.69)} & \shortstack{77.43\\($\pm$10.43)} & \shortstack{84.22\\($\pm$4.62)} & \shortstack{86.72\\($\pm$4.37)} & \shortstack{\textbf{91.38}\\($\pm$2.06)} \\
+ACIM $\to$ PMSM & \mbox{51.58\,$\pm$\,1.52} & \mbox{54.01\,$\pm$\,0.12} & \mbox{54.62\,$\pm$\,1.76} & \mbox{54.04\,$\pm$\,1.35} & \mbox{\textbf{56.30}\,$\pm$\,3.23} \\
+PMSM $\to$ ACIM & \mbox{56.00\,$\pm$\,5.69} & \mbox{77.43\,$\pm$\,10.43} & \mbox{84.22\,$\pm$\,4.62} & \mbox{86.72\,$\pm$\,4.37} & \mbox{\textbf{91.38}\,$\pm$\,2.06} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest observed mean within each direction and stream; no test-based configuration selection. Budgets refer to the target episode-group pool.\end{minipage}
-\end{table}
+\par\smallskip\begin{minipage}{\textwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. Bold: highest observed mean within each direction and stream; no test-based configuration selection. Budgets refer to the target episode-group pool.\end{minipage}
+\end{table*}
 
 \subsection{Error Analysis: Confusion Matrices and FP/FN Behavior}
 \label{sec:error_analysis}
 
-Fig.~\ref{fig:main_confusion_matrices} shows the full error distributions. Binary motor sensing combines high attack recall with a substantial and variable normal false-alarm rate; PCC sensing misses more attacks. For the PCC severity model, mistakes include both normal/attack confusion and confusion among nonzero bias bins. Therefore, the errors should not be characterized solely as confusion between adjacent levels. Fig.~\ref{fig:severity_detection_decisions} presents the complementary PCC decisions here. A low-bias attack predicted as medium or high is detected but its exact severity is incorrect. Normal false alarms must be considered alongside any-attack recall. Mean and SD values are listed in Appendix~\ref{app:severity_detection}.
+Fig.~\ref{fig:main_confusion_matrices} shows the classwise errors for FDIA detection and severity classification. The motor-terminal detector has high attack recall, although its false-alarm rate varies substantially across recording partitions. The PCC detector has a higher missed-attack rate. For PCC severity classification, errors include both normal/attack misclassification and confusion among the three nonzero bias classes. Fig.~\ref{fig:severity_detection_decisions} separates these effects by grouping all predicted attack classes. An attack assigned to an incorrect nonzero class contributes to attack detection but not to exact-severity recall. The corresponding recall and false-alarm statistics are reported in Appendix~\ref{app:severity_detection}.
 
-Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} shows a 200-s overview and a 22-s transition detail from a held-out ACIM recording. The recording was selected by a fixed alphabetical rule, not for visual agreement with the schedule. The trace exposes both successful detections and false alarms. The complete recording, including its normal tail, and a corresponding held-out PMSM trace are supplied with the revision materials.
+Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} shows a 200-s overview and a 22-s transition detail from a held-out ACIM recording. The first test recording in alphabetical order was used to provide a reproducible example. The predicted scores show both detected attacks and false alarms relative to the recorded injection schedule. The complete recording, including its normal tail, and a corresponding held-out PMSM trace are supplied with the revision materials.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure5_confusion_matrices.pdf}
+% Cell values: unchanged pooled confusion counts, row-normalized (%).
+\begingroup
+\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(252.0000,272.0000)
+\put(23.0000,205.0000){\color[rgb]{0.096348,0.400815,0.676740}\rule{52.0000bp}{52.0000bp}}
+\put(49.0000,231.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 79.1\%}}
+\put(75.0000,205.0000){\color[rgb]{0.808212,0.879985,0.947835}\rule{52.0000bp}{52.0000bp}}
+\put(101.0000,231.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 20.9\%}}
+\put(23.0000,153.0000){\color[rgb]{0.953249,0.974471,0.995079}\rule{52.0000bp}{52.0000bp}}
+\put(49.0000,179.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.3\%}}
+\put(75.0000,153.0000){\color[rgb]{0.031373,0.208535,0.449750}\rule{52.0000bp}{52.0000bp}}
+\put(101.0000,179.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 97.7\%}}
+\put(19.0000,231.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(19.0000,179.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(49.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(101.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(75.0000,266.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (a) Motor: fdia2}}
+\put(23,153){\framebox(104.0,104.0){}}
+\put(146.0000,205.0000){\color[rgb]{0.047136,0.337824,0.627528}\rule{52.0000bp}{52.0000bp}}
+\put(172.0000,231.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 85.3\%}}
+\put(198.0000,205.0000){\color[rgb]{0.855456,0.911480,0.963583}\rule{52.0000bp}{52.0000bp}}
+\put(224.0000,231.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 14.7\%}}
+\put(146.0000,153.0000){\color[rgb]{0.778685,0.860300,0.937993}\rule{52.0000bp}{52.0000bp}}
+\put(172.0000,179.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 24.6\%}}
+\put(198.0000,153.0000){\color[rgb]{0.127105,0.440185,0.707497}\rule{52.0000bp}{52.0000bp}}
+\put(224.0000,179.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 75.4\%}}
+\put(142.0000,231.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(142.0000,179.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(172.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(224.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(198.0000,266.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (b) PCC: fdia2}}
+\put(146,153){\framebox(104.0,104.0){}}
+\put(23.0000,101.0000){\color[rgb]{0.080969,0.381130,0.661361}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 81.2\%}}
+\put(49.0000,101.0000){\color[rgb]{0.828881,0.893764,0.954725}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 18.3\%}}
+\put(75.0000,101.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.2\%}}
+\put(101.0000,101.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(23.0000,75.0000){\color[rgb]{0.934794,0.962661,0.989173}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 4.4\%}}
+\put(49.0000,75.0000){\color[rgb]{0.031373,0.293795,0.576348}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,88.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 89.6\%}}
+\put(75.0000,75.0000){\color[rgb]{0.922491,0.954787,0.985236}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 6.0\%}}
+\put(101.0000,75.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.0\%}}
+\put(23.0000,49.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(49.0000,49.0000){\color[rgb]{0.953249,0.974471,0.995079}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.0\%}}
+\put(75.0000,49.0000){\color[rgb]{0.031373,0.249135,0.510035}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,62.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 94.0\%}}
+\put(101.0000,49.0000){\color[rgb]{0.940946,0.966597,0.991142}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 3.7\%}}
+\put(23.0000,23.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.4\%}}
+\put(49.0000,23.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(75.0000,23.0000){\color[rgb]{0.965552,0.982345,0.999016}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.6\%}}
+\put(101.0000,23.0000){\color[rgb]{0.031373,0.200415,0.437693}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,36.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 98.8\%}}
+\put(19.0000,114.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(19.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(19.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(19.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(36.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(62.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(88.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(114.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(75.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (c) Motor: severity4}}
+\put(23,23){\framebox(104.0,104.0){}}
+\put(146.0000,101.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
+\put(172.0000,101.0000){\color[rgb]{0.811165,0.881953,0.948820}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 20.4\%}}
+\put(198.0000,101.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 7.9\%}}
+\put(224.0000,101.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.0\%}}
+\put(146.0000,75.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.6\%}}
+\put(172.0000,75.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.3\%}}
+\put(198.0000,75.0000){\color[rgb]{0.867266,0.919354,0.967520}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 13.2\%}}
+\put(224.0000,75.0000){\color[rgb]{0.891734,0.935102,0.975394}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.8\%}}
+\put(146.0000,49.0000){\color[rgb]{0.852503,0.909512,0.962599}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 14.9\%}}
+\put(172.0000,49.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 12.0\%}}
+\put(198.0000,49.0000){\color[rgb]{0.412042,0.677186,0.836263}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 50.6\%}}
+\put(224.0000,49.0000){\color[rgb]{0.796401,0.872111,0.943899}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 22.5\%}}
+\put(146.0000,23.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 11.9\%}}
+\put(172.0000,23.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 8.1\%}}
+\put(198.0000,23.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.2\%}}
+\put(224.0000,23.0000){\color[rgb]{0.171027,0.484752,0.731242}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,36.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 70.8\%}}
+\put(142.0000,114.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(142.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(142.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(142.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(159.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(185.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(211.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(237.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(198.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (d) PCC: severity4}}
+\put(146,23){\framebox(104.0,104.0){}}
+\put(4.0000,140.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Actual class}}}
+\put(136.0000,1.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Predicted class}}
+\end{picture}}
+\endgroup
 \caption{Confusion matrices for \texttt{fdia2} and \texttt{severity4}. Rows are actual and columns predicted classes. Percentages normalize pooled prediction counts within each row across three holdouts; repeated appearances of a recording are not independent replications. N/L/M/H denote normal/low/medium/high bias.}
 \label{fig:main_confusion_matrices}
 \end{figure}
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/pcc_severity_and_detection_confusions.pdf}
+\begingroup
+\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(252.0000,142.0000)
+\put(23.0000,101.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{48.0000bp}{26.0000bp}}
+\put(47.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
+\put(71.0000,101.0000){\color[rgb]{0.622684,0.793464,0.883429}\rule{48.0000bp}{26.0000bp}}
+\put(95.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 37.3\%}}
+\put(23.0000,75.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{48.0000bp}{26.0000bp}}
+\put(47.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.6\%}}
+\put(71.0000,75.0000){\color[rgb]{0.270804,0.580730,0.781146}\rule{48.0000bp}{26.0000bp}}
+\put(95.0000,88.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 61.4\%}}
+\put(23.0000,49.0000){\color[rgb]{0.852503,0.909512,0.962599}\rule{48.0000bp}{26.0000bp}}
+\put(47.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 14.9\%}}
+\put(71.0000,49.0000){\color[rgb]{0.050211,0.341761,0.630604}\rule{48.0000bp}{26.0000bp}}
+\put(95.0000,62.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 85.1\%}}
+\put(23.0000,23.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{48.0000bp}{26.0000bp}}
+\put(47.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 11.9\%}}
+\put(71.0000,23.0000){\color[rgb]{0.031373,0.310035,0.600461}\rule{48.0000bp}{26.0000bp}}
+\put(95.0000,36.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 88.1\%}}
+\put(19.0000,114.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(19.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(19.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(19.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(47.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(95.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(71.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (a) By true class}}
+\put(23,23){\framebox(96,104){}}
+\put(148.0000,75.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{48.0000bp}{26.0000bp}}
+\put(172.0000,88.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
+\put(196.0000,75.0000){\color[rgb]{0.622684,0.793464,0.883429}\rule{48.0000bp}{26.0000bp}}
+\put(220.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 37.3\%}}
+\put(148.0000,49.0000){\color[rgb]{0.828881,0.893764,0.954725}\rule{48.0000bp}{26.0000bp}}
+\put(172.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 18.1\%}}
+\put(196.0000,49.0000){\color[rgb]{0.074817,0.373256,0.655210}\rule{48.0000bp}{26.0000bp}}
+\put(220.0000,62.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 82.0\%}}
+\put(144.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(144.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(172.0000,41.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(220.0000,41.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
+\put(196.0000,110.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (b) Collapsed}}
+\put(148,49){\framebox(96,52){}}
+\put(4.0000,76.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Actual class}}}
+\put(134.0000,1.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Predicted N (normal) / A (any attack)}}
+\end{picture}}
+\endgroup
 \caption{PCC \texttt{severity4} outputs interpreted as (a) normal/any-attack decisions by actual class and (b) a collapsed binary decision. Row percentages pool three holdouts. These decisions come from the severity model, not the separately trained \texttt{fdia2} detector.}
 \label{fig:severity_detection_decisions}
 \end{figure}
@@ -437,12 +657,12 @@ Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} shows a 200-s overview and 
 \end{figure*}
 \section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
 \label{sec:realtime}
-Practical PCC monitoring requires low latency and stable online throughput. This section reports per-window latency, throughput, pruning, and reduced-feature effects. In particular, the analysis focuses on end-to-end processing latency, online throughput, feature-pruning effects, and practical considerations for deployment at the PCC. 
+Practical PCC monitoring requires processing each measurement window within the acquisition interval. This section evaluates processing time and throughput, then examines the effects of feature selection and LF/HF/TD feature-family reduction.
 
 \subsection{Inference Latency and Throughput on CPU/GPU}
 \label{sec:latency_throughput}
 
-Runtime was measured on the Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the seed-1234 binary models. Each variant used 10 warm-up executions and 50 timed repetitions. The benchmark separates feature extraction, normalization/transfer/inference, and full processing, reporting median and 95th-percentile latency (Table~\ref{tab:runtime_latency}). End-to-end processing excludes the 200-ms acquisition window; it is not an attack-onset-to-alarm delay. CPU and GPU-assisted versions use the same selected models.
+Runtime was measured on the Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the seed-1234 binary models. Each variant used 10 warm-up executions and 50 timed repetitions. The benchmark separates feature extraction, normalization/transfer/inference, and full processing, reporting median and 95th-percentile latency (Table~\ref{tab:runtime_latency}). The reported processing time excludes the 200-ms acquisition window and is distinct from the delay between attack onset and alarm generation. CPU and GPU-assisted versions use the same selected models.
 
 Full-feature GPU-assisted processing takes 22.37~ms for PCC and 66.33~ms for motor sensing, with 95th percentiles of 23.93 and 67.55~ms. Both measured processing times are below the 200-ms window interval. Reciprocal median processing rates are approximately 44.69 and 15.08 windows/s, respectively; these are workstation processing capacities, not measured embedded worst-case guarantees. Acquisition, scheduling, and any alarm-persistence logic must be included in a deployed timing budget.
 
@@ -471,7 +691,7 @@ Median & 64.99 & 1.33 & 66.33 & 15.08 \\
 
 Binary-model features were ranked by validation-set permutation importance: the decrease in balanced accuracy when one feature trajectory is permuted across validation windows, repeated three times. Test labels were not used for ranking. Within each split, global top-75\%, top-50\%, and top-25\% subsets and per-channel top-15/top-10 subsets were retrained with the full model's selected architecture and training protocol. Fig.~\ref{fig:top10_feature_importance} summarizes validation importance across repeats; correlated features can share predictive information, so these scores do not identify causal attack mechanisms.
 
-Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained features do not guarantee faster extraction. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), but processing remains 22.42~ms versus 22.37~ms for full features. The motor top-25\% subset retains 56 of 222 features, gives 86.83\% balanced accuracy versus 88.26\% for full input, and reduces processing from 66.33 to 56.41~ms (1.18$\times$). The extractor skips an LF, HF, or TD family only when that entire family is absent from a channel; otherwise it computes every statistic in that family before selecting the requested columns. In the seed-1234 PCC top-25\% subset, all three families remain active on both channels: each family routine is called 122 times per window, exactly as for full input. Motor top-25\% removes the HF family on two channels, reducing HF calls from 366 to 244. Thus, the current implementation provides family-level computational pruning, not individual-feature computation. The nearly unchanged PCC latency reflects this implementation limit; it does not establish that a feature-level optimized extractor could not be faster. All subsets are reported; no test-best subset replaces the primary full-feature model.
+Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained features do not guarantee faster extraction. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), but processing remains 22.42~ms versus 22.37~ms for full features. The motor top-25\% subset retains 56 of 222 features, gives 86.83\% balanced accuracy versus 88.26\% for full input, and reduces processing from 66.33 to 56.41~ms (1.18$\times$). The extractor skips an LF, HF, or TD family only when that entire family is absent from a channel; otherwise it computes every statistic in that family before selecting the requested columns. In the seed-1234 PCC top-25\% subset, all three families remain active on both channels: each family routine is called 122 times per window, exactly as for full input. Motor top-25\% removes the HF family on two channels, reducing HF calls from 366 to 244. Consequently, computation is reduced only when an entire feature family is omitted from a channel. This explains the negligible PCC speedup despite the reduction in feature count. Further reduction would require computing only the selected statistics within each family. The full-feature model remains the reference, and all evaluated subsets are reported.
 
 \begin{figure*}[t]
 \centering
@@ -490,29 +710,29 @@ Table~\ref{tab:feature_pruning_anomaly2_runtime} shows that fewer retained featu
 \hline
 Subset & No. & \shortstack{BA\\(\%)} & \shortstack{F1\\(\%)} & \shortstack{Extract.\\(ms)} & \shortstack{Total\\(ms)} & \shortstack{Speedup\\($\times$)} \\\hline
 \hline\multicolumn{7}{c}{\textit{PCC stream}} \\\hline
-Full & 74 & \shortstack{80.29\\($\pm$3.03)} & \shortstack{80.42\\($\pm$2.96)} & 21.64 & \textbf{22.37} & 1.00 \\
-75\% & 56 & \shortstack{78.28\\($\pm$3.07)} & \shortstack{78.41\\($\pm$3.37)} & 21.77 & 22.46 & 1.00 \\
-50\% & 37 & \shortstack{78.87\\($\pm$2.79)} & \shortstack{79.10\\($\pm$2.97)} & 21.83 & 22.58 & 0.99 \\
-25\% & 18 & \shortstack{80.29\\($\pm$2.14)} & \shortstack{80.58\\($\pm$2.29)} & 21.70 & 22.42 & 1.00 \\
-15/ch. & 30 & \shortstack{77.59\\($\pm$4.75)} & \shortstack{77.74\\($\pm$4.94)} & 21.80 & 22.49 & 0.99 \\
-10/ch. & 20 & \shortstack{\textbf{80.47}\\($\pm$2.79)} & \shortstack{\textbf{80.69}\\($\pm$2.80)} & 21.94 & 22.68 & 0.99 \\
+Full & 74 & \mbox{80.29\,$\pm$\,3.03} & \mbox{80.42\,$\pm$\,2.96} & 21.64 & \textbf{22.37} & 1.00 \\
+75\% & 56 & \mbox{78.28\,$\pm$\,3.07} & \mbox{78.41\,$\pm$\,3.37} & 21.77 & 22.46 & 1.00 \\
+50\% & 37 & \mbox{78.87\,$\pm$\,2.79} & \mbox{79.10\,$\pm$\,2.97} & 21.83 & 22.58 & 0.99 \\
+25\% & 18 & \mbox{80.29\,$\pm$\,2.14} & \mbox{80.58\,$\pm$\,2.29} & 21.70 & 22.42 & 1.00 \\
+15/ch. & 30 & \mbox{77.59\,$\pm$\,4.75} & \mbox{77.74\,$\pm$\,4.94} & 21.80 & 22.49 & 0.99 \\
+10/ch. & 20 & \mbox{\textbf{80.47}\,$\pm$\,2.79} & \mbox{\textbf{80.69}\,$\pm$\,2.80} & 21.94 & 22.68 & 0.99 \\
 \hline\multicolumn{7}{c}{\textit{MOTOR stream}} \\\hline
-Full & 222 & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} & 64.99 & 66.33 & 1.00 \\
-75\% & 166 & \shortstack{87.95\\($\pm$11.38)} & \shortstack{87.19\\($\pm$12.42)} & 65.65 & 67.02 & 0.99 \\
-50\% & 111 & \shortstack{89.28\\($\pm$11.33)} & \shortstack{88.20\\($\pm$12.87)} & 65.14 & 66.49 & 1.00 \\
-25\% & 56 & \shortstack{86.83\\($\pm$10.93)} & \shortstack{85.44\\($\pm$12.39)} & 55.11 & \textbf{56.41} & 1.18 \\
-15/ch. & 90 & \shortstack{\textbf{92.10}\\($\pm$9.71)} & \shortstack{\textbf{91.44}\\($\pm$10.88)} & 60.80 & 62.13 & 1.07 \\
-10/ch. & 60 & \shortstack{88.18\\($\pm$9.28)} & \shortstack{87.20\\($\pm$10.62)} & 55.45 & 56.77 & 1.17 \\
+Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 64.99 & 66.33 & 1.00 \\
+75\% & 166 & \mbox{87.95\,$\pm$\,11.38} & \mbox{87.19\,$\pm$\,12.42} & 65.65 & 67.02 & 0.99 \\
+50\% & 111 & \mbox{89.28\,$\pm$\,11.33} & \mbox{88.20\,$\pm$\,12.87} & 65.14 & 66.49 & 1.00 \\
+25\% & 56 & \mbox{86.83\,$\pm$\,10.93} & \mbox{85.44\,$\pm$\,12.39} & 55.11 & \textbf{56.41} & 1.18 \\
+15/ch. & 90 & \mbox{\textbf{92.10}\,$\pm$\,9.71} & \mbox{\textbf{91.44}\,$\pm$\,10.88} & 60.80 & 62.13 & 1.07 \\
+10/ch. & 60 & \mbox{88.18\,$\pm$\,9.28} & \mbox{87.20\,$\pm$\,10.62} & 55.45 & 56.77 & 1.17 \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean above ($\pm$ SD). Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only whole unused feature families are skipped.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean $\pm$ sample SD. Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only whole unused feature families are skipped.\end{minipage}
 \end{table}
 
 \subsection{LF/HF/TD Ablation for Binary Anomaly Detection}
 \label{sec:lfhf_ablation}
 
-All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 22.37 to 12.32~ms (1.82$\times$). Thus, the measured marginal PCC benefit of HF features does not establish that their extra computation is necessary for binary detection on this dataset.
+All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 22.37 to 12.32~ms (1.82$\times$). The small difference in balanced accuracy suggests that LF and TD features provide most of the useful information for PCC binary detection under the tested conditions.
 
-For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.28~ms (4.07$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These are observed ablation results, not test-based selection of a new primary model. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
+For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.28~ms (4.07$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These ablations quantify the contribution of each feature family relative to the full-feature reference; they are not used for model selection. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
 
 \begin{table}[t]
 \centering
@@ -525,23 +745,23 @@ For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reach
 \hline
 Features & No. & Accuracy & BA & Macro F1 \\\hline
 \hline\multicolumn{5}{c}{\textit{PCC stream}} \\\hline
-Full & 74 & \shortstack{\textbf{80.78}\\($\pm$2.95)} & \shortstack{\textbf{80.29}\\($\pm$3.03)} & \shortstack{\textbf{80.42}\\($\pm$2.96)} \\
-LF only & 36 & \shortstack{74.03\\($\pm$3.84)} & \shortstack{73.56\\($\pm$3.13)} & \shortstack{73.59\\($\pm$3.33)} \\
-HF only & 22 & \shortstack{64.50\\($\pm$4.62)} & \shortstack{64.49\\($\pm$4.56)} & \shortstack{64.21\\($\pm$4.71)} \\
-Time only & 16 & \shortstack{72.18\\($\pm$1.73)} & \shortstack{70.66\\($\pm$1.77)} & \shortstack{70.65\\($\pm$1.76)} \\
-LF + HF & 58 & \shortstack{68.66\\($\pm$4.60)} & \shortstack{68.15\\($\pm$4.26)} & \shortstack{68.18\\($\pm$4.39)} \\
-LF + Time & 52 & \shortstack{80.49\\($\pm$1.73)} & \shortstack{80.03\\($\pm$1.79)} & \shortstack{80.16\\($\pm$1.73)} \\
-HF + Time & 38 & \shortstack{69.49\\($\pm$3.66)} & \shortstack{67.85\\($\pm$3.11)} & \shortstack{67.72\\($\pm$3.06)} \\
+Full & 74 & \mbox{\textbf{80.78}\,$\pm$\,2.95} & \mbox{\textbf{80.29}\,$\pm$\,3.03} & \mbox{\textbf{80.42}\,$\pm$\,2.96} \\
+LF only & 36 & \mbox{74.03\,$\pm$\,3.84} & \mbox{73.56\,$\pm$\,3.13} & \mbox{73.59\,$\pm$\,3.33} \\
+HF only & 22 & \mbox{64.50\,$\pm$\,4.62} & \mbox{64.49\,$\pm$\,4.56} & \mbox{64.21\,$\pm$\,4.71} \\
+Time only & 16 & \mbox{72.18\,$\pm$\,1.73} & \mbox{70.66\,$\pm$\,1.77} & \mbox{70.65\,$\pm$\,1.76} \\
+LF + HF & 58 & \mbox{68.66\,$\pm$\,4.60} & \mbox{68.15\,$\pm$\,4.26} & \mbox{68.18\,$\pm$\,4.39} \\
+LF + Time & 52 & \mbox{80.49\,$\pm$\,1.73} & \mbox{80.03\,$\pm$\,1.79} & \mbox{80.16\,$\pm$\,1.73} \\
+HF + Time & 38 & \mbox{69.49\,$\pm$\,3.66} & \mbox{67.85\,$\pm$\,3.11} & \mbox{67.72\,$\pm$\,3.06} \\
 \hline\multicolumn{5}{c}{\textit{MOTOR stream}} \\\hline
-Full & 222 & \shortstack{87.41\\($\pm$11.13)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} \\
-LF only & 108 & \shortstack{81.61\\($\pm$3.08)} & \shortstack{80.54\\($\pm$2.55)} & \shortstack{80.94\\($\pm$2.77)} \\
-HF only & 66 & \shortstack{63.32\\($\pm$4.96)} & \shortstack{63.76\\($\pm$4.28)} & \shortstack{63.14\\($\pm$4.81)} \\
-Time only & 48 & \shortstack{92.61\\($\pm$5.51)} & \shortstack{92.89\\($\pm$4.96)} & \shortstack{92.58\\($\pm$5.50)} \\
-LF + HF & 174 & \shortstack{80.33\\($\pm$7.88)} & \shortstack{79.91\\($\pm$7.06)} & \shortstack{80.05\\($\pm$7.60)} \\
-LF + Time & 156 & \shortstack{90.70\\($\pm$8.32)} & \shortstack{91.17\\($\pm$7.45)} & \shortstack{90.65\\($\pm$8.35)} \\
-HF + Time & 114 & \shortstack{\textbf{93.87}\\($\pm$4.56)} & \shortstack{\textbf{94.11}\\($\pm$4.04)} & \shortstack{\textbf{93.85}\\($\pm$4.54)} \\
+Full & 222 & \mbox{87.41\,$\pm$\,11.13} & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} \\
+LF only & 108 & \mbox{81.61\,$\pm$\,3.08} & \mbox{80.54\,$\pm$\,2.55} & \mbox{80.94\,$\pm$\,2.77} \\
+HF only & 66 & \mbox{63.32\,$\pm$\,4.96} & \mbox{63.76\,$\pm$\,4.28} & \mbox{63.14\,$\pm$\,4.81} \\
+Time only & 48 & \mbox{92.61\,$\pm$\,5.51} & \mbox{92.89\,$\pm$\,4.96} & \mbox{92.58\,$\pm$\,5.50} \\
+LF + HF & 174 & \mbox{80.33\,$\pm$\,7.88} & \mbox{79.91\,$\pm$\,7.06} & \mbox{80.05\,$\pm$\,7.60} \\
+LF + Time & 156 & \mbox{90.70\,$\pm$\,8.32} & \mbox{91.17\,$\pm$\,7.45} & \mbox{90.65\,$\pm$\,8.35} \\
+HF + Time & 114 & \mbox{\textbf{93.87}\,$\pm$\,4.56} & \mbox{\textbf{94.11}\,$\pm$\,4.04} & \mbox{\textbf{93.85}\,$\pm$\,4.54} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). Bold: highest mean within each stream; these test comparisons do not select a replacement primary model.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. Bold: highest mean within each stream; these test comparisons do not select a replacement primary model.\end{minipage}
 \end{table}
 
 \section{Discussion}
@@ -549,9 +769,9 @@ HF + Time & 114 & \shortstack{\textbf{93.87}\\($\pm$4.56)} & \shortstack{\textbf
 \subsection{Why Adaptation Helps More in One Direction}
 \label{sec:adaptation_asymmetry}
 
-The PCC results retain a strong direction asymmetry: at 20\% target labels, PMSM-to-ACIM fine-tuning reaches 91.38\% balanced accuracy, while ACIM-to-PMSM reaches 56.30\%. Source-only predictions also show different class biases: for PCC ACIM-to-PMSM, the mean attack miss rate is 92.71\%; in the reverse direction the normal false-alarm rate is 86.03\%. These biases show that source-domain decision boundaries and operating distributions do not transfer reliably. They do not isolate a causal mechanism for the asymmetry.
+The PCC results retain a strong direction asymmetry: at 20\% target labels, PMSM-to-ACIM fine-tuning reaches 91.38\% balanced accuracy, while ACIM-to-PMSM reaches 56.30\%. Source-only predictions also show different class biases: for PCC ACIM-to-PMSM, the mean attack miss rate is 92.71\%; in the reverse direction the normal false-alarm rate is 86.03\%. These biases show that source-domain decision boundaries and operating distributions do not transfer reliably. The present experiments do not separate the physical and operating-condition contributions to this asymmetry.
 
-The adaptation results therefore support direction-specific target calibration. In particular, the strong PCC PMSM-to-ACIM gain is not reproduced in the reverse direction. Source-only and fine-tuned results quantify the benefit of updating a source model with target labels; they do not isolate the contribution of source pretraining from the benefit of those labels.
+The adaptation results indicate that the required target-domain training depends on the transfer direction. In particular, the strong PCC PMSM-to-ACIM gain is not reproduced in the reverse direction. Source-only and fine-tuned results quantify the benefit of updating a source model with target labels; they do not isolate the contribution of source pretraining from the benefit of those labels.
 \subsection{PCC vs Motor Tradeoffs}
 \label{sec:pcc_vs_motor}
 
@@ -566,11 +786,112 @@ The evidence is limited to additive, piecewise-constant current-feedback bias on
 
 PCC signatures can depend on the shared rectifier, downstream inverter topology, control behavior, modulation, sensor transfer functions, and supply impedance. These factors were not varied independently in the dataset. Consequently, no robustness claim is made for other converter topologies, modulation strategies, grids, or installations. Whole-recording holdouts remove within-repeat recording/episode overlap, but remain a retrospective evaluation on reused data from the same apparatus. Three repeated holdouts do not provide independent hardware replication or a strong significance test.
 
-The adaptation study requires target labels and uses fixed training budgets; unsupervised adaptation is outside its scope. PCC severity remains weak, and normal false alarms are material even when attack recall is high. Finally, measured workstation processing times exclude acquisition and do not establish embedded worst-case latency or a tested closed-loop mitigation system.
+The adaptation study requires target labels and uses fixed training budgets; unsupervised adaptation is outside its scope. PCC severity classification has limited balanced accuracy, and its false-alarm rate remains substantial despite higher detection rates for medium- and high-bias attacks. Finally, measured workstation processing times exclude acquisition and do not establish embedded worst-case latency or a tested closed-loop mitigation system.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figs_revised/figure8_original_style.pdf}
+\begingroup
+\setlength{\unitlength}{1bp}
+\resizebox{\linewidth}{!}{\begin{picture}(515.5200,161.0000)
+\put(144.8379,153.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{10bp}{11bp}\selectfont ACIM}}
+\put(43.9276,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(54.0186,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(59.0641,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.05}}
+\put(64.1096,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(74.2007,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(79.2462,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.10}}
+\put(84.2917,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(94.3827,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(99.4282,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.15}}
+\put(104.4737,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(114.5648,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(119.6103,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.20}}
+\put(124.6558,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(134.7468,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(139.7923,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.25}}
+\put(144.8379,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(154.9289,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(159.9744,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.30}}
+\put(165.0199,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(175.1109,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(180.1564,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.35}}
+\put(185.2020,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(195.2930,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(200.3385,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.40}}
+\put(205.3840,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(215.4751,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(220.5206,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.45}}
+\put(225.5661,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(235.6571,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(240.7026,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.50}}
+\put(37.9276,130.5000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Bias (\%)}}
+\put(43.92758,75){\includegraphics[viewport=43.92758 125.67077 245.74813 202.66817,clip,width=201.82055bp,height=44bp]{figs_revised/figure8_original_style.pdf}}
+\put(38.9276,81.3454){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.22}}
+\put(38.9276,100.9156){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.23}}
+\put(6.9276,97.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Motor RMS}}}
+\put(43.92758,24){\includegraphics[viewport=43.92758 35.17252 245.74813 112.16993,clip,width=201.82055bp,height=44bp]{figs_revised/figure8_original_style.pdf}}
+\put(38.9276,25.2713){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.95}}
+\put(38.9276,41.6711){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.00}}
+\put(38.9276,58.0708){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.05}}
+\put(6.9276,46.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PCC RMS}}}
+\put(43.9276,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0}}
+\put(94.3827,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 50}}
+\put(144.8379,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 100}}
+\put(195.2930,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 150}}
+\put(245.7481,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 200}}
+\put(144.8379,3.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Time (s)}}
+\put(400.9863,153.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{10bp}{11bp}\selectfont PMSM}}
+\put(300.0760,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(310.1670,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(315.2125,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.05}}
+\put(320.2581,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(330.3491,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(335.3946,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.10}}
+\put(340.4401,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(350.5312,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(355.5767,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.15}}
+\put(360.6222,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(370.7132,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(375.7587,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.20}}
+\put(380.8042,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(390.8953,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(395.9408,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.25}}
+\put(400.9863,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(411.0773,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(416.1228,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.30}}
+\put(421.1683,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(431.2594,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(436.3049,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.35}}
+\put(441.3504,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(451.4414,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(456.4869,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.40}}
+\put(461.5325,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(471.6235,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(476.6690,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.45}}
+\put(481.7145,126.0000){\color[rgb]{0.665,0.809,0.887}\rule{10.0910bp}{9.0000bp}}
+\put(491.8055,126.0000){\color[rgb]{0.986,0.489,0.375}\rule{10.0910bp}{9.0000bp}}
+\put(496.8510,142.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.50}}
+\put(294.0760,130.5000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Bias (\%)}}
+\put(300.07601,75){\includegraphics[viewport=300.07601 125.67077 501.89657 202.66817,clip,width=201.82055bp,height=44bp]{figs_revised/figure8_original_style.pdf}}
+\put(295.0760,76.6377){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.23}}
+\put(295.0760,88.3566){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.24}}
+\put(295.0760,100.0733){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.25}}
+\put(295.0760,111.7922){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.26}}
+\put(263.0760,97.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Motor RMS}}}
+\put(300.07601,24){\includegraphics[viewport=300.07601 35.17252 501.89657 112.16993,clip,width=201.82055bp,height=44bp]{figs_revised/figure8_original_style.pdf}}
+\put(295.0760,31.0157){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.850}}
+\put(295.0760,43.2172){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.875}}
+\put(295.0760,55.4164){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.900}}
+\put(295.0760,67.6179){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.925}}
+\put(263.0760,46.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PCC RMS}}}
+\put(300.0760,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0}}
+\put(350.5312,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 50}}
+\put(400.9863,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 100}}
+\put(451.4414,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 150}}
+\put(501.8966,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 200}}
+\put(400.9863,3.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Time (s)}}
+\end{picture}}
+\endgroup
 \caption{First 200 s of prespecified held-out ACIM and PMSM recordings, showing the schedule and current RMS. Blue and red schedule blocks denote normal and attack intervals; numbers give maximum injected bias (\%). Middle/bottom: motor/PCC RMS over 500-sample frames at stride 25, in acquisition units. These are descriptive electrical traces, not calibrated torque measurements.}
 \label{fig:app_attack_process_examples}
 \end{figure*}
@@ -578,7 +899,7 @@ The adaptation study requires target labels and uses fixed training budgets; uns
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper assessed nonintrusive FDIA monitoring in a heterogeneous ACIM/PMSM inverter-fed drive platform using recording- and episode-disjoint evaluation. Across three holdouts, binary accuracy was 87.41\% for motor-side sensing and 80.78\% for PCC sensing. Four-class injected-bias balanced accuracy was 90.81\% and 55.62\%, respectively, demonstrating a substantial limitation of PCC severity estimation. Severity-conditioned attack recall complements exact-bin recall but must be interpreted alongside false alarms. Cross-motor source-only transfer was unreliable, and supervised adaptation benefits depended on direction and sensing location; the source-only comparison does not establish a universal benefit of pretraining. PCC LF+Time retained approximately full-feature binary balanced accuracy while reducing processing from 22.37 to 12.32~ms on the tested workstation. The results support further development of PCC monitoring for additive feedback-bias attacks while delimiting its accuracy, calibration, and deployment constraints.
+This paper presented a nonintrusive FDIA monitoring framework for heterogeneous ACIM/PMSM inverter-fed drives. Motor-terminal and PCC measurements were evaluated independently using three training--validation--test partitions with disjoint recordings and episodes. Mean binary detection accuracy was 87.41\% for motor-terminal sensing and 80.78\% for PCC sensing, while four-class severity balanced accuracy was 90.81\% and 55.62\%, respectively. The PCC results show that detecting an attack is less demanding than assigning its exact bias class; both measures must be considered together with the false-alarm rate. Direct cross-motor transfer was limited, and the improvement obtained by supervised adaptation depended on the transfer direction and sensing location. For PCC detection, LF and time-domain features retained approximately the full-feature balanced accuracy while reducing processing time from 22.37 to 12.32~ms on the tested workstation. These findings identify the practical tradeoffs among sensing location, severity resolution, target-domain adaptation, and processing time for additive current-feedback bias monitoring. Validation on additional installations and dynamic operating conditions remains necessary to establish broader applicability.
 
 \bibliographystyle{ieeetr}
 \bibliography{ref_revised}
@@ -646,20 +967,20 @@ Table~\ref{tab:severity_detection_recall} separates correct bias-bin classificat
 \hline
 True bias & \shortstack{Exact\\recall} & \shortstack{Any-attack\\recall} & \shortstack{Normal false\\alarms} \\\hline
 \hline\multicolumn{4}{c}{\textit{MOTOR stream}} \\\hline
-Low & \shortstack{89.58\\($\pm$2.14)} & \shortstack{95.58\\($\pm$4.15)} & \shortstack{19.08\\($\pm$16.08)} \\
-Medium & \shortstack{93.96\\($\pm$1.05)} & \shortstack{99.71\\($\pm$0.04)} & \shortstack{19.08\\($\pm$16.08)} \\
-High & \shortstack{98.76\\($\pm$0.27)} & \shortstack{99.65\\($\pm$0.29)} & \shortstack{19.08\\($\pm$16.08)} \\
+Low & \mbox{89.58\,$\pm$\,2.14} & \mbox{95.58\,$\pm$\,4.15} & \mbox{19.08\,$\pm$\,16.08} \\
+Medium & \mbox{93.96\,$\pm$\,1.05} & \mbox{99.71\,$\pm$\,0.04} & \mbox{19.08\,$\pm$\,16.08} \\
+High & \mbox{98.76\,$\pm$\,0.27} & \mbox{99.65\,$\pm$\,0.29} & \mbox{19.08\,$\pm$\,16.08} \\
 \hline\multicolumn{4}{c}{\textit{PCC stream}} \\\hline
-Low & \shortstack{38.33\\($\pm$7.04)} & \shortstack{61.39\\($\pm$2.64)} & \shortstack{37.23\\($\pm$3.17)} \\
-Medium & \shortstack{50.58\\($\pm$7.01)} & \shortstack{85.08\\($\pm$6.52)} & \shortstack{37.23\\($\pm$3.17)} \\
-High & \shortstack{70.79\\($\pm$2.28)} & \shortstack{88.09\\($\pm$7.22)} & \shortstack{37.23\\($\pm$3.17)} \\
+Low & \mbox{38.33\,$\pm$\,7.04} & \mbox{61.39\,$\pm$\,2.64} & \mbox{37.23\,$\pm$\,3.17} \\
+Medium & \mbox{50.58\,$\pm$\,7.01} & \mbox{85.08\,$\pm$\,6.52} & \mbox{37.23\,$\pm$\,3.17} \\
+High & \mbox{70.79\,$\pm$\,2.28} & \mbox{88.09\,$\pm$\,7.22} & \mbox{37.23\,$\pm$\,3.17} \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean above ($\pm$ SD). False alarms refer to the same normal class for all three attack levels. Different metrics are not competing methods, so none is highlighted as best.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. False alarms refer to the same normal class for all three attack levels. Different metrics are not competing methods, so none is highlighted as best.\end{minipage}
 \end{table}
 
 \subsection{Hyperparameter Sensitivity}
 \label{app:sensitivity}
-Fig.~\ref{fig:hyperparameter_sensitivity} reports all one-factor perturbations. PCC binary mean balanced accuracy ranges from 72.23\% to 78.33\% among these variants, compared with 80.29\% for the selected reference. PCC severity varies from 51.25\% to 55.71\%, compared with 55.62\%. Motor severity is more sensitive to the high learning rate, falling to 77.69\% mean balanced accuracy. Therefore, the comparison supports a persistent PCC severity limitation rather than insensitivity to every training setting.
+Fig.~\ref{fig:hyperparameter_sensitivity} reports all one-factor perturbations. PCC binary mean balanced accuracy ranges from 72.23\% to 78.33\% among these variants, compared with 80.29\% for the selected reference. PCC severity varies from 51.25\% to 55.71\%, compared with 55.62\%. Motor severity is more sensitive to the high learning rate, falling to 77.69\% mean balanced accuracy. The PCC severity limitation persists across the evaluated settings, although classification performance remains sensitive to the training parameters.
 
 \begin{figure*}[t]
 \centering
@@ -669,7 +990,7 @@ Fig.~\ref{fig:hyperparameter_sensitivity} reports all one-factor perturbations. 
 \end{figure*}
 \subsection{Auxiliary Diagnostic Tasks}
 \label{app:auxiliary_diagnostics}
-The motor-type results are included in Table~\ref{tab:all_tasks_in_domain}. For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. Fig.~\ref{fig:regression_diagnostics} shows prediction distributions at every tested bias level for each repeat. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
+The auxiliary motor-type classifier (\texttt{motor2}) distinguishes ACIM and PMSM recording conditions using a two-class softmax output. Its results are included in Table~\ref{tab:all_tasks_in_domain}. For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. Fig.~\ref{fig:regression_diagnostics} shows prediction distributions at every tested bias level for each repeat. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
 
 \begin{figure*}[t]
 \centering
