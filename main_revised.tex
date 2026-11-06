@@ -691,7 +691,7 @@ Median & 66.38 & 1.42 & 67.81 & 14.75 \\
 
 Binary-model features were ranked by validation-set permutation importance: the decrease in balanced accuracy when one feature trajectory is permuted across validation windows, repeated three times. Test labels were not used for ranking. Within each split, global top-75\%, top-50\%, and top-25\% subsets and per-channel top-15/top-10 subsets were retrained with the full model's selected architecture and training protocol. Fig.~\ref{fig:top10_feature_importance} summarizes validation importance across repeats; correlated features can share predictive information, so these scores do not identify causal attack mechanisms.
 
-Table~\ref{tab:feature_pruning_anomaly2_runtime} quantifies the reduction in processing time obtained by selective feature computation. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), while reducing processing time from 23.03 to 12.44~ms (1.85$\times$). The motor top-25\% subset retains 56 of 222 features and reduces processing time from 67.81 to 27.87~ms (2.43$\times$), with balanced accuracy of 86.83\% compared with 88.26\% for the full input. For each subset, the extractor evaluates only the selected statistics and the intermediate calculations required to obtain them. Shared operations, such as the FFT, are retained when needed by a selected feature; unrelated harmonic, spectral, envelope, and time-domain calculations are omitted. The selected feature values and model outputs were verified against the original implementation, so the trained models and classification results are unchanged. Full and reduced subsets were timed using the same implementation and benchmark conditions. Speedup depends on the computational dependencies of the retained features as well as their number. All evaluated subsets are reported, and the full-feature model remains the reference.
+Table~\ref{tab:feature_pruning_anomaly2_runtime} quantifies the reduction in processing time obtained by selective feature computation. The PCC top-25\% subset retains 18 of 74 features and approximately preserves balanced accuracy (80.29\%), while reducing processing time from 23.03 to 12.44~ms (85.18\% speedup). The motor top-25\% subset retains 56 of 222 features and reduces processing time from 67.81 to 27.87~ms (143.33\% speedup), with balanced accuracy of 86.83\% compared with 88.26\% for the full input. For each subset, the extractor evaluates only the selected statistics and the intermediate calculations required to obtain them. Shared operations, such as the FFT, are retained when needed by a selected feature; unrelated harmonic, spectral, envelope, and time-domain calculations are omitted. The selected feature values and model outputs were verified against the original implementation, so the trained models and classification results are unchanged. Full and reduced subsets were timed using the same implementation and benchmark conditions. Speedup depends on the computational dependencies of the retained features as well as their number. All evaluated subsets are reported, and the full-feature model remains the reference.
 
 \begin{figure*}[t]
 \centering
@@ -708,31 +708,31 @@ Table~\ref{tab:feature_pruning_anomaly2_runtime} quantifies the reduction in pro
 \setlength{\tabcolsep}{1.7pt}
 \begin{tabular}{@{}lcccccc@{}}
 \hline
-Subset & No. & \shortstack{BA\\(\%)} & \shortstack{F1\\(\%)} & \shortstack{Extract.\\(ms)} & \shortstack{Total\\(ms)} & \shortstack{Speedup\\($\times$)} \\\hline
+Subset & No. & \shortstack{BA\\(\%)} & \shortstack{F1\\(\%)} & \shortstack{Extract.\\(ms)} & \shortstack{Total\\(ms)} & \shortstack{Speedup\\(\%)} \\\hline
 \hline\multicolumn{7}{c}{\textit{PCC stream}} \\\hline
-Full & 74 & \mbox{80.29\,$\pm$\,3.03} & \mbox{80.42\,$\pm$\,2.96} & 22.30 & 23.03 & 1.00 \\
-75\% & 56 & \mbox{78.28\,$\pm$\,3.07} & \mbox{78.41\,$\pm$\,3.37} & 19.65 & 20.33 & 1.13 \\
-50\% & 37 & \mbox{78.87\,$\pm$\,2.79} & \mbox{79.10\,$\pm$\,2.97} & 16.63 & 17.31 & 1.33 \\
-25\% & 18 & \mbox{80.29\,$\pm$\,2.14} & \mbox{80.58\,$\pm$\,2.29} & 11.81 & \textbf{12.44} & 1.85 \\
-15/ch. & 30 & \mbox{77.59\,$\pm$\,4.75} & \mbox{77.74\,$\pm$\,4.94} & 15.64 & 16.25 & 1.42 \\
-10/ch. & 20 & \mbox{\textbf{80.47}\,$\pm$\,2.79} & \mbox{\textbf{80.69}\,$\pm$\,2.80} & 12.07 & 12.68 & 1.82 \\
+Full & 74 & \mbox{80.29\,$\pm$\,3.03} & \mbox{80.42\,$\pm$\,2.96} & 22.30 & 23.03 & 0.00 \\
+75\% & 56 & \mbox{78.28\,$\pm$\,3.07} & \mbox{78.41\,$\pm$\,3.37} & 19.65 & 20.33 & 13.26 \\
+50\% & 37 & \mbox{78.87\,$\pm$\,2.79} & \mbox{79.10\,$\pm$\,2.97} & 16.63 & 17.31 & 33.07 \\
+25\% & 18 & \mbox{80.29\,$\pm$\,2.14} & \mbox{80.58\,$\pm$\,2.29} & 11.81 & \textbf{12.44} & 85.18 \\
+15/ch. & 30 & \mbox{77.59\,$\pm$\,4.75} & \mbox{77.74\,$\pm$\,4.94} & 15.64 & 16.25 & 41.76 \\
+10/ch. & 20 & \mbox{\textbf{80.47}\,$\pm$\,2.79} & \mbox{\textbf{80.69}\,$\pm$\,2.80} & 12.07 & 12.68 & 81.60 \\
 \hline\multicolumn{7}{c}{\textit{MOTOR stream}} \\\hline
-Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 66.38 & 67.81 & 1.00 \\
-75\% & 166 & \mbox{87.95\,$\pm$\,11.38} & \mbox{87.19\,$\pm$\,12.42} & 56.28 & 57.70 & 1.18 \\
-50\% & 111 & \mbox{89.28\,$\pm$\,11.33} & \mbox{88.20\,$\pm$\,12.87} & 45.50 & 46.89 & 1.45 \\
-25\% & 56 & \mbox{86.83\,$\pm$\,10.93} & \mbox{85.44\,$\pm$\,12.39} & 26.57 & \textbf{27.87} & 2.43 \\
-15/ch. & 90 & \mbox{\textbf{92.10}\,$\pm$\,9.71} & \mbox{\textbf{91.44}\,$\pm$\,10.88} & 37.68 & 38.96 & 1.74 \\
-10/ch. & 60 & \mbox{88.18\,$\pm$\,9.28} & \mbox{87.20\,$\pm$\,10.62} & 28.48 & 29.80 & 2.28 \\
+Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 66.38 & 67.81 & 0.00 \\
+75\% & 166 & \mbox{87.95\,$\pm$\,11.38} & \mbox{87.19\,$\pm$\,12.42} & 56.28 & 57.70 & 17.52 \\
+50\% & 111 & \mbox{89.28\,$\pm$\,11.33} & \mbox{88.20\,$\pm$\,12.87} & 45.50 & 46.89 & 44.62 \\
+25\% & 56 & \mbox{86.83\,$\pm$\,10.93} & \mbox{85.44\,$\pm$\,12.39} & 26.57 & \textbf{27.87} & 143.33 \\
+15/ch. & 90 & \mbox{\textbf{92.10}\,$\pm$\,9.71} & \mbox{\textbf{91.44}\,$\pm$\,10.88} & 37.68 & 38.96 & 74.04 \\
+10/ch. & 60 & \mbox{88.18\,$\pm$\,9.28} & \mbox{87.20\,$\pm$\,10.62} & 28.48 & 29.80 & 127.56 \\
 \hline\end{tabular}
-\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean $\pm$ sample SD. Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only selected statistics and their required intermediate calculations are evaluated.\end{minipage}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Performance: mean $\pm$ sample SD. Timing: seed-1234 GPU-assisted median; 95th percentiles are supplied in the results. Bold: highest BA/F1 or lowest total latency within a stream. Only selected statistics and their required intermediate calculations are evaluated. Percentage speedup is $100(T_{\mathrm{full}}/T_{\mathrm{subset}}-1)$, using median total processing times.\end{minipage}
 \end{table}
 
 \subsection{LF/HF/TD Ablation for Binary Anomaly Detection}
 \label{sec:lfhf_ablation}
 
-All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 23.03 to 12.69~ms (1.81$\times$). The small difference in balanced accuracy suggests that LF and TD features provide most of the useful information for PCC binary detection under the tested conditions.
+All seven LF/HF/TD combinations were evaluated by retraining with the selected full-feature architecture fixed within each task, stream, and split. Table~\ref{tab:lfhf_ablation_anomaly2} reports binary results. For PCC, LF+Time reaches 80.03\% balanced accuracy, close to the full input at 80.29\%, while reducing GPU-assisted processing from 23.03 to 12.69~ms (81.49\% speedup). The small difference in balanced accuracy suggests that LF and TD features provide most of the useful information for PCC binary detection under the tested conditions.
 
-For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.33~ms (4.15$\times$ faster than full). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These ablations quantify the contribution of each feature family relative to the full-feature reference; they are not used for model selection. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
+For motor sensing, time-only reaches 92.89\% balanced accuracy and HF+Time reaches 94.11\%, compared with 88.26\% for the full input. Time-only processing takes 16.33~ms (315.24\% speedup over the full input). HF-only performs poorly for both streams (63.76\% motor and 64.49\% PCC balanced accuracy), but its combination with time features is useful for motor sensing. These ablations quantify the contribution of each feature family relative to the full-feature reference; they are not used for model selection. Severity ablations and complete per-repeat measurements are supplied with the revision materials.
 
 \begin{table}[t]
 \centering
