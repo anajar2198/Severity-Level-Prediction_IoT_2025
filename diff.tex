@@ -1,7 +1,7 @@
-% Generated visual comparison of main.tex and main_revised.tex; base repository revision 9daefe7d0a0fd73767049e515d76b4df589a4955.
+% Generated visual comparison of main.tex and main_revised.tex; base repository revision a728c4562dd1a98e7fd7d1c5c11870015a21c5a5.
 % Compile diff.tex from this repository using pdfLaTeX and BibTeX.
 % Text uses latexdiff; complete original/revised floats preserve their respective values and artwork.
-% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "7b9e06b744b028f938ec6525834ca1c68dac6d91d28cd98cf8899226d9ff5f68"}
+% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "3b3195aeb7506527698d8563ddce5e88b873fe317562cbf85ee9c953f7ae2eba"}
 \documentclass[letterpaper,journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main.tex (original)
@@ -106,7 +106,7 @@ False-data-injection attack, point of common coupling, inverter-fed motor drives
 
 \IEEEPARstart{F}{DIA} detection and severity assessment are important in networked motor-drive systems, where manipulated sensor feedback can degrade control performance and cause unsafe operation~\cite{Ghaderi2021A}. Increasing drive connectivity makes timely detection of sensor-oriented cyber attacks essential for resilient operation~\cite{Yang2022Fast,Yang2024Enhanced}.
 Current signals are attractive for FDIA monitoring because they are easy to acquire, strongly coupled to electromechanical dynamics, and have been shown to reveal sensor-integrity attacks in motor drives~\cite{7944701, YangVulnerability}. However, most existing studies emphasize terminal-side sensing, operate on a single machine domain, or assume sufficient labeled data for supervised training. These assumptions limit practicality in heterogeneous deployments where different motor types, sensing locations, and data availability constraints all affect performance.
-Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{fdia2}}\DIFadd{)}\DIFaddend , four-level severity assessment \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{severity4}}\DIFadd{)}\DIFaddend , cross-domain transfer, and deployment feasibility. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{electrical }\DIFaddend features with an InceptionTime classifier, and compares motor-terminal and PCC sensing. \DIFaddbegin \DIFadd{An auxiliary motor-type classifier (}\texttt{\DIFadd{motor2}}\DIFadd{) distinguishes ACIM and PMSM recording conditions.
+Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{fdia2}}\DIFadd{)}\DIFaddend , four-level severity assessment \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{severity4}}\DIFadd{)}\DIFaddend , cross-domain transfer, and deployment feasibility. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{electrical }\DIFaddend features with an InceptionTime classifier, and compares motor-terminal and PCC sensing. \DIFaddbegin \DIFadd{A three-class classifier (}\texttt{\DIFadd{fdia3}}\DIFadd{) additionally distinguishes normal operation, an ACIM attack, and a PMSM attack.
 }\DIFaddend
 
 \subsection{Challenges at PCC in Heterogeneous Multi-Motor Systems}
@@ -147,7 +147,7 @@ The main gap is not FDIA detection in general, which has been widely studied in 
 \label{sec:experimental_platform}
 
 Fig.~\ref{fig:system_schematic} illustrates the overall setup, including the shared PCC, the two drive branches, the ACIM and PMSM loads, the sensing locations, and the FDIA injection points in the control/feedback paths. The experimental platform consists of a heterogeneous two-motor industrial setup including one ACIM branch and one PMSM branch. Both branches are supplied from a common upstream electrical interface, enabling measurements at the PCC in addition to motor-side measurements. This setup enables comparison of motor-terminal and PCC sensing under heterogeneous ACIM/PMSM dynamics.
-\DIFdelbegin \DIFdel{A total of }\DIFdelend \DIFaddbegin \DIFadd{The dataset contains }\DIFaddend 540 \DIFdelbegin \DIFdel{unique FDIA cases were collected, including 270 ACIM cases and }\DIFdelend \DIFaddbegin \DIFadd{scheduled attack episodes (}\DIFaddend 270 \DIFdelbegin \DIFdel{PMSM cases}\DIFdelend \DIFaddbegin \DIFadd{for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. All episodes were acquired on the same two-motor platform}\DIFaddend . The experiments cover three speed operating points, namely 900, 1100, and 1300 \DIFdelbegin \DIFdel{rpm}\DIFdelend \DIFaddbegin \DIFadd{RPM}\DIFaddend .
+\DIFdelbegin \DIFdel{A total of }\DIFdelend \DIFaddbegin \DIFadd{The dataset contains }\DIFaddend 540 \DIFdelbegin \DIFdel{unique FDIA cases were collected, including }\DIFdelend \DIFaddbegin \DIFadd{scheduled attack episodes (}\DIFaddend 270 \DIFdelbegin \DIFdel{ACIM cases and 270 PMSM cases}\DIFdelend \DIFaddbegin \DIFadd{for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. All episodes were acquired on the same two-motor platform. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals}\DIFaddend . The experiments cover three speed operating points, namely 900, 1100, and 1300 \DIFdelbegin \DIFdel{rpm}\DIFdelend \DIFaddbegin \DIFadd{RPM}\DIFaddend .
 
 Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}. The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine.
 \DIFdelbegin \DIFdel{The measured signals and channel counts associated with the motor-side and PCC-side streams are summarized in Table~\ref{tab:measurement_streams}.
@@ -233,7 +233,7 @@ For four-class severity assessment, the label is defined as
 \end{cases}
 \label{eq:severity_bins}
 }\end{equation}\DIFaddend
-\DIFdelbegin \DIFdel{corresponding to normal,mild, }\DIFdelend \DIFaddbegin \DIFadd{Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 }\DIFaddend medium, and \DIFdelbegin \DIFdel{severe conditions,respectively}\DIFdelend \DIFaddbegin \DIFadd{14,400 high}\DIFaddend .
+\DIFdelbegin \DIFdel{corresponding to normal,mild,}\DIFdelend \DIFaddbegin \DIFadd{Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 }\DIFaddend medium, and \DIFdelbegin \DIFdel{severe conditions,respectively}\DIFdelend \DIFaddbegin \DIFadd{14,400 high}\DIFaddend .
 Table~\ref{tab:cyberattack_dataset_structure} summarizes the swept single-phase, equal two-phase, and fixed-plus-swept two-phase FDIA cases. Across three speeds, three load settings, and two motor types, the dataset contains 540 total attack cases. Each recording \DIFdelbegin \DIFdel{consists of }\DIFdelend \DIFaddbegin \DIFadd{contains }\DIFaddend 30 consecutive 20-s episodes, with 10~s normal operation followed by 10~s FDIA operation. \DIFaddbegin \DIFadd{In total, the dataset contains 33,054 normal and 27,000 attack windows.
 }
 
@@ -621,7 +621,7 @@ Together, these features \DIFaddbegin \DIFadd{help }\DIFaddend make weak PCC FDI
 \subsection{Inception-Based Detection Model}
 \label{sec:inception_model}
 
-The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels \DIFaddbegin \DIFadd{of lengths 39, 19, and 9}\DIFaddend , residual shortcuts, global average pooling, and a dense output layer. Motor and PCC models used stream-specific hyperparameters selected by validation balanced accuracy. The Inception-based design is well suited to the proposed LF/HF representation because the extracted features retain temporal ordering across the 61-step sequence. This preserves temporal interactions among LF, HF, and TD features. \DIFaddbegin \DIFadd{Each task uses a separately trained model with two outputs for }\texttt{\DIFadd{fdia2}} \DIFadd{or }\texttt{\DIFadd{motor2}}\DIFadd{, and four outputs for }\texttt{\DIFadd{severity4}}\DIFadd{.
+The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels \DIFaddbegin \DIFadd{of lengths 39, 19, and 9}\DIFaddend , residual shortcuts, global average pooling, and a dense output layer. Motor and PCC models used stream-specific hyperparameters selected by validation balanced accuracy. The Inception-based design is well suited to the proposed LF/HF representation because the extracted features retain temporal ordering across the 61-step sequence. This preserves temporal interactions among LF, HF, and TD features. \DIFaddbegin \DIFadd{Each task uses a separately trained model with two outputs for }\texttt{\DIFadd{fdia2}}\DIFadd{, three for }\texttt{\DIFadd{fdia3}}\DIFadd{, and four for }\texttt{\DIFadd{severity4}}\DIFadd{.
 }
 
 
@@ -664,7 +664,7 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \put(497.2000,53.3000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{8bp}{9bp}\selectfont \shortstack{Class\\output}}}
 \end{picture}}
 \endgroup
-\caption{InceptionTime architecture for FDIA detection, severity assessment, and motor-type classification.}
+\caption{InceptionTime architecture for FDIA detection, severity assessment, and attack localization.}
 \label{fig:inceptiontime_architecture}
 
 \end{minipage}
@@ -741,15 +741,15 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \DIFaddend \subsection{Training Details and Hyperparameters}
 \label{sec:training_details}
 
-For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \DIFadd{each task in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFaddbegin \DIFadd{(64/128)}\DIFaddend . Table~\ref{tab:search_top5_combined} summarizes the top-ranked configurations for both sensing streams \DIFaddbegin \DIFadd{across all three seeds}\DIFaddend .
-
-\DIFaddbegin \DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs.
+For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFaddbegin \DIFadd{(64/128)}\DIFaddend . Table~\ref{tab:search_top5_combined} summarizes the top-ranked configurations for both sensing streams \DIFaddbegin \DIFadd{across all three seeds.
 }
 
-\DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection.
+\DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs.
 }
 
-\DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications.
+\DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection. The }\texttt{\DIFadd{fdia3}} \DIFadd{model retained the }\texttt{\DIFadd{severity4}}\DIFadd{-selected configuration for each stream and holdout and was trained from fresh weights with three outputs. Its checkpoint was selected by three-class validation balanced accuracy}\DIFaddend .
+
+\DIFaddbegin \DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications.
 }
 
 
@@ -838,7 +838,7 @@ Rank & D & F & BN & Dr & LR & WD & BS & Seed 1234 & Seed 2234 & Seed 3234 & Mean
 \label{sec:domain_adaptation}
 \DIFaddbegin
 
-\DIFaddend Few-shot adaptation was evaluated by training on one motor type and testing on the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, the detector was first trained using labeled data from the source motor only and then evaluated directly on the target motor. This \emph{source-only} setting quantifies cross-motor domain shift. \DIFaddbegin \DIFadd{Six source recordings were used for training and three for validation, with the 100-candidate search selected by source validation balanced accuracy.
+\DIFaddend Few-shot adaptation was evaluated by training on \DIFdelbegin \DIFdel{one motor type }\DIFdelend \DIFaddbegin \DIFadd{recordings targeting one motor }\DIFaddend and testing on \DIFaddbegin \DIFadd{recordings targeting }\DIFaddend the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, the detector was first trained using labeled \DIFdelbegin \DIFdel{data from the source motor only }\DIFdelend \DIFaddbegin \DIFadd{source recordings }\DIFaddend and then evaluated directly on the target \DIFdelbegin \DIFdel{motor}\DIFdelend \DIFaddbegin \DIFadd{recordings}\DIFaddend . This \emph{source-only} setting quantifies cross-motor domain shift. \DIFaddbegin \DIFadd{Six source recordings were used for training and three for validation, with the 100-candidate search selected by source validation balanced accuracy.
 }\DIFaddend
 
 For adaptation, the source-trained model was fine-tuned using a small labeled subset of \DIFaddbegin \DIFadd{complete }\DIFaddend target-domain \DIFdelbegin \DIFdel{samples }\DIFdelend \DIFaddbegin \DIFadd{episode groups }\DIFaddend before testing on \DIFdelbegin \DIFdel{held-out target data. The }\DIFdelend \DIFaddbegin \DIFadd{separate target recordings. The nominal }\DIFaddend target adaptation ratios considered in this work were 1\%, 5\%, 10\%, and 20\% of the available target-domain adaptation pool \DIFaddbegin \DIFadd{(Table~\ref{tab:evaluation_protocols}); the 1\% budget selects two of 180 groups (1.11\%). Fine-tuning used 20 epochs at 0.2 times the source learning rate, with source normalization fixed}\DIFaddend .
@@ -852,7 +852,7 @@ This protocol is particularly important in the present study because ACIM and PM
 \subsection{In-Domain Baselines: Motor vs PCC}
 \label{sec:in_domain}
 
-Table~\ref{tab:all_tasks_in_domain} reports mixed-domain in-domain performance with ACIM and PMSM \DIFdelbegin \DIFdel{samples }\DIFdelend \DIFaddbegin \DIFadd{recordings }\DIFaddend in all splits \DIFaddbegin \DIFadd{and no shared recordings or episodes between them}\DIFaddend . The results show that motor-side sensing provides more discriminative attack signatures than PCC sensing for both \DIFdelbegin \DIFdel{(}\DIFdelend \texttt{fdia2} \DIFdelbegin \DIFdel{) and (}\DIFdelend \DIFaddbegin \DIFadd{and }\DIFaddend \texttt{severity4}\DIFdelbegin \DIFdel{)}\DIFdelend . In addition, \DIFdelbegin \DIFdel{(}\DIFdelend \texttt{severity4} \DIFdelbegin \DIFdel{) }\DIFdelend is substantially more challenging than binary attack detection, especially at PCC. \DIFaddbegin \DIFadd{Fig.~\ref{fig:main_confusion_matrices} shows the corresponding confusion matrices, with row percentages pooled over the three holdouts.
+Table~\ref{tab:all_tasks_in_domain} reports mixed-domain in-domain performance with ACIM and PMSM \DIFdelbegin \DIFdel{samples }\DIFdelend \DIFaddbegin \DIFadd{recordings }\DIFaddend in all splits \DIFaddbegin \DIFadd{and no shared recordings or episodes between them}\DIFaddend . The results show that motor-side sensing provides more discriminative attack signatures than PCC sensing for both \DIFdelbegin \DIFdel{(}\DIFdelend \texttt{fdia2} \DIFdelbegin \DIFdel{) and (}\DIFdelend \DIFaddbegin \DIFadd{and }\DIFaddend \texttt{severity4}\DIFdelbegin \DIFdel{)}\DIFdelend . In addition, \DIFdelbegin \DIFdel{(}\DIFdelend \texttt{severity4} \DIFdelbegin \DIFdel{) }\DIFdelend is substantially more challenging than binary attack detection, especially at PCC. \DIFaddbegin \DIFadd{The }\texttt{\DIFadd{fdia3}} \DIFadd{rows report joint detection and localization, including the normal class. Fig.~\ref{fig:main_confusion_matrices} shows the }\texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{confusion matrices, with row percentages pooled over the three holdouts.
 }\DIFaddend
 
 Thus, PCC-side severity estimates should be treated as coarse diagnostics, whereas motor-side measurements support finer severity discrimination. Overall, PCC monitoring is more challenging than motor-side monitoring, and severity assessment is harder than binary detection. These baseline findings motivate the subsequent cross-domain analysis, where the additional challenge of motor-type shift is introduced.
@@ -918,11 +918,11 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \hline\multicolumn{6}{c}{\textit{PCC stream}} \\\hline
 \texttt{fdia2} & \shortstack{80.78\\($\pm$2.95)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{81.04\\($\pm$3.14)} & \shortstack{80.29\\($\pm$3.03)} & \shortstack{80.42\\($\pm$2.96)} \\
 \texttt{severity4} & \shortstack{61.00\\($\pm$1.32)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.93\\($\pm$2.36)} & \shortstack{55.62\\($\pm$2.94)} & \shortstack{52.96\\($\pm$2.15)} \\
-\texttt{motor2} & \shortstack{94.40\\($\pm$9.70)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{95.35\\($\pm$8.06)} & \shortstack{94.35\\($\pm$9.79)} & \shortstack{94.27\\($\pm$9.92)} \\
+\texttt{fdia3} & \shortstack{74.32\\($\pm$4.16)} & \shortstack{77.84\\($\pm$4.63)} & \shortstack{76.16\\($\pm$4.56)} & \shortstack{77.84\\($\pm$4.63)} & \shortstack{75.52\\($\pm$4.14)} \\
 \hline\multicolumn{6}{c}{\textit{MOTOR stream}} \\\hline
 \texttt{fdia2} & \shortstack{87.41\\($\pm$11.13)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{89.90\\($\pm$7.84)} & \shortstack{88.26\\($\pm$9.99)} & \shortstack{87.23\\($\pm$11.39)} \\
 \texttt{severity4} & \shortstack{87.64\\($\pm$8.87)} & \shortstack{90.81\\($\pm$4.29)} & \shortstack{86.09\\($\pm$9.44)} & \shortstack{90.81\\($\pm$4.29)} & \shortstack{86.06\\($\pm$8.95)} \\
-\texttt{motor2} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.10)} & \shortstack{99.94\\($\pm$0.11)} & \shortstack{99.94\\($\pm$0.11)} \\
+\texttt{fdia3} & \shortstack{85.64\\($\pm$9.60)} & \shortstack{89.55\\($\pm$4.47)} & \shortstack{87.95\\($\pm$8.29)} & \shortstack{89.55\\($\pm$4.47)} & \shortstack{86.70\\($\pm$8.18)} \\
 \hline\end{tabular}
 \par\smallskip\begin{minipage}{\columnwidth}\scriptsize Cells show mean above ($\pm$ sample SD), over three holdouts; this is not a range or confidence interval. BA: balanced accuracy. Precision, recall, and F1 are macro-averaged.\end{minipage}
 
@@ -1277,7 +1277,7 @@ MultiRocket & \mbox{58.41\,$\pm$\,3.34} & \mbox{44.92\,$\pm$\,3.46} & \mbox{44.2
 \label{sec:cross_domain}
 \DIFaddbegin
 
-\DIFaddend Source-only transfer was evaluated by training on one motor type and testing directly on the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. Table~\ref{tab:cross_domain_source_only} shows that source-only \DIFdelbegin \DIFdel{fdia2 }\DIFdelend \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFaddend transfer falls near chance balanced accuracy for \DIFdelbegin \DIFdel{both sensingstreams}\DIFdelend \DIFaddbegin \DIFadd{ACIM-to-PMSM transfer, while the reverse direction falls below chance for motor sensing and reaches 56.00\% for PCC sensing}\DIFaddend . For \texttt{fdia2}, the source-only results in Table~\ref{tab:cross_domain_source_only} show a substantial degradation relative to the mixed-domain baselines. This confirms a substantial ACIM/PMSM domain shift in the tested transfer setting. Thus, reliable cross-motor FDIA detection in this setting benefits from target-domain adaptation.
+\DIFaddend Source-only transfer was evaluated by training on \DIFdelbegin \DIFdel{one motor type }\DIFdelend \DIFaddbegin \DIFadd{recordings targeting one motor }\DIFaddend and testing directly on \DIFaddbegin \DIFadd{recordings targeting }\DIFaddend the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. Table~\ref{tab:cross_domain_source_only} shows that source-only \DIFdelbegin \DIFdel{fdia2 }\DIFdelend \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFaddend transfer falls near chance balanced accuracy for \DIFdelbegin \DIFdel{both sensingstreams}\DIFdelend \DIFaddbegin \DIFadd{ACIM-to-PMSM transfer, while the reverse direction falls below chance for motor sensing and reaches 56.00\% for PCC sensing}\DIFaddend . For \texttt{fdia2}, the source-only results in Table~\ref{tab:cross_domain_source_only} show a substantial degradation relative to the mixed-domain baselines. This confirms a substantial ACIM/PMSM domain shift in the tested transfer setting. Thus, reliable cross-motor FDIA detection in this setting benefits from target-domain adaptation.
 
 
 
@@ -1872,7 +1872,7 @@ HF + Time & 114 & \mbox{\textbf{93.87}\,$\pm$\,4.56} & \mbox{\textbf{94.11}\,$\p
 \label{sec:adaptation_asymmetry}
 \DIFaddbegin
 
-\DIFaddend The adaptation results show that ACIM and PMSM do not form a symmetric transfer pair. PMSM $\rightarrow$ ACIM adaptation is much more effective than ACIM $\rightarrow$ PMSM adaptation, particularly for PCC sensing. In the PCC stream, \DIFdelbegin \DIFdel{the ACIM $\rightarrow$ PMSM model tends to collapse toward the normal class, whereas the }\DIFdelend \DIFaddbegin \DIFadd{Table~\ref{tab:domain_adaptation_anomaly2} shows a substantial }\DIFaddend PMSM $\rightarrow$ ACIM \DIFdelbegin \DIFdel{model retains more attack-sensitive structure and can be corrected with limited labeled ACIM data. Thus, the source motor affects the initial class bias, the retained target-relevant information, and the benefit obtained from }\DIFdelend \DIFaddbegin \DIFadd{gain even at the nominal 1\% budget, while the reverse direction remains less effective. These results show that the benefit of }\DIFaddend few-shot fine-tuning \DIFaddbegin \DIFadd{depends on the source and target motor types; the physical causes of the asymmetry were not isolated}\DIFaddend . For practical PCC deployment, a small amount of target-domain calibration data is therefore important when the deployed motor family differs from the source training domain.
+\DIFaddend The adaptation results show that ACIM and PMSM do not form a symmetric transfer pair. PMSM $\rightarrow$ ACIM adaptation is much more effective than ACIM $\rightarrow$ PMSM adaptation, particularly for PCC sensing. In the PCC stream, \DIFdelbegin \DIFdel{the ACIM $\rightarrow$ PMSM model tends to collapse toward the normal class, whereas the }\DIFdelend \DIFaddbegin \DIFadd{Table~\ref{tab:domain_adaptation_anomaly2} shows a substantial }\DIFaddend PMSM $\rightarrow$ ACIM \DIFdelbegin \DIFdel{model retains more attack-sensitive structure and can be corrected with limited labeled ACIM data. Thus, the source motor affects the initial class bias, the retained target-relevant information, and the benefit obtained from }\DIFdelend \DIFaddbegin \DIFadd{gain even at the nominal 1\% budget, while the reverse direction remains less effective. These results show that the benefit of }\DIFaddend few-shot fine-tuning \DIFaddbegin \DIFadd{depends on the source and target motor types; the physical causes of the asymmetry were not isolated}\DIFaddend . For practical PCC deployment, a small amount of target-domain calibration data is therefore important when \DIFdelbegin \DIFdel{the deployed motor family differs }\DIFdelend \DIFaddbegin \DIFadd{monitoring attacks on a motor family absent }\DIFaddend from the source \DIFdelbegin \DIFdel{training domain}\DIFdelend \DIFaddbegin \DIFadd{attack examples}\DIFaddend .
 
 \subsection{PCC vs Motor Tradeoffs}
 \label{sec:pcc_vs_motor}
@@ -1888,7 +1888,7 @@ Overall, the motor stream is the stronger sensing modality when maximum classifi
 \subsection{Limitations}
 \label{sec:limitations}
 
-Several limitations should be noted when interpreting the present results. First, the study considers only two motor families, ACIM and PMSM, under \DIFdelbegin \DIFdel{a fixed experimental FDIA framework}\DIFdelend \DIFaddbegin \DIFadd{additive current-feedback bias on one experimental platform. The recordings use fixed speed/load settings; dynamic changes and converter topologies were not varied. The three recording holdouts reuse this apparatus and are not independent hardware replications}\DIFaddend .
+Several limitations should be noted when interpreting the present results. First, the study considers only two motor families, ACIM and PMSM, under \DIFdelbegin \DIFdel{a fixed experimental FDIA framework}\DIFdelend \DIFaddbegin \DIFadd{additive current-feedback bias on one experimental platform. The recordings use fixed speed/load settings; dynamic changes and converter topologies were not varied. The three recording holdouts reuse this apparatus and are not independent hardware replications. Localization was evaluated with one attacked branch at a time; simultaneous attacks on both motors were not tested. Because the attacked branch is fixed within each recording, operating-condition cues may also contribute to localization}\DIFaddend .
 Broader validation across additional machines, loads, control modes, sensing setups, and attack families is needed before generalizing beyond the tested platform.
 
 Second, the domain-adaptation analysis is based on supervised few-shot fine-tuning with labeled target-domain data. This does not cover cases where target labels are unavailable or delayed. Unsupervised or self-supervised adaptation strategies may therefore be required for more constrained deployment scenarios.
@@ -1919,12 +1919,11 @@ This appendix provides \DIFdelbegin \DIFdel{supplementary material supporting th
 \subsection{Representative FDIA Episodes}
 \label{app:fdia_episode_examples}
 
-Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses during the first 200 \DIFdelbegin \DIFdel{~s of operation. }\DIFdelend \DIFaddbegin \DIFadd{s of each selected recording. RMS uses 500-sample frames at stride 25, matching the time-domain RMS definition. Complete-recording diagnostics retain the post-schedule normal tails.
-}
+Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses during the first 200 \DIFdelbegin \DIFdel{~s of operation}\DIFdelend \DIFaddbegin \DIFadd{s of each selected recording. RMS uses 500-sample frames at stride 25, matching the time-domain RMS definition. Complete-recording diagnostics retain the post-schedule normal tails}\DIFaddend .
 
 
 
-\begin{figure*}[p]
+\DIFaddbegin \begin{figure*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -2057,12 +2056,12 @@ Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FD
 \end{minipage}
 \end{adjustbox}
 \end{figure*}
-\DIFaddend
 
 
 
 
-\subsection{Extracted Feature Set}
+
+\DIFaddend \subsection{Extracted Feature Set}
 \label{app:feature_set}
 
 Table~\ref{tab:app_extracted_features} summarizes the extracted features used in the proposed LF/HF/TD pipeline. Each channel is represented using low-frequency spectral features, high-frequency spectral-envelope features, and time-domain statistical features.
@@ -2230,7 +2229,10 @@ High & \mbox{70.79\,$\pm$\,2.28} & \mbox{88.09\,$\pm$\,7.22} & \mbox{37.23\,$\pm
 
 \subsection{\DIFadd{Auxiliary Diagnostic Tasks}}
 \label{app:auxiliary_diagnostics}
-\DIFadd{The auxiliary motor-type classifier (}\texttt{\DIFadd{motor2}}\DIFadd{) distinguishes ACIM and PMSM recording conditions using a two-class softmax output. Its results are included in Table~\ref{tab:all_tasks_in_domain}. For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. Fig.~\ref{fig:regression_diagnostics} shows prediction distributions at every tested bias level for each repeat. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
+\DIFadd{The joint detection and localization task (}\texttt{\DIFadd{fdia3}}\DIFadd{) assigns 33,054 windows to normal operation, 13,500 to ACIM attack, and 13,500 to PMSM attack. The model uses a three-class softmax output and the same recording-separated holdouts as the other tasks. Its results are included in Table~\ref{tab:all_tasks_in_domain}. Mean normal false-alarm rates are 22.85\% for motor sensing and 33.12\% for PCC sensing.
+}
+
+\DIFadd{For attack-only regression, the target is $100\|\boldsymbol{\alpha}\|_\infty$, in percentage points of nominal current-feedback bias. A scalar output replaces the classification head; training uses Smooth-L1 loss with transition parameter 0.5 and validation mean absolute error (MAE) for checkpoint selection. The severity-selected architecture is retained within each stream and repeat. Motor-side MAE is $0.0196\pm0.0041$ percentage points, with mean $R^2=0.961$; PCC MAE is $0.0981\pm0.0049$ percentage points, with mean $R^2=0.267$. Fig.~\ref{fig:regression_diagnostics} shows prediction distributions at every tested bias level for each repeat. These are estimates of injected amplitude on attacked windows, not measured mechanical impact.
 }
 
 
