@@ -48,6 +48,7 @@
 \lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
 %DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
+\newcommand{\agent}[1]{\textcolor{red}{#1}}
 
 % Review-only support; original manuscript files are not modified.
 \usepackage{adjustbox}
@@ -117,7 +118,6 @@ The problem becomes more difficult in heterogeneous multi-motor settings. ACIM a
 \subsection{Contributions}
 \label{sec:contributions}
 The main contributions of this work are as follows:
-
 \begin{itemize}
 \item \DIFdelbegin \textbf{\DIFdel{Developed}} %DIFAUXCMD
 \DIFdel{and validated a }\DIFdelend \DIFaddbegin \DIFadd{A nonintrusive }\DIFaddend PCC-based FDIA monitoring framework \DIFdelbegin \DIFdel{for heterogeneous inverter-fed drives, showing that PCC sensing supports useful binary detection and coarse four-level severity assessment without direct motor-terminal instrumentation.
