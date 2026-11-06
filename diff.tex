@@ -1,7 +1,7 @@
-% Generated visual comparison of main.tex and main_revised.tex; base repository revision a728c4562dd1a98e7fd7d1c5c11870015a21c5a5.
+% Generated visual comparison of main.tex and main_revised.tex; base repository revision 5a78c03e9654d618fc8c36a5d343aa0d70e23372.
 % Compile diff.tex from this repository using pdfLaTeX and BibTeX.
 % Text uses latexdiff; complete original/revised floats preserve their respective values and artwork.
-% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "3b3195aeb7506527698d8563ddce5e88b873fe317562cbf85ee9c953f7ae2eba"}
+% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "a4d1a38f2a89ca2b2ee8bf1d0baa7cb82ae9325055dbd958bba1fc9aceec378c"}
 \documentclass[letterpaper,journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main.tex (original)
@@ -120,10 +120,11 @@ The main contributions of this work are as follows:
 
 \begin{itemize}
 \item \textbf{\DIFdelbegin \DIFdel{Developed}%DIFDELCMD < \MBLOCKRIGHTBRACE %%%
-\DIFdel{and validated a }\DIFdelend \DIFaddbegin \DIFadd{Experimental }\DIFaddend PCC-based \DIFdelbegin \DIFdel{FDIA monitoring framework for heterogeneous inverter-fed drives, showing that PCC sensing supports useful binary detection and coarse four-level severity assessment without direct motor-terminal instrumentation}\DIFdelend \DIFaddbegin \DIFadd{FDIA monitoring:}} \DIFadd{A multiscale feature and InceptionTime framework is validated using 540 attack episodes across three speeds and three load settings for each motor type. Complete recordings and their episodes are separated between training, validation, and testing, enabling evaluation on unseen recordings without temporal leakage between these sets}\DIFaddend .
+\DIFdel{and validated a PCC-based FDIA monitoring framework for heterogeneous inverter-fed drives, showing that PCC sensing supports useful binary detectionand coarse four-level }\DIFdelend \DIFaddbegin \DIFadd{Nonintrusive FDIA monitoring in heterogeneous motor drives:}} \DIFadd{We develop and experimentally validate a PCC monitoring framework that combines LF, HF, and TD electrical features with task-specific InceptionTime classifiers, enabling attack detection, localization to the ACIM or PMSM, and injected-bias }\DIFaddend severity assessment without \DIFdelbegin \DIFdel{direct }\DIFdelend \DIFaddbegin \DIFadd{dedicated }\DIFaddend motor-terminal \DIFdelbegin \DIFdel{instrumentation}\DIFdelend \DIFaddbegin \DIFadd{sensors}\DIFaddend .
 \item \textbf{\DIFdelbegin \DIFdel{Constructed}%DIFDELCMD < \MBLOCKRIGHTBRACE %%%
-\DIFdelend \DIFaddbegin \DIFadd{Detection and severity assessment at }\DIFaddend a \DIFdelbegin \DIFdel{multi-scale LF/HF/TD current-feature representation and showed that it improves PCC-side separability under harmonic distortion and signal aggregation, while also enabling stronger motor-side performance}\DIFdelend \DIFaddbegin \DIFadd{shared sensing point:}} \DIFadd{Separate motor-terminal and PCC models quantify the sensing tradeoff. PCC monitoring detects attacks without dedicated motor-terminal instrumentation, while severity-conditioned attack recall identifies attacks even when their exact bias level is misclassified}\DIFaddend .
-\item \textbf{\DIFdelbegin \DIFdel{Provided}\DIFdelend \DIFaddbegin \DIFadd{Limited-label adaptation and reduced-feature inference:}\DIFaddend } \DIFdelbegin \DIFdel{a }\DIFdelend \DIFaddbegin \DIFadd{Bidirectional }\DIFaddend cross-motor \DIFdelbegin \DIFdel{evaluation across ACIM and PMSM domains, including source-only transfer, few-shot target-domain adaptation, and latency/pruning analysis, showing both the limits of direct transfer and the practical gains from lightweight adaptation}\DIFdelend \DIFaddbegin \DIFadd{experiments show that a nominal 1\% target-episode budget improves PMSM-to-ACIM PCC balanced accuracy by 21.43 percentage points. Validation-based feature pruning preserves PCC detection performance with 18 of 74 features and an 85.18\% processing speedup}\DIFaddend .
+\DIFdel{a multi-scale LF/HF/TD current-feature representation and showed that it improves PCC-side separability under harmonic distortion and signal aggregation, while also enabling stronger motor-side performance}\DIFdelend \DIFaddbegin \DIFadd{Cross-motor adaptation with limited labeled data:}} \DIFadd{We evaluate a supervised adaptation strategy that fine-tunes a source-trained detector using complete labeled target-domain episodes, enabling a PCC balanced-accuracy gain of 21.43 percentage points for PMSM-to-ACIM transfer with a nominal 1\% target-episode budget}\DIFaddend .
+\item \textbf{\DIFdelbegin \DIFdel{Provided}%DIFDELCMD < \MBLOCKRIGHTBRACE %%%
+\DIFdel{a cross-motor evaluation across ACIM and PMSM domains, including source-only transfer, few-shot target-domain adaptation, and latency/pruning analysis, showing both the limits of direct transfer and the practical gains from lightweight adaptation}\DIFdelend \DIFaddbegin \DIFadd{Computationally efficient PCC monitoring:}} \DIFadd{We develop a reduced-feature inference pipeline that selects features using validation-set permutation importance and computes only the selected features and their required intermediate quantities, enabling an 85.18\% processing speedup with 18 of 74 features while retaining 80.29\% mean detection balanced accuracy}\DIFaddend .
 \end{itemize}
 
 The remainder of this paper is organized as follows: Section~\ref{sec:relatedWorks} reviews related literature. Section~\ref{sec:system_data} describes the physical system and dataset construction, while Section~\ref{sec:method} details the proposed FDIA detection framework and feature pipeline. Experimental results and cross-domain adaptations are reported in Section~\ref{sec:results}. Section~\ref{sec:realtime} analyzes real-time deployment and latency, followed by a discussion of tradeoffs in Section~\ref{sec:discussion}. Section~\ref{sec:conclusion} concludes the paper.
@@ -741,15 +742,15 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \DIFaddend \subsection{Training Details and Hyperparameters}
 \label{sec:training_details}
 
-For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFaddbegin \DIFadd{(64/128)}\DIFaddend . Table~\ref{tab:search_top5_combined} summarizes the top-ranked configurations for both sensing streams \DIFaddbegin \DIFadd{across all three seeds.
+For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFaddbegin \DIFadd{(64/128)}\DIFaddend . Table~\ref{tab:search_top5_combined} summarizes the top-ranked configurations for both sensing streams \DIFaddbegin \DIFadd{across all three seeds}\DIFaddend .
+
+\DIFaddbegin \DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs.
 }
 
-\DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs.
+\DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection. The }\texttt{\DIFadd{fdia3}} \DIFadd{model retained the }\texttt{\DIFadd{severity4}}\DIFadd{-selected configuration for each stream and holdout and was trained from fresh weights with three outputs. Its checkpoint was selected by three-class validation balanced accuracy.
 }
 
-\DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection. The }\texttt{\DIFadd{fdia3}} \DIFadd{model retained the }\texttt{\DIFadd{severity4}}\DIFadd{-selected configuration for each stream and holdout and was trained from fresh weights with three outputs. Its checkpoint was selected by three-class validation balanced accuracy}\DIFaddend .
-
-\DIFaddbegin \DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications.
+\DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications.
 }
 
 
@@ -1414,11 +1415,12 @@ PMSM $\to$ ACIM & \mbox{56.00\,$\pm$\,5.69} & \mbox{77.43\,$\pm$\,10.43} & \mbox
 
 \DIFaddend Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{severity4}. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix \DIFdelbegin \DIFdel{with low }\DIFdelend \DIFaddbegin \DIFadd{for attack windows, with pooled }\DIFaddend false-positive and false-negative rates of \DIFdelbegin \DIFdel{0.75\% and 1.56}\DIFdelend \DIFaddbegin \DIFadd{20.9\% and 2.3}\DIFaddend \%, respectively\DIFdelbegin \DIFdel{, whereas PCC sensing increases these rates to 6.55\% and 15.46\% because the attack is observed only through the aggregated current response}\DIFdelend \DIFaddbegin \DIFadd{. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks}\DIFaddend . For \texttt{severity4}, PCC errors \DIFdelbegin \DIFdel{concentrate between adjacent classes, especially }\DIFdelend \DIFaddbegin \DIFadd{include both }\DIFaddend normal/\DIFdelbegin \DIFdel{mild and mild/medium}\DIFdelend \DIFaddbegin \DIFadd{attack confusion and confusion among the nonzero bias classes}\DIFaddend , indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
 
-Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack}\DIFaddend . These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for \DIFdelbegin \DIFdel{fine severity discrimination}\DIFdelend \DIFaddbegin \DIFadd{detecting small attacks. RMS traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5}\DIFaddend .
+Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack}\DIFaddend . These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for \DIFdelbegin \DIFdel{fine severity discrimination. }\DIFdelend \DIFaddbegin \DIFadd{detecting small attacks. RMS traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5.
+}
 
 
 
-\DIFaddbegin \begin{figure*}[p]
+\begin{figure*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -1557,11 +1559,11 @@ Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate c
 \end{minipage}
 \end{adjustbox}
 \end{figure*}
+\DIFaddend
 
 
 
-
-\DIFaddend \section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
+\section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
 \label{sec:realtime}
 \DIFaddbegin
 
