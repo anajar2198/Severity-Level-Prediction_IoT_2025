@@ -1,7 +1,7 @@
-% Generated visual comparison of main.tex and main_revised.tex; base repository revision 5a78c03e9654d618fc8c36a5d343aa0d70e23372.
+% Generated visual comparison of main.tex and main_revised.tex; base repository revision 305584eb96de259a6cb3935faa178356bdaa3126.
 % Compile diff.tex from this repository using pdfLaTeX and BibTeX.
 % Text uses latexdiff; complete original/revised floats preserve their respective values and artwork.
-% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "a4d1a38f2a89ca2b2ee8bf1d0baa7cb82ae9325055dbd958bba1fc9aceec378c"}
+% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "6f759b725e9f49fb47e1e4393255330e136bc19b83113b037f1636317d0a14e4"}
 \documentclass[letterpaper,journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main.tex (original)
@@ -9,6 +9,8 @@
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{array,graphicx,xcolor,booktabs,tabularx}
 \usepackage{url}
+
+\usepackage[nocompress]{cite}
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
 %DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
 %DIF UNDERLINE PREAMBLE %DIF PREAMBLE
@@ -56,8 +58,9 @@
 \newcommand{\DiffOriginalCaption}[1]{\par\smallskip\noindent{\footnotesize #1\par}}
 
 \begin{document}
-\title{Nonintrusive Cross-Motor Detection and Severity Assessment of False-Data-Injection Attacks in Heterogeneous Inverter-Fed Drives
-}
+\title{Nonintrusive \DIFdelbegin \DIFdel{Cross-Motor }\DIFdelend Detection\DIFaddbegin \DIFadd{, Localization, }\DIFaddend and Severity Assessment of False-Data-Injection Attacks in Heterogeneous \DIFdelbegin \DIFdel{Inverter-Fed Drives
+}\DIFdelend \DIFaddbegin \DIFadd{Motor-Drive Systems
+}\DIFaddend }
 
 \author{
     Abolfazl Najar, He Yang, Jin Ye,~\IEEEmembership{Senior Member,~IEEE},  Ping Ma and WenZhan Song,~\IEEEmembership{Senior Member,~IEEE}
@@ -89,9 +92,9 @@ Unmarked text is unchanged. Tables and figures are paired as complete ORIGINAL a
 \DIFdelbegin %DIFDELCMD <
 
 %DIFDELCMD < %%%
-\DIFdelend This paper presents an experimentally validated method for detecting false-data-injection attacks (FDIA) and estimating attack severity in heterogeneous motor-drive systems using measurements acquired either at the motor terminals or at the point-of-common-coupling.
+\DIFdelend This paper presents an experimentally validated method for detecting false-data-injection attacks (FDIA) and estimating attack severity in heterogeneous motor-drive systems using measurements acquired either at the motor terminals or at the \DIFdelbegin \DIFdel{point-of-common-coupling}\DIFdelend \DIFaddbegin \DIFadd{point of common coupling (PCC)}\DIFaddend .
 The method extracts multi-scale features from variable-size windows and uses an InceptionTime model for binary attack detection and four-level severity classification. \DIFaddbegin \DIFadd{Motor-terminal currents and PCC voltage/current are evaluated separately using three partitions with no shared recordings or episodes between training, validation, and test sets.
-}\DIFaddend Experiments on a two-branch platform containing one alternating current induction motor (ACIM) drive and one permanent magnet synchronous motor (PMSM) drive show that motor-side sensing yields the strongest class separability, while point-of-common-coupling (PCC) sensing remains attractive for nonintrusive deployment. In the mixed-domain setting, binary detection reaches \DIFdelbegin \DIFdel{98.89\% }\DIFdelend \DIFaddbegin \DIFadd{87.41\% mean }\DIFaddend accuracy with motor-side data and \DIFdelbegin \DIFdel{89.44\% }\DIFdelend \DIFaddbegin \DIFadd{80.78\% mean }\DIFaddend accuracy with PCC data. For four-class severity assessment, the motor-side stream achieves \DIFdelbegin \DIFdel{98.68\% }\DIFdelend \DIFaddbegin \DIFadd{87.64\% mean }\DIFaddend accuracy, while the PCC stream achieves \DIFdelbegin \DIFdel{84.17\% }\DIFdelend \DIFaddbegin \DIFadd{61.00\% mean }\DIFaddend accuracy. Among the evaluated deep-learning and classical machine-learning baselines, the proposed method achieved the \DIFdelbegin \DIFdel{best PCC-side performance }\DIFdelend \DIFaddbegin \DIFadd{highest mean PCC balanced accuracy }\DIFaddend for both binary detection and four-level severity assessment. \DIFdelbegin \DIFdel{For the PCC-side tasks, the proposed method outperformed the evaluated baselines, achieving 89.44\% accuracy for binary detection and 84.17\% accuracy for four-level severity classification, compared with the best baseline accuracies of 86.45\% and 83.42\%, respectively. }\DIFdelend In cross-motor experiments, few-shot fine-tuning improved transfer performance, especially in the PMSM-to-ACIM direction\DIFaddbegin \DIFadd{, where a nominal 1\% target-episode budget raised PCC balanced accuracy from 56.00\% to 77.43\%}\DIFaddend . These results indicate that PCC-based FDIA monitoring is promising on the tested ACIM/PMSM platform.
+}\DIFaddend Experiments on a two-branch platform containing one alternating current induction motor (ACIM) drive and one permanent magnet synchronous motor (PMSM) drive show that motor-side sensing yields the strongest class separability, while \DIFdelbegin \DIFdel{point-of-common-coupling (PCC ) }\DIFdelend \DIFaddbegin \DIFadd{PCC }\DIFaddend sensing remains attractive for nonintrusive deployment. In the mixed-domain setting, binary detection reaches \DIFdelbegin \DIFdel{98.89\% }\DIFdelend \DIFaddbegin \DIFadd{87.41\% mean }\DIFaddend accuracy with motor-side data and \DIFdelbegin \DIFdel{89.44\% }\DIFdelend \DIFaddbegin \DIFadd{80.78\% mean }\DIFaddend accuracy with PCC data. For four-class severity assessment, the motor-side stream achieves \DIFdelbegin \DIFdel{98.68\% }\DIFdelend \DIFaddbegin \DIFadd{87.64\% mean }\DIFaddend accuracy, while the PCC stream achieves \DIFdelbegin \DIFdel{84.17\% }\DIFdelend \DIFaddbegin \DIFadd{61.00\% mean }\DIFaddend accuracy. Among the evaluated deep-learning and classical machine-learning baselines, the proposed method achieved the \DIFdelbegin \DIFdel{best PCC-side performance }\DIFdelend \DIFaddbegin \DIFadd{highest mean PCC balanced accuracy }\DIFaddend for both binary detection and four-level severity assessment. \DIFdelbegin \DIFdel{For the PCC-side tasks, the proposed method outperformed the evaluated baselines, achieving 89.44\% accuracy for binary detection and 84.17\% accuracy for four-level severity classification, compared with the best baseline accuracies of 86.45\% and 83.42\%, respectively. }\DIFdelend In cross-motor experiments, few-shot fine-tuning improved transfer performance, especially in the PMSM-to-ACIM direction\DIFaddbegin \DIFadd{, where a nominal 1\% target-episode budget raised PCC balanced accuracy from 56.00\% to 77.43\%}\DIFaddend . These results indicate that PCC-based FDIA monitoring is promising on the tested ACIM/PMSM platform.
 \DIFdelbegin %DIFDELCMD <
 
 %DIFDELCMD < %%%
@@ -104,15 +107,17 @@ False-data-injection attack, point of common coupling, inverter-fed motor drives
 \section{Introduction}
 \label{sec:introduction}
 
-\IEEEPARstart{F}{DIA} detection and severity assessment are important in networked motor-drive systems, where manipulated sensor feedback can degrade control performance and cause unsafe operation~\cite{Ghaderi2021A}. Increasing drive connectivity makes timely detection of sensor-oriented cyber attacks essential for resilient operation~\cite{Yang2022Fast,Yang2024Enhanced}.
+\DIFdelbegin %DIFDELCMD < \IEEEPARstart{F}{DIA} %%%
+\DIFdelend \DIFaddbegin \IEEEPARstart{F}{alse}\DIFadd{-data-injection attack (FDIA) }\DIFaddend detection and severity assessment are important in networked motor-drive systems, where manipulated sensor feedback can degrade control performance and cause unsafe operation~\cite{Ghaderi2021A}. Increasing drive connectivity makes timely detection of sensor-oriented \DIFdelbegin \DIFdel{cyber attacks }\DIFdelend \DIFaddbegin \DIFadd{cyberattacks }\DIFaddend essential for resilient operation~\cite{Yang2022Fast,Yang2024Enhanced}.
 Current signals are attractive for FDIA monitoring because they are easy to acquire, strongly coupled to electromechanical dynamics, and have been shown to reveal sensor-integrity attacks in motor drives~\cite{7944701, YangVulnerability}. However, most existing studies emphasize terminal-side sensing, operate on a single machine domain, or assume sufficient labeled data for supervised training. These assumptions limit practicality in heterogeneous deployments where different motor types, sensing locations, and data availability constraints all affect performance.
-Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both ACIM and PMSM domains. The study evaluates binary detection \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{fdia2}}\DIFadd{)}\DIFaddend , four-level severity assessment \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{severity4}}\DIFadd{)}\DIFaddend , cross-domain transfer, and deployment feasibility. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{electrical }\DIFaddend features with an InceptionTime classifier, and compares motor-terminal and PCC sensing. \DIFaddbegin \DIFadd{A three-class classifier (}\texttt{\DIFadd{fdia3}}\DIFadd{) additionally distinguishes normal operation, an ACIM attack, and a PMSM attack.
+Motivated by these limitations, this work experimentally evaluates FDIA detection in a heterogeneous motor-drive setting involving both \DIFdelbegin \DIFdel{ACIM and PMSM }\DIFdelend \DIFaddbegin \DIFadd{alternating current induction motor (ACIM) and permanent magnet synchronous motor (PMSM) }\DIFaddend domains. The study evaluates binary detection \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{fdia2}}\DIFadd{)}\DIFaddend , four-level severity assessment \DIFaddbegin \DIFadd{(}\texttt{\DIFadd{severity4}}\DIFadd{)}\DIFaddend , cross-domain transfer, and deployment feasibility. The framework combines low-frequency (LF), high-frequency (HF), and time-domain (TD) \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{electrical }\DIFaddend features with an InceptionTime classifier, and compares motor-terminal and \DIFdelbegin \DIFdel{PCC sensing.
+}\DIFdelend \DIFaddbegin \DIFadd{point of common coupling (PCC) sensing. A three-class classifier (}\texttt{\DIFadd{fdia3}}\DIFadd{) additionally distinguishes normal operation, an ACIM attack, and a PMSM attack.
 }\DIFaddend
 
 \subsection{Challenges at PCC in Heterogeneous Multi-Motor Systems}
 \label{sec:pcc_challenges}
 
-From a deployment perspective, motor-terminal measurements provide cleaner machine-specific signatures, whereas PCC measurements are more scalable and non-intrusive. PCC sensing is attractive because it avoids direct motor-terminal instrumentation and is compatible with shared electrical infrastructure~\cite{7271086}. However, PCC currents are affected by converter harmonics, network interactions, and load aggregation. Consequently, PCC attack signatures are weaker and less separable than motor-terminal signatures~\cite{10005067}.
+From a deployment perspective, motor-terminal measurements provide cleaner machine-specific signatures, whereas PCC measurements are more scalable and \DIFdelbegin \DIFdel{non-intrusive}\DIFdelend \DIFaddbegin \DIFadd{nonintrusive}\DIFaddend . PCC sensing is attractive because it avoids direct motor-terminal instrumentation and is compatible with shared electrical infrastructure~\cite{7271086}. However, PCC currents are affected by converter harmonics, network interactions, and load aggregation. Consequently, PCC attack signatures are weaker and less separable than motor-terminal signatures~\cite{10005067}.
 The problem becomes more difficult in heterogeneous multi-motor settings. ACIM and PMSM systems exhibit different current characteristics even under the same attack framework, which introduces a substantial domain shift between source and target deployments. Consequently, a detector trained on one motor family may generalize poorly to the other unless explicit adaptation is used. Therefore, this study evaluates in-domain performance, source-only transfer, few-shot adaptation, and transfer-direction asymmetry.
 \subsection{Contributions}
 \label{sec:contributions}
@@ -132,7 +137,7 @@ The remainder of this paper is organized as follows: Section~\ref{sec:relatedWor
 \section{Related Work}
 \label{sec:relatedWorks}
 
-FDIA detection has been studied extensively in smart grids and broader cyber-physical systems (CPS), but the assumptions in that literature do not transfer cleanly to inverter-fed motor drives. Many grid- and CPS-oriented approaches rely on state estimation, observer-based detection, invariant analysis, adaptive neuro-fuzzy models, or graph-based learning~\cite{7438916,basati2022fdi,nath2022quickest,beg2017fdia,sargolzaei2020fdia,10016905}. These studies demonstrate strong FDIA-detection capability at the system level, but they are generally not designed for drive-level current monitoring or for deployment at a shared point of common coupling (PCC).
+FDIA detection has been studied extensively in smart grids and broader cyber-physical systems (CPS), but the assumptions in that literature do not transfer cleanly to inverter-fed motor drives. Many grid- and CPS-oriented approaches rely on state estimation, observer-based detection, invariant analysis, adaptive neuro-fuzzy models, or graph-based learning~\cite{7438916,basati2022fdi,nath2022quickest,beg2017fdia,sargolzaei2020fdia,10016905}. These studies demonstrate strong FDIA-detection capability at the system level, but they are generally not designed for drive-level current monitoring or for deployment at a shared \DIFdelbegin \DIFdel{point of common coupling (PCC)}\DIFdelend \DIFaddbegin \DIFadd{PCC}\DIFaddend .
 
 Motor-drive-specific studies are more closely related to the present work. Prior work has shown that current signals can support effective FDIA detection in electric-drive systems and that transfer learning can improve performance when labeled data are limited~\cite{Yang2022Fast,Yang2024Enhanced}. Related industrial-IoT monitoring studies have also considered cyber-detection in machine-monitoring settings~\cite{423563247547}. However, these studies mainly rely on motor-terminal sensing, single-motor settings, or closely related operating domains, and therefore provide limited evidence for heterogeneous cross-motor transfer.
 
@@ -680,7 +685,7 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \label{sec:AnomalyDetection}
 \DIFaddbegin
 
-\DIFaddend The proposed pipeline supports online monitoring from trusted motor-terminal \DIFdelbegin \DIFdel{or PCC }\DIFdelend \DIFaddbegin \DIFadd{currents or PCC voltage and }\DIFaddend current measurements. Figure~\ref{fig:Online-algorithem} illustrates the overall architecture of the proposed monitoring pipeline. In the deployed setting, fixed-length windows of \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{measurement }\DIFaddend data are acquired from either the motor terminals or the PCC, passed through the LF/HF\DIFaddbegin \DIFadd{/TD }\DIFaddend feature-extraction stage, and then evaluated by the selected learning model to produce anomaly or severity decisions. The measurement, feature-extraction, and inference stages are modular, allowing the same pipeline to operate with motor-side or PCC inputs and supporting feature pruning, reduced-input models, and cross-motor adaptation. The framework provides alarms, severity indicators, and logs for supervisory systems; automatic mitigation is outside the scope. The same architecture is used for binary detection and severity classification\DIFdelbegin \DIFdel{. Binary detection is the primary PCC deployment task; severity estimates provide secondary diagnostic information}\DIFdelend \DIFaddbegin \DIFadd{, with separate normalization and trained models for motor-side and PCC inputs}\DIFaddend . The experimental results in later sections show that motor-terminal sensing provides cleaner discriminative signatures, whereas PCC sensing offers a less intrusive sensing option for the tested setup.
+\DIFaddend The proposed pipeline supports online monitoring from trusted motor-terminal \DIFdelbegin \DIFdel{or PCC }\DIFdelend \DIFaddbegin \DIFadd{currents or PCC voltage and }\DIFaddend current measurements. \DIFdelbegin \DIFdel{Figure}\DIFdelend \DIFaddbegin \DIFadd{Fig.}\DIFaddend ~\ref{fig:Online-algorithem} illustrates the overall architecture of the proposed monitoring pipeline. In the deployed setting, fixed-length windows of \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{measurement }\DIFaddend data are acquired from either the motor terminals or the PCC, passed through the LF/HF\DIFaddbegin \DIFadd{/TD }\DIFaddend feature-extraction stage, and then evaluated by the selected learning model to produce anomaly or severity decisions. The measurement, feature-extraction, and inference stages are modular, allowing the same pipeline to operate with motor-side or PCC inputs and supporting feature pruning, reduced-input models, and cross-motor adaptation. The framework provides alarms, severity indicators, and logs for supervisory systems; automatic mitigation is outside the scope. The same architecture is used for binary detection and severity classification\DIFdelbegin \DIFdel{. Binary detection is the primary PCC deployment task; severity estimates provide secondary diagnostic information}\DIFdelend \DIFaddbegin \DIFadd{, with separate normalization and trained models for motor-side and PCC inputs}\DIFaddend . The experimental results in later sections show that motor-terminal sensing provides cleaner discriminative signatures, whereas PCC sensing offers a less intrusive sensing option for the tested setup.
 
 
 
@@ -1193,7 +1198,7 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \label{sec:model_comparison}
 \DIFaddbegin
 
-\DIFaddend To benchmark the proposed LF/HF Inception-based model, representative deep-learning and classical ML baselines were evaluated on the PCC-based \texttt{fdia2} and \texttt{severity4} tasks, which were the most challenging in-domain settings. The baselines include ResNet, \DIFdelbegin \DIFdel{MLSTM-FCN}\DIFdelend \DIFaddbegin \DIFadd{LSTM-FCN}\DIFaddend , Random Forest, \DIFdelbegin \DIFdel{and XGBoost, }\DIFdelend \DIFaddbegin \DIFadd{XGBoost, and MultiRocket~}\cite{tan2022multirocket}\DIFadd{, }\DIFaddend while the proposed model uses the final stream-specific InceptionTime configuration selected by validation-based hyperparameter search. \DIFaddbegin \DIFadd{All methods use the same recording partitions and feature inputs; search budgets differ between model families. }\DIFaddend As shown in Table~\ref{tab:model_comparison_hard_tasks}, the proposed model achieved the highest \DIFaddbegin \DIFadd{mean }\DIFaddend accuracy, balanced accuracy, and F1 score among the evaluated baselines \DIFdelbegin \DIFdel{on both PCC tasks. The performance gap is larger for }\DIFdelend \DIFaddbegin \DIFadd{for PCC binary detection, and the highest mean balanced accuracy for PCC severity assessment. For }\DIFaddend \texttt{severity4}\DIFdelbegin \DIFdel{, confirming that PCC-based severity discrimination is more challenging than binary FDIA detectionand benefits from the proposed temporal LF/HF representation}\DIFdelend \DIFaddbegin \DIFadd{, XGBoost achieved higher accuracy and LSTM-FCN slightly higher macro F1. The proposed model therefore improves average class recall for PCC severity assessment, while the preferred model depends on the evaluation metric}\DIFaddend .
+\DIFaddend To benchmark the proposed LF/HF Inception-based model, representative deep-learning and classical \DIFdelbegin \DIFdel{ML }\DIFdelend \DIFaddbegin \DIFadd{machine-learning (ML) }\DIFaddend baselines were evaluated on the PCC-based \texttt{fdia2} and \texttt{severity4} tasks, which were the most challenging in-domain settings. The baselines include ResNet, \DIFdelbegin \DIFdel{MLSTM-FCN}\DIFdelend \DIFaddbegin \DIFadd{LSTM-FCN}\DIFaddend , Random Forest, \DIFdelbegin \DIFdel{and XGBoost, }\DIFdelend \DIFaddbegin \DIFadd{XGBoost, and MultiRocket~}\cite{tan2022multirocket}\DIFadd{, }\DIFaddend while the proposed model uses the final stream-specific InceptionTime configuration selected by validation-based hyperparameter search. \DIFaddbegin \DIFadd{All methods use the same recording partitions and feature inputs; search budgets differ between model families. }\DIFaddend As shown in Table~\ref{tab:model_comparison_hard_tasks}, the proposed model achieved the highest \DIFaddbegin \DIFadd{mean }\DIFaddend accuracy, balanced accuracy, and F1 score among the evaluated baselines \DIFdelbegin \DIFdel{on both PCC tasks. The performance gap is larger for }\DIFdelend \DIFaddbegin \DIFadd{for PCC binary detection, and the highest mean balanced accuracy for PCC severity assessment. For }\DIFaddend \texttt{severity4}\DIFdelbegin \DIFdel{, confirming that PCC-based severity discrimination is more challenging than binary FDIA detectionand benefits from the proposed temporal LF/HF representation}\DIFdelend \DIFaddbegin \DIFadd{, XGBoost achieved higher accuracy and LSTM-FCN slightly higher macro F1. The proposed model therefore improves average class recall for PCC severity assessment, while the preferred model depends on the evaluation metric}\DIFaddend .
 
 
 
@@ -1413,14 +1418,13 @@ PMSM $\to$ ACIM & \mbox{56.00\,$\pm$\,5.69} & \mbox{77.43\,$\pm$\,10.43} & \mbox
 \label{sec:error_analysis}
 \DIFaddbegin
 
-\DIFaddend Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{severity4}. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix \DIFdelbegin \DIFdel{with low }\DIFdelend \DIFaddbegin \DIFadd{for attack windows, with pooled }\DIFaddend false-positive and false-negative rates of \DIFdelbegin \DIFdel{0.75\% and 1.56}\DIFdelend \DIFaddbegin \DIFadd{20.9\% and 2.3}\DIFaddend \%, respectively\DIFdelbegin \DIFdel{, whereas PCC sensing increases these rates to 6.55\% and 15.46\% because the attack is observed only through the aggregated current response}\DIFdelend \DIFaddbegin \DIFadd{. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks}\DIFaddend . For \texttt{severity4}, PCC errors \DIFdelbegin \DIFdel{concentrate between adjacent classes, especially }\DIFdelend \DIFaddbegin \DIFadd{include both }\DIFaddend normal/\DIFdelbegin \DIFdel{mild and mild/medium}\DIFdelend \DIFaddbegin \DIFadd{attack confusion and confusion among the nonzero bias classes}\DIFaddend , indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
+\DIFaddend Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{severity4}. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix \DIFdelbegin \DIFdel{with low }\DIFdelend \DIFaddbegin \DIFadd{for attack windows, with pooled }\DIFaddend false-positive \DIFaddbegin \DIFadd{(FP) }\DIFaddend and false-negative \DIFdelbegin \DIFdel{rates of 0.75\% and 1.56}\DIFdelend \DIFaddbegin \DIFadd{(FN) rates of 20.9\% and 2.3}\DIFaddend \%, respectively\DIFdelbegin \DIFdel{, whereas PCC sensing increases these rates to 6.55\% and 15.46\% because the attack is observed only through the aggregated current response}\DIFdelend \DIFaddbegin \DIFadd{. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks}\DIFaddend . For \texttt{severity4}, PCC errors \DIFdelbegin \DIFdel{concentrate between adjacent classes, especially }\DIFdelend \DIFaddbegin \DIFadd{include both }\DIFaddend normal/\DIFdelbegin \DIFdel{mild and mild/medium}\DIFdelend \DIFaddbegin \DIFadd{attack confusion and confusion among the nonzero bias classes}\DIFaddend , indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
 
-Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack}\DIFaddend . These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for \DIFdelbegin \DIFdel{fine severity discrimination. }\DIFdelend \DIFaddbegin \DIFadd{detecting small attacks. RMS traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5.
-}
-
+Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack}\DIFaddend . These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for \DIFdelbegin \DIFdel{fine severity discrimination}\DIFdelend \DIFaddbegin \DIFadd{detecting small attacks. Root-mean-square (RMS) traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5}\DIFaddend .
 
 
-\begin{figure*}[p]
+
+\DIFaddbegin \begin{figure*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -1559,11 +1563,11 @@ Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate c
 \end{minipage}
 \end{adjustbox}
 \end{figure*}
-\DIFaddend
 
 
 
-\section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
+
+\DIFaddend \section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
 \label{sec:realtime}
 \DIFaddbegin
 
@@ -1921,7 +1925,7 @@ This appendix provides \DIFdelbegin \DIFdel{supplementary material supporting th
 \subsection{Representative FDIA Episodes}
 \label{app:fdia_episode_examples}
 
-Figure~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses during the first 200 \DIFdelbegin \DIFdel{~s of operation}\DIFdelend \DIFaddbegin \DIFadd{s of each selected recording. RMS uses 500-sample frames at stride 25, matching the time-domain RMS definition. Complete-recording diagnostics retain the post-schedule normal tails}\DIFaddend .
+\DIFdelbegin \DIFdel{Figure}\DIFdelend \DIFaddbegin \DIFadd{Fig.}\DIFaddend ~\ref{fig:app_attack_process_examples} shows representative consecutive FDIA episodes applied to the ACIM and PMSM drive systems. In both examples, the top panel shows the scheduled FDIA severity level, while the middle and bottom panels show the corresponding motor-current and PCC-current RMS responses during the first 200 \DIFdelbegin \DIFdel{~s of operation}\DIFdelend \DIFaddbegin \DIFadd{s of each selected recording. RMS uses 500-sample frames at stride 25, matching the time-domain RMS definition. Complete-recording diagnostics retain the post-schedule normal tails}\DIFaddend .
 
 
 
@@ -2122,7 +2126,7 @@ Total & 37 & -- & LF (18), HF (11), TD (8) \\
 \renewcommand{\arraystretch}{1.08}
 \begin{tabularx}{\columnwidth}{l c c X}
 \hline
-Type & No. & Window / Stride & Features \\
+Type & No. & \shortstack{Window / Stride\\(samples)} & Features \\
 \hline
 LF & 18 & 500 / 25 &
 $A_1$, $f_1$, $\phi_1$, THD, $H_2/H_1$, $H_3/H_1$, $H_5/H_1$, $H_7/H_1$,
@@ -2131,7 +2135,7 @@ $E_{0-120}$, $E_{120-300}$, $E_{300-500}$,
 $df_1/dt$, $dA_1/dt$, $d\mathrm{THD}/dt$ \\
 \hline
 HF & 11 & 250 / 29 &
-RMS$_{2-5k}$, energy ratio, centroid, bandwidth, flatness, kurtosis,
+$\mathrm{RMS}_{2\text{--}5\,\mathrm{kHz}}$, energy ratio, centroid, bandwidth, flatness, kurtosis,
 peak frequency, peak-to-band, envelope RMS, envelope kurtosis, envelope crest factor \\
 \hline
 TD & 8 & 500 / 25 &
@@ -2140,6 +2144,8 @@ RMS, standard deviation, crest factor, kurtosis, skewness, peak-to-peak, line le
 Total & 37 & -- & LF (18), HF (11), TD (8) \\
 \hline
 \end{tabularx}
+\par\smallskip\raggedright
+THD: total harmonic distortion; MAV: mean absolute value. Subscripts of $E$ give frequency-band limits in hertz.
 
 \end{minipage}
 \end{minipage}
