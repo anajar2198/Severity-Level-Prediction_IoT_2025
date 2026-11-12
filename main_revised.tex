@@ -30,11 +30,11 @@
 }
 
 \maketitle
-\agent{the abstract is not good. we are talking so much on algorithem rather than what we are solving and why its important. we need to say 1/3 what is the problem. how we solved it 1/3 and why its matter 1/3}
+
 \begin{abstract}
-This paper presents an experimentally validated method for detecting false-data-injection attacks (FDIA) and estimating attack severity in heterogeneous motor-drive systems using measurements acquired either at the motor terminals or at the point of common coupling (PCC).
-The method extracts multi-scale features from variable-size windows and uses an InceptionTime model for binary attack detection and four-level severity classification. Motor-terminal currents and PCC voltage/current are evaluated separately using three partitions with no shared recordings or episodes between training, validation, and test sets.
-Experiments on a two-branch platform containing one alternating current induction motor (ACIM) drive and one permanent magnet synchronous motor (PMSM) drive show that motor-side sensing yields the strongest class separability, while PCC sensing remains attractive for nonintrusive deployment. In the mixed-domain setting, binary detection reaches 87.41\% mean accuracy with motor-side data and 80.78\% mean accuracy with PCC data. For four-class severity assessment, the motor-side stream achieves 87.64\% mean accuracy, while the PCC stream achieves 61.00\% mean accuracy. Among the evaluated deep-learning and classical machine-learning baselines, the proposed method achieved the highest mean PCC balanced accuracy for both binary detection and four-level severity assessment. In cross-motor experiments, few-shot fine-tuning improved transfer performance, especially in the PMSM-to-ACIM direction, where a nominal 1\% target-episode budget raised PCC balanced accuracy from 56.00\% to 77.43\%. These results indicate that PCC-based FDIA monitoring is promising on the tested ACIM/PMSM platform.
+False-data-injection attacks on current feedback can compromise the operation of inverter-fed motor drives. In heterogeneous multi-motor systems, installing monitoring sensors at each motor increases instrumentation requirements, while measurements at the shared point of common coupling (PCC) combine responses from different drives. This aggregation makes it difficult to detect small attacks, identify the affected motor, and distinguish injected-bias levels, limiting the use of centralized monitoring.
+This paper addresses these tasks using PCC voltage and current measurements, with motor-terminal currents evaluated separately as a reference. Multiscale electrical features and task-specific InceptionTime classifiers are validated on a platform containing an alternating current induction motor and a permanent magnet synchronous motor. The evaluation keeps complete recordings and their episodes separate across training, validation, and test sets and examines cross-motor adaptation and selective feature computation.
+PCC measurements achieve mean accuracies of 80.78\% for attack detection and 74.32\% for joint detection and motor localization, supporting monitoring without dedicated motor-terminal sensors. Severity classification remains more challenging, with 61.00\% accuracy. Target-domain fine-tuning improves cross-motor transfer, while feature pruning reduces processing time by 85.18\% at 80.29\% balanced detection accuracy. These results establish the feasibility and current limitations of PCC monitoring on the tested heterogeneous drive platform.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -70,7 +70,7 @@ The remainder of this paper is organized as follows: Section~\ref{sec:relatedWor
 
 FDIA detection has been studied extensively in smart grids and broader cyber-physical systems (CPS), but the assumptions in that literature do not transfer cleanly to inverter-fed motor drives. Many grid- and CPS-oriented approaches rely on state estimation, observer-based detection, invariant analysis, adaptive neuro-fuzzy models, or graph-based learning~\cite{7438916,basati2022fdi,nath2022quickest,beg2017fdia,sargolzaei2020fdia,10016905}. These studies demonstrate strong FDIA-detection capability at the system level, but they are generally not designed for drive-level current monitoring or for deployment at a shared PCC.
 
-Motor-drive-specific studies has shown that current signals can support effective FDIA detection in electric-drive systems and that transfer learning can improve performance when labeled data are limited~\cite{Yang2022Fast,Yang2024Enhanced}. Related industrial-IoT monitoring studies have also considered cyber-detection in machine-monitoring settings~\cite{423563247547}. However, these studies mainly rely on motor-terminal sensing, single-motor settings, or closely related operating domains, and therefore provide limited evidence for heterogeneous cross-motor transfer.
+Motor-drive-specific studies have shown that current signals can support effective FDIA detection in electric-drive systems and that transfer learning can improve performance when labeled data are limited~\cite{Yang2022Fast,Yang2024Enhanced}. Related industrial-IoT monitoring studies have also considered cyber-detection in machine-monitoring settings~\cite{423563247547}. However, these studies mainly rely on motor-terminal sensing, single-motor settings, or closely related operating domains, and therefore provide limited evidence for heterogeneous cross-motor transfer.
 
 
 
@@ -79,12 +79,14 @@ Motor-drive-specific studies has shown that current signals can support effectiv
 The main gap is not FDIA detection in general, which has been widely studied in smart grids and cyber-physical systems, but nonintrusive PCC-based monitoring for heterogeneous inverter-fed motor-drive systems. In particular, the existing literature does not clearly establish: 1) how PCC sensing compares with motor-side sensing for low-severity current-feedback FDIAs, 2) whether PCC measurements support reliable multi-level severity assessment rather than only binary detection, given that attack signatures become weaker and less separable under signal aggregation and harmonic distortion, and 3) how detection performance transfers between heterogeneous ACIM and PMSM domains when labeled target-domain data are limited. This work addresses these three questions experimentally on a shared ACIM/PMSM platform using multi-scale features, in-domain evaluation, source-only cross-domain transfer, and few-shot target-domain adaptation.
 
 \section{System and Data}
-\agent{we can not jump to A. If can bring some text from next subsections in here. do this for whole paper. }
+
 \label{sec:system_data}
+
+The experimental platform consists of a heterogeneous two-motor industrial setup including one ACIM branch and one PMSM branch. Both branches are supplied from a common upstream electrical interface, enabling measurements at the PCC in addition to motor-side measurements. This setup enables comparison of motor-terminal and PCC sensing under heterogeneous ACIM/PMSM dynamics.
 \subsection{Experimental Platform: ACIM/PMSM and PCC Sensing}
 \label{sec:experimental_platform}
 
-Fig.~\ref{fig:system_schematic} illustrates the overall setup, including the shared PCC, the two drive branches, the ACIM and PMSM loads, the sensing locations, and the FDIA injection points in the control/feedback paths. The experimental platform consists of a heterogeneous two-motor industrial setup including one ACIM branch and one PMSM branch. Both branches are supplied from a common upstream electrical interface, enabling measurements at the PCC in addition to motor-side measurements. This setup enables comparison of motor-terminal and PCC sensing under heterogeneous ACIM/PMSM dynamics.
+Fig.~\ref{fig:system_schematic} illustrates the overall setup, including the shared PCC, the two drive branches, the ACIM and PMSM loads, the sensing locations, and the FDIA injection points in the control/feedback paths.
 The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. All episodes were acquired on the same two-motor platform. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals. The experiments cover three speed operating points, namely 900, 1100, and 1300 RPM.
 
 Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}. The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine.
@@ -346,10 +348,12 @@ partition within a repeat. $N$: number of windows.
 \section{The Proposed Method}
 \label{sec:method}
 
+To represent both slow electromechanical behavior and faster attack-induced disturbances, a two-scale LF/HF feature pipeline was applied independently to each measured channel. Separate classifiers use these features for attack detection, motor localization, and injected-bias severity assessment.
+
 \subsection{LF/HF Feature Extraction Pipeline}
 \label{sec:lfhf_features}
 
-To represent both slow electromechanical behavior and faster attack-induced disturbances, a two-scale LF/HF feature pipeline was applied independently to each measured channel. For every sample, a 2{,}000-point outer window was first extracted from the raw 10~kHz recording. Within this outer window, two parallel sliding analyses were performed. The LF branch uses a 500-sample window with a stride of 25 samples, while the HF branch uses a 250-sample window with a stride of 29 samples. The LF and HF settings both produce 61 time steps, enabling concatenation into one temporal feature tensor.
+For every sample, a 2{,}000-point outer window was first extracted from the raw 10~kHz recording. Within this outer window, two parallel sliding analyses were performed. The LF branch uses a 500-sample window with a stride of 25 samples, while the HF branch uses a 250-sample window with a stride of 29 samples. The LF and HF settings both produce 61 time steps, enabling concatenation into one temporal feature tensor.
 Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates representative attack-onset responses and the corresponding LF/HF windows. In both cases, the raw signal is shown around the attack-transition instant, and representative LF and HF windows are overlaid to illustrate the two-scale extraction procedure. Signal amplitudes are in recorded acquisition units.
 
 
@@ -523,14 +527,16 @@ This protocol is particularly important in the present study because ACIM and PM
 
 \section{Experimental Results}
 \label{sec:results}
+
+Table~\ref{tab:all_tasks_in_domain} reports mixed-domain in-domain performance with ACIM and PMSM recordings in all splits and no shared recordings or episodes between them.
 \subsection{In-Domain Baselines: Motor vs PCC}
 \label{sec:in_domain}
 
-Table~\ref{tab:all_tasks_in_domain} reports mixed-domain in-domain performance with ACIM and PMSM recordings in all splits and no shared recordings or episodes between them. The results show that motor-side sensing provides more discriminative attack signatures than PCC sensing for both \texttt{fdia2} and \texttt{severity4}. In addition, \texttt{severity4} is substantially more challenging than binary attack detection, especially at PCC. The \texttt{fdia3} rows report joint detection and localization, including the normal class. Fig.~\ref{fig:main_confusion_matrices} shows the \texttt{fdia2} and \texttt{severity4} confusion matrices, with row percentages pooled over the three holdouts.
+The results show that motor-side sensing provides more discriminative attack signatures than PCC sensing for both \texttt{fdia2} and \texttt{severity4}. In addition, \texttt{severity4} is substantially more challenging than binary attack detection, especially at PCC. The \texttt{fdia3} rows report joint detection and localization, including the normal class. Fig.~\ref{fig:main_confusion_matrices} shows the \texttt{fdia2} and \texttt{fdia3} confusion matrices; Fig.~\ref{fig:severity_detection_decisions}(a), (b) shows the \texttt{severity4} matrices. Row percentages are pooled over the three holdouts.
 
 Thus, PCC-side severity estimates should be treated as coarse diagnostics, whereas motor-side measurements support finer severity discrimination. Overall, PCC monitoring is more challenging than motor-side monitoring, and severity assessment is harder than binary detection. These baseline findings motivate the subsequent cross-domain analysis, where the additional challenge of motor-type shift is introduced.
 
-Exact-severity recall counts attacks assigned to the correct bias class. Severity-conditioned attack recall also counts attacks assigned to another nonzero bias class. Fig.~\ref{fig:severity_detection_decisions} presents this second view of the PCC severity model: it detects 88.1\% of high-bias attacks as some attack level, compared with 70.8\% assigned to the exact high-bias class. Thus, an incorrect severity estimate can still provide an attack indication. The same model labels 37.3\% of normal windows as attacks, so this detection benefit must be considered together with false alarms. These decisions come from the four-class model; the separately trained binary detector in Fig.~\ref{fig:main_confusion_matrices}(b) has fewer false alarms.
+Exact-severity recall counts attacks assigned to the correct bias class. Severity-conditioned attack recall also counts attacks assigned to another nonzero bias class. Fig.~\ref{fig:severity_detection_decisions}(c), (d) presents this second view of the PCC severity model: it detects 88.1\% of high-bias attacks as some attack level, compared with 70.8\% assigned to the exact high-bias class. Thus, an incorrect severity estimate can still provide an attack indication. The same model labels 37.3\% of normal windows as attacks, so this detection benefit must be considered together with false alarms. These decisions come from the four-class model; the separately trained binary detector in Fig.~\ref{fig:main_confusion_matrices}(b) has fewer false alarms.
 
 \begin{table}[t]
 \centering
@@ -553,7 +559,7 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \hline\end{tabular}
 \par\smallskip\begin{minipage}{\columnwidth}\scriptsize Cells show mean above ($\pm$ sample SD), over three holdouts; this is not a range or confidence interval. BA: balanced accuracy. Precision, recall, and F1 are macro-averaged.\end{minipage}
 \end{table}
-\agent{I believe it is good to bring fdi3 here as well. what do you think? I think if we bring totally severerity in next figue it is better.}
+
 \begin{figure}[t]
 \centering
 % Cell values: unchanged pooled confusion counts, row-normalized (%).
@@ -588,95 +594,63 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \put(224.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
 \put(198.0000,266.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (b) PCC: fdia2}}
 \put(146,153){\framebox(104.0,104.0){}}
-\put(23.0000,101.0000){\color[rgb]{0.080969,0.381130,0.661361}\rule{26.0000bp}{26.0000bp}}
-\put(36.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 81.2\%}}
-\put(49.0000,101.0000){\color[rgb]{0.828881,0.893764,0.954725}\rule{26.0000bp}{26.0000bp}}
-\put(62.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 18.3\%}}
-\put(75.0000,101.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(88.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.2\%}}
-\put(101.0000,101.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(114.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
-\put(23.0000,75.0000){\color[rgb]{0.934794,0.962661,0.989173}\rule{26.0000bp}{26.0000bp}}
-\put(36.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 4.4\%}}
-\put(49.0000,75.0000){\color[rgb]{0.031373,0.293795,0.576348}\rule{26.0000bp}{26.0000bp}}
-\put(62.0000,88.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 89.6\%}}
-\put(75.0000,75.0000){\color[rgb]{0.922491,0.954787,0.985236}\rule{26.0000bp}{26.0000bp}}
-\put(88.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 6.0\%}}
-\put(101.0000,75.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(114.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.0\%}}
-\put(23.0000,49.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(36.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
-\put(49.0000,49.0000){\color[rgb]{0.953249,0.974471,0.995079}\rule{26.0000bp}{26.0000bp}}
-\put(62.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.0\%}}
-\put(75.0000,49.0000){\color[rgb]{0.031373,0.249135,0.510035}\rule{26.0000bp}{26.0000bp}}
-\put(88.0000,62.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 94.0\%}}
-\put(101.0000,49.0000){\color[rgb]{0.940946,0.966597,0.991142}\rule{26.0000bp}{26.0000bp}}
-\put(114.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 3.7\%}}
-\put(23.0000,23.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(36.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.4\%}}
-\put(49.0000,23.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
-\put(62.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
-\put(75.0000,23.0000){\color[rgb]{0.965552,0.982345,0.999016}\rule{26.0000bp}{26.0000bp}}
-\put(88.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.6\%}}
-\put(101.0000,23.0000){\color[rgb]{0.031373,0.200415,0.437693}\rule{26.0000bp}{26.0000bp}}
-\put(114.0000,36.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 98.8\%}}
-\put(19.0000,114.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
-\put(19.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
-\put(19.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
-\put(19.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
-\put(36.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
-\put(62.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
-\put(88.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
-\put(114.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
-\put(75.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (c) Motor: severity4}}
+\put(23.0000,92.3333){\color[rgb]{0.108651,0.416563,0.689043}\rule{34.6667bp}{34.6667bp}}
+\put(40.3333,109.6667){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 77.5\%}}
+\put(57.6667,92.3333){\color[rgb]{0.959400,0.978408,0.997047}\rule{34.6667bp}{34.6667bp}}
+\put(75.0000,109.6667){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.3\%}}
+\put(92.3333,92.3333){\color[rgb]{0.805260,0.878016,0.946851}\rule{34.6667bp}{34.6667bp}}
+\put(109.6667,109.6667){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 21.2\%}}
+\put(23.0000,57.6667){\color[rgb]{0.953249,0.974471,0.995079}\rule{34.6667bp}{34.6667bp}}
+\put(40.3333,75.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.3\%}}
+\put(57.6667,57.6667){\color[rgb]{0.031373,0.208535,0.449750}\rule{34.6667bp}{34.6667bp}}
+\put(75.0000,75.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 97.7\%}}
+\put(92.3333,57.6667){\color[rgb]{0.968627,0.984314,1.000000}\rule{34.6667bp}{34.6667bp}}
+\put(109.6667,75.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.0\%}}
+\put(23.0000,23.0000){\color[rgb]{0.919416,0.952818,0.984252}\rule{34.6667bp}{34.6667bp}}
+\put(40.3333,40.3333){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 6.3\%}}
+\put(57.6667,23.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{34.6667bp}{34.6667bp}}
+\put(75.0000,40.3333){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.0\%}}
+\put(92.3333,23.0000){\color[rgb]{0.031373,0.253195,0.516063}\rule{34.6667bp}{34.6667bp}}
+\put(109.6667,40.3333){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 93.7\%}}
+\put(19.0000,109.6667){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(40.3333,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(19.0000,75.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont AC}}
+\put(75.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont AC}}
+\put(19.0000,40.3333){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PM}}
+\put(109.6667,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PM}}
+\put(75.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (c) Motor: fdia3}}
 \put(23,23){\framebox(104.0,104.0){}}
-\put(146.0000,101.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{26.0000bp}{26.0000bp}}
-\put(159.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
-\put(172.0000,101.0000){\color[rgb]{0.811165,0.881953,0.948820}\rule{26.0000bp}{26.0000bp}}
-\put(185.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 20.4\%}}
-\put(198.0000,101.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
-\put(211.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 7.9\%}}
-\put(224.0000,101.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
-\put(237.0000,114.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.0\%}}
-\put(146.0000,75.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
-\put(159.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.6\%}}
-\put(172.0000,75.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
-\put(185.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.3\%}}
-\put(198.0000,75.0000){\color[rgb]{0.867266,0.919354,0.967520}\rule{26.0000bp}{26.0000bp}}
-\put(211.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 13.2\%}}
-\put(224.0000,75.0000){\color[rgb]{0.891734,0.935102,0.975394}\rule{26.0000bp}{26.0000bp}}
-\put(237.0000,88.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.8\%}}
-\put(146.0000,49.0000){\color[rgb]{0.852503,0.909512,0.962599}\rule{26.0000bp}{26.0000bp}}
-\put(159.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 14.9\%}}
-\put(172.0000,49.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
-\put(185.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 12.0\%}}
-\put(198.0000,49.0000){\color[rgb]{0.412042,0.677186,0.836263}\rule{26.0000bp}{26.0000bp}}
-\put(211.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 50.6\%}}
-\put(224.0000,49.0000){\color[rgb]{0.796401,0.872111,0.943899}\rule{26.0000bp}{26.0000bp}}
-\put(237.0000,62.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 22.5\%}}
-\put(146.0000,23.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
-\put(159.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 11.9\%}}
-\put(172.0000,23.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
-\put(185.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 8.1\%}}
-\put(198.0000,23.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
-\put(211.0000,36.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.2\%}}
-\put(224.0000,23.0000){\color[rgb]{0.171027,0.484752,0.731242}\rule{26.0000bp}{26.0000bp}}
-\put(237.0000,36.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 70.8\%}}
-\put(142.0000,114.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
-\put(142.0000,88.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
-\put(142.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
-\put(142.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
-\put(159.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
-\put(185.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
-\put(211.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
-\put(237.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
-\put(198.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (d) PCC: severity4}}
+\put(146.0000,92.3333){\color[rgb]{0.211626,0.525352,0.752157}\rule{34.6667bp}{34.6667bp}}
+\put(163.3333,109.6667){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 67.0\%}}
+\put(180.6667,92.3333){\color[rgb]{0.953249,0.974471,0.995079}\rule{34.6667bp}{34.6667bp}}
+\put(198.0000,109.6667){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.0\%}}
+\put(215.3333,92.3333){\color[rgb]{0.701423,0.826928,0.910988}\rule{34.6667bp}{34.6667bp}}
+\put(232.6667,109.6667){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 31.0\%}}
+\put(146.0000,57.6667){\color[rgb]{0.900961,0.941007,0.978347}\rule{34.6667bp}{34.6667bp}}
+\put(163.3333,75.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 8.7\%}}
+\put(180.6667,57.6667){\color[rgb]{0.031373,0.289735,0.570319}\rule{34.6667bp}{34.6667bp}}
+\put(198.0000,75.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 90.1\%}}
+\put(215.3333,57.6667){\color[rgb]{0.962476,0.980377,0.998032}\rule{34.6667bp}{34.6667bp}}
+\put(232.6667,75.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 1.2\%}}
+\put(146.0000,23.0000){\color[rgb]{0.796401,0.872111,0.943899}\rule{34.6667bp}{34.6667bp}}
+\put(163.3333,40.3333){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 22.6\%}}
+\put(180.6667,23.0000){\color[rgb]{0.962476,0.980377,0.998032}\rule{34.6667bp}{34.6667bp}}
+\put(198.0000,40.3333){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.9\%}}
+\put(215.3333,23.0000){\color[rgb]{0.117878,0.428374,0.698270}\rule{34.6667bp}{34.6667bp}}
+\put(232.6667,40.3333){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 76.5\%}}
+\put(142.0000,109.6667){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(163.3333,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(142.0000,75.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont AC}}
+\put(198.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont AC}}
+\put(142.0000,40.3333){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PM}}
+\put(232.6667,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont PM}}
+\put(198.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (d) PCC: fdia3}}
 \put(146,23){\framebox(104.0,104.0){}}
 \put(4.0000,140.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Actual class}}}
 \put(136.0000,1.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Predicted class}}
 \end{picture}}
 \endgroup
-\caption{In-domain confusion matrices (row percentages). N/A: normal/attack; N/L/M/H: normal/low/medium/high bias.}
+\caption{Detection and motor localization: (a), (b) \texttt{fdia2}; (c), (d) \texttt{fdia3}. Cells show row percentages pooled over three holdouts. N: neither motor attacked; A: any attack; AC: ACIM attacked; PM: PMSM attacked.}
 \label{fig:main_confusion_matrices}
 \end{figure}
 
@@ -684,7 +658,92 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \centering
 \begingroup
 \setlength{\unitlength}{1bp}
-\resizebox{\linewidth}{!}{\begin{picture}(252.0000,142.0000)
+\resizebox{\linewidth}{!}{\begin{picture}(252.0000,272.0000)
+\put(23.0000,231.0000){\color[rgb]{0.080969,0.381130,0.661361}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,244.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 81.2\%}}
+\put(49.0000,231.0000){\color[rgb]{0.828881,0.893764,0.954725}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 18.3\%}}
+\put(75.0000,231.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.2\%}}
+\put(101.0000,231.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(23.0000,205.0000){\color[rgb]{0.934794,0.962661,0.989173}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 4.4\%}}
+\put(49.0000,205.0000){\color[rgb]{0.031373,0.293795,0.576348}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,218.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 89.6\%}}
+\put(75.0000,205.0000){\color[rgb]{0.922491,0.954787,0.985236}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 6.0\%}}
+\put(101.0000,205.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.0\%}}
+\put(23.0000,179.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(49.0000,179.0000){\color[rgb]{0.953249,0.974471,0.995079}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 2.0\%}}
+\put(75.0000,179.0000){\color[rgb]{0.031373,0.249135,0.510035}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,192.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 94.0\%}}
+\put(101.0000,179.0000){\color[rgb]{0.940946,0.966597,0.991142}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 3.7\%}}
+\put(23.0000,153.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(36.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.4\%}}
+\put(49.0000,153.0000){\color[rgb]{0.968627,0.984314,1.000000}\rule{26.0000bp}{26.0000bp}}
+\put(62.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.3\%}}
+\put(75.0000,153.0000){\color[rgb]{0.965552,0.982345,0.999016}\rule{26.0000bp}{26.0000bp}}
+\put(88.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 0.6\%}}
+\put(101.0000,153.0000){\color[rgb]{0.031373,0.200415,0.437693}\rule{26.0000bp}{26.0000bp}}
+\put(114.0000,166.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 98.8\%}}
+\put(19.0000,244.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(19.0000,218.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(19.0000,192.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(19.0000,166.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(36.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(62.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(88.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(114.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(75.0000,266.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (a) Motor: severity4}}
+\put(23,153.0000){\framebox(104.0,104.0){}}
+\put(146.0000,231.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,244.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
+\put(172.0000,231.0000){\color[rgb]{0.811165,0.881953,0.948820}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 20.4\%}}
+\put(198.0000,231.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 7.9\%}}
+\put(224.0000,231.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,244.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.0\%}}
+\put(146.0000,205.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.6\%}}
+\put(172.0000,205.0000){\color[rgb]{0.604706,0.783975,0.879139}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 38.3\%}}
+\put(198.0000,205.0000){\color[rgb]{0.867266,0.919354,0.967520}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 13.2\%}}
+\put(224.0000,205.0000){\color[rgb]{0.891734,0.935102,0.975394}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,218.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.8\%}}
+\put(146.0000,179.0000){\color[rgb]{0.852503,0.909512,0.962599}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 14.9\%}}
+\put(172.0000,179.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 12.0\%}}
+\put(198.0000,179.0000){\color[rgb]{0.412042,0.677186,0.836263}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 50.6\%}}
+\put(224.0000,179.0000){\color[rgb]{0.796401,0.872111,0.943899}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,192.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 22.5\%}}
+\put(146.0000,153.0000){\color[rgb]{0.876355,0.925260,0.970473}\rule{26.0000bp}{26.0000bp}}
+\put(159.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 11.9\%}}
+\put(172.0000,153.0000){\color[rgb]{0.907113,0.944944,0.980315}\rule{26.0000bp}{26.0000bp}}
+\put(185.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 8.1\%}}
+\put(198.0000,153.0000){\color[rgb]{0.897885,0.939039,0.977363}\rule{26.0000bp}{26.0000bp}}
+\put(211.0000,166.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont 9.2\%}}
+\put(224.0000,153.0000){\color[rgb]{0.171027,0.484752,0.731242}\rule{26.0000bp}{26.0000bp}}
+\put(237.0000,166.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 70.8\%}}
+\put(142.0000,244.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(142.0000,218.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(142.0000,192.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(142.0000,166.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(159.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
+\put(185.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont L}}
+\put(211.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont M}}
+\put(237.0000,145.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
+\put(198.0000,266.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (b) PCC: severity4}}
+\put(146,153.0000){\framebox(104.0,104.0){}}
+
 \put(23.0000,101.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{48.0000bp}{26.0000bp}}
 \put(47.0000,114.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
 \put(71.0000,101.0000){\color[rgb]{0.622684,0.793464,0.883429}\rule{48.0000bp}{26.0000bp}}
@@ -707,7 +766,7 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \put(19.0000,36.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont H}}
 \put(47.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
 \put(95.0000,15.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
-\put(71.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (a) By true class}}
+\put(71.0000,136.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (c) PCC: by true class}}
 \put(23,23){\framebox(96,104){}}
 \put(148.0000,75.0000){\color[rgb]{0.256286,0.570012,0.775163}\rule{48.0000bp}{26.0000bp}}
 \put(172.0000,88.0000){\makebox(0,0){\color[rgb]{1,1,1}\fontsize{9.5bp}{10.5bp}\selectfont 62.7\%}}
@@ -721,13 +780,13 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \put(144.0000,62.0000){\makebox(0,0)[r]{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
 \put(172.0000,41.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont N}}
 \put(220.0000,41.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont A}}
-\put(196.0000,110.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (b) Collapsed}}
+\put(196.0000,110.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont (d) PCC: collapsed}}
 \put(148,49){\framebox(96,52){}}
-\put(4.0000,76.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Actual class}}}
-\put(134.0000,1.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Predicted N (normal) / A (any attack)}}
+\put(4.0000,141.0000){\makebox(0,0){\rotatebox{90}{\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Actual class}}}
+\put(134.0000,1.0000){\makebox(0,0){\color[rgb]{0,0,0}\fontsize{9.5bp}{10.5bp}\selectfont Predicted class}}
 \end{picture}}
 \endgroup
-\caption{PCC severity-model decisions: (a) attack recall by true severity; (b) collapsed normal/attack matrix (row percentages).}
+\caption{Severity assessment: (a), (b) motor and PCC four-class matrices; (c) PCC normal/attack decisions by true severity; (d) collapsed PCC normal/attack matrix. Cells show row percentages pooled over three holdouts. N: normal; L/M/H: low/medium/high bias; A: any attack. Panels (c), (d) derive from the four-class PCC model.}
 \label{fig:severity_detection_decisions}
 \end{figure}
 
@@ -820,7 +879,7 @@ PMSM $\to$ ACIM & \mbox{56.00\,$\pm$\,5.69} & \mbox{77.43\,$\pm$\,10.43} & \mbox
 \subsection{Error Analysis: Confusion Matrices and FP/FN Behavior}
 \label{sec:error_analysis}
 
-Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{severity4}. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix for attack windows, with pooled false-positive (FP) and false-negative (FN) rates of 20.9\% and 2.3\%, respectively. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks. For \texttt{severity4}, PCC errors include both normal/attack confusion and confusion among the nonzero bias classes, indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
+Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{fdia3}. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix for attack windows, with pooled false-positive (FP) and false-negative (FN) rates of 20.9\% and 2.3\%, respectively. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks. The \texttt{fdia3} matrices show that false alarms and missed attacks are more frequent than confusion between the attacked motor types. For \texttt{severity4} in Fig.~\ref{fig:severity_detection_decisions}(a), (b), PCC errors include both normal/attack confusion and confusion among the nonzero bias classes, indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
 
 Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative held-out ACIM detection sequence on a continuous experimental signal. The motor-side detector follows most scheduled normal/FDIA intervals, while the PCC-side detector exhibits missed attacks and false alarms, especially near the first low-bias attack. These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for detecting small attacks. Root-mean-square (RMS) traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5.
 
@@ -1048,15 +1107,17 @@ HF + Time & 114 & \mbox{\textbf{93.87}\,$\pm$\,4.56} & \mbox{\textbf{94.11}\,$\p
 
 \section{Discussion}
 \label{sec:discussion}
+
+The results reveal a consistent tradeoff between sensing convenience and predictive separability. The adaptation results show that ACIM and PMSM do not form a symmetric transfer pair.
 \subsection{Why Adaptation Helps More in One Direction}
 \label{sec:adaptation_asymmetry}
 
-The adaptation results show that ACIM and PMSM do not form a symmetric transfer pair. PMSM $\rightarrow$ ACIM adaptation is much more effective than ACIM $\rightarrow$ PMSM adaptation, particularly for PCC sensing. In the PCC stream, Table~\ref{tab:domain_adaptation_anomaly2} shows a substantial PMSM $\rightarrow$ ACIM gain even at the nominal 1\% budget, while the reverse direction remains less effective. These results show that the benefit of few-shot fine-tuning depends on the source and target motor types; the physical causes of the asymmetry were not isolated. For practical PCC deployment, a small amount of target-domain calibration data is therefore important when monitoring attacks on a motor family absent from the source attack examples.
+PMSM $\rightarrow$ ACIM adaptation is much more effective than ACIM $\rightarrow$ PMSM adaptation, particularly for PCC sensing. In the PCC stream, Table~\ref{tab:domain_adaptation_anomaly2} shows a substantial PMSM $\rightarrow$ ACIM gain even at the nominal 1\% budget, while the reverse direction remains less effective. These results show that the benefit of few-shot fine-tuning depends on the source and target motor types; the physical causes of the asymmetry were not isolated. For practical PCC deployment, a small amount of target-domain calibration data is therefore important when monitoring attacks on a motor family absent from the source attack examples.
 
 \subsection{PCC vs Motor Tradeoffs}
 \label{sec:pcc_vs_motor}
 
-The results reveal a consistent tradeoff between sensing convenience and predictive separability. Motor-side measurements provide the clearest attack-sensitive signatures across nearly all tasks. In the in-domain experiments, the motor stream outperformed the PCC stream for both \texttt{fdia2} and \texttt{severity4}, and the confusion matrices showed substantially stronger diagonal structure for motor-side classification.
+Motor-side measurements provide the clearest attack-sensitive signatures across nearly all tasks. In the in-domain experiments, the motor stream outperformed the PCC stream for both \texttt{fdia2} and \texttt{severity4}, and the confusion matrices showed substantially stronger diagonal structure for motor-side classification.
 
 PCC remains the more deployment-oriented option because it avoids direct terminal access and matches shared industrial power infrastructure. A shared PCC sensing point also avoids dedicated instrumentation at each motor, offering a path toward scalable monitoring; larger installations remain to be validated. Despite lower separability, PCC achieved useful in-domain detection and strong adapted performance, especially for PMSM $\rightarrow$ ACIM transfer.
 
@@ -1247,7 +1308,7 @@ Table~\ref{tab:severity_detection_recall} separates correct bias-bin classificat
 R_{\mathrm{attack}|k}=\frac{\sum_{j=1}^{3}C_{kj}}{\sum_{j=0}^{3}C_{kj}},\qquad k\in\{1,2,3\},
 \label{eq:severity_conditioned_detection}
 \end{equation}
-while exact-severity recall is $C_{kk}/\sum_j C_{kj}$. The repeated false-alarm entries belong to the same four-class model and do not depend on the actual attack level. Fig.~\ref{fig:severity_detection_decisions} presents the corresponding PCC decision matrices; pooled normal recall can differ slightly from the mean per-repeat recall because normal-window counts vary across holdouts.
+while exact-severity recall is $C_{kk}/\sum_j C_{kj}$. The repeated false-alarm entries belong to the same four-class model and do not depend on the actual attack level. Fig.~\ref{fig:severity_detection_decisions}(c), (d) presents the corresponding PCC decision matrices; pooled normal recall can differ slightly from the mean per-repeat recall because normal-window counts vary across holdouts.
 
 \begin{table}[t]
 \centering
