@@ -52,7 +52,7 @@ Motivated by these limitations, this work experimentally evaluates FDIA detectio
 \label{sec:pcc_challenges}
 
 From a deployment perspective, motor-terminal measurements provide cleaner machine-specific signatures, whereas PCC measurements are more scalable and nonintrusive. PCC sensing is attractive because it avoids direct motor-terminal instrumentation and is compatible with shared electrical infrastructure~\cite{7271086}. However, PCC currents are affected by converter harmonics, network interactions, and load aggregation. Consequently, PCC attack signatures are weaker and less separable than motor-terminal signatures~\cite{10005067}.
-The problem becomes more difficult in heterogeneous multi-motor settings. ACIM and PMSM systems exhibit different current characteristics even under the same attack framework, which introduces a substantial domain shift between source and target deployments. Consequently, a detector trained on one motor family may generalize poorly to the other unless explicit adaptation is used. Therefore, this study evaluates in-domain performance, source-only transfer, few-shot adaptation, and transfer-direction asymmetry.
+The problem becomes more difficult in heterogeneous multi-motor settings. ACIM and PMSM systems exhibit different current characteristics even under the same attack framework, which introduces a substantial domain shift between source and target deployments. Consequently, a detector trained on one motor family may generalize poorly to the other unless explicit adaptation is used.
 \subsection{Contributions}
 \label{sec:contributions}
 The main contributions of this work are as follows:
@@ -87,9 +87,9 @@ The experimental platform consists of a heterogeneous two-motor industrial setup
 \label{sec:experimental_platform}
 
 Fig.~\ref{fig:system_schematic} illustrates the overall setup, including the shared PCC, the two drive branches, the ACIM and PMSM loads, the sensing locations, and the FDIA injection points in the control/feedback paths.
-The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. All episodes were acquired on the same two-motor platform. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals. The experiments cover three speed operating points, namely 900, 1100, and 1300 RPM.
+The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals. The experiments cover three speed operating points, namely 900, 1100, and 1300 RPM.
 
-Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}. The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine.
+Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}.
 
 
 \begin{figure*}[t]
@@ -131,7 +131,7 @@ y_{\mathrm{severity4}} =
 \label{eq:severity_bins}
 \end{equation}
 Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 medium, and 14,400 high.
-Table~\ref{tab:cyberattack_dataset_structure} summarizes the swept single-phase, equal two-phase, and fixed-plus-swept two-phase FDIA cases. Across three speeds, three load settings, and two motor types, the dataset contains 540 total attack cases. Each recording contains 30 consecutive 20-s episodes, with 10~s normal operation followed by 10~s FDIA operation. In total, the dataset contains 33,054 normal and 27,000 attack windows.
+Table~\ref{tab:cyberattack_dataset_structure} summarizes the swept single-phase, equal two-phase, and fixed-plus-swept two-phase FDIA cases. Each recording contains 30 consecutive 20-s episodes, with 10~s normal operation followed by 10~s FDIA operation. In total, the dataset contains 33,054 normal and 27,000 attack windows.
 
 \begin{table}[t]
 \centering
@@ -355,7 +355,7 @@ To represent both slow electromechanical behavior and faster attack-induced dist
 \label{sec:lfhf_features}
 
 For every sample, a 2{,}000-point outer window was first extracted from the raw 10~kHz recording. Within this outer window, two parallel sliding analyses were performed. The LF branch uses a 500-sample window with a stride of 25 samples, while the HF branch uses a 250-sample window with a stride of 29 samples. The LF and HF settings both produce 61 time steps, enabling concatenation into one temporal feature tensor.
-Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates representative attack-onset responses and the corresponding LF/HF windows. In both cases, the raw signal is shown around the attack-transition instant, and representative LF and HF windows are overlaid to illustrate the two-scale extraction procedure. Signal amplitudes are in recorded acquisition units.
+Fig.~\ref{fig:lfhf_motor_pcc_examples} illustrates representative attack-onset responses and the corresponding LF/HF windows. Signal amplitudes are in recorded acquisition units.
 
 
 In total, 37 features were extracted per channel, including 18 LF spectral features, 11 HF spectral/envelope features, and 8 TD features. The LF branch targets slow electromechanical changes, fundamental-frequency behavior, harmonic distortion, sideband effects, and low-band energy redistribution. The HF branch captures higher-frequency redistribution and envelope-related changes that may appear during small current-feedback FDIAs. The TD features provide complementary sensitivity to amplitude variation, impulsiveness, waveform asymmetry, and short-term signal complexity.
@@ -364,7 +364,7 @@ Together, these features help make weak PCC FDIA signatures more separable despi
 \subsection{Inception-Based Detection Model}
 \label{sec:inception_model}
 
-The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels of lengths 39, 19, and 9, residual shortcuts, global average pooling, and a dense output layer. Motor and PCC models used stream-specific hyperparameters selected by validation balanced accuracy. Each task uses a separately trained model with two outputs for \texttt{fdia2}, three for \texttt{fdia3}, and four for \texttt{severity4}.
+The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime architecture~\cite{fawaz2020inceptiontime} for multivariate time-series classification. The input dimension is $(61,222)$ for the motor stream and $(61,74)$ for the PCC stream. As illustrated in Fig.~\ref{fig:inceptiontime_architecture}, the network uses bottleneck compression, parallel one-dimensional convolutional kernels of lengths 39, 19, and 9, residual shortcuts, global average pooling, and a dense output layer. Each task uses a separately trained model with two outputs for \texttt{fdia2}, three for \texttt{fdia3}, and four for \texttt{severity4}.
 
 \begin{figure*}[t]
 \centering
@@ -523,7 +523,7 @@ within each seed.
 Few-shot adaptation was evaluated by training on recordings targeting one motor and testing on recordings targeting the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM. For each direction, the detector was first trained using labeled source recordings and then evaluated directly on the target recordings. This \emph{source-only} setting quantifies cross-motor domain shift. Six source recordings were used for training and three for validation, with the 100-candidate search selected by source validation balanced accuracy.
 
 For adaptation, the source-trained model was fine-tuned using a small labeled subset of complete target-domain episode groups before testing on separate target recordings. The nominal target adaptation ratios considered in this work were 1\%, 5\%, 10\%, and 20\% of the available target-domain adaptation pool (Table~\ref{tab:evaluation_protocols}); the 1\% budget selects two of 180 groups (1.11\%). Fine-tuning used 20 epochs at 0.2 times the source learning rate, with source normalization fixed.
-The domain-adaptation strategy was implemented as supervised fine-tuning rather than unsupervised feature alignment. Accordingly, all reported adaptation gains reflect the benefit of limited labeled target-domain data under a practical transfer-learning setting. To ensure reliable comparison, all cross-domain experiments were repeated over three random seeds.
+The domain-adaptation strategy was implemented as supervised fine-tuning rather than unsupervised feature alignment. To ensure reliable comparison, all cross-domain experiments were repeated over three random seeds.
 
 
 
@@ -1004,8 +1004,7 @@ Practical PCC monitoring requires low latency and stable online throughput. This
 
 Runtime was benchmarked on an Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the selected seed-1234 LF/HF-Inception binary pipelines. The benchmark was split into three stages: (i) LF/HF feature extraction from one 2{,}000-sample raw window, (ii) normalization, host-to-device transfer, and model inference on the resulting feature tensor, and (iii) end-to-end per-window execution. Each variant used 10 warm-up runs and 50 timed repetitions, with randomized variant order. Processing starts from an available measurement window; acquisition and disk I/O are excluded.
 
-Table~\ref{tab:runtime_latency} summarizes the measured per-window latencies. For the PCC stream, LF/HF feature extraction required 22.30~ms on CPU, while normalization, transfer, and GPU inference required 0.78~ms. As a result, the median PCC end-to-end processing latency was 23.03~ms.
-A similar pattern was observed for the motor stream. Feature extraction required 66.38~ms on CPU, while normalization, transfer, and GPU inference required 1.42~ms, leading to a median end-to-end latency of 67.81~ms. In terms of throughput, the end-to-end PCC pipeline had a reciprocal-median processing rate of 43.42 windows/s, while the corresponding motor pipeline sustained 14.75 windows/s.
+Table~\ref{tab:runtime_latency} shows that feature extraction dominates processing time. Median end-to-end latency is 23.03~ms for PCC and 67.81~ms for motor sensing.
 
 \begin{table}[t]
 \centering
@@ -1078,7 +1077,7 @@ Full & 222 & \mbox{88.26\,$\pm$\,9.99} & \mbox{87.23\,$\pm$\,11.39} & 66.38 & 67
 \subsection{LF/HF/TD Ablation for Binary Anomaly Detection}
 \label{sec:lfhf_ablation}
 
-A complementary LF/HF/TD ablation was performed on the \texttt{fdia2} task to identify which feature groups are most useful for binary anomaly detection in the PCC and motor streams. All seven combinations were retrained using the selected full-feature architecture within each stream and split. Detailed ablation results are reported in Table~\ref{tab:lfhf_ablation_anomaly2}. For the PCC stream, the LF+Time subset achieved 80.03\% balanced accuracy, close to the full model at 80.29\%, whereas HF-only and HF+Time dropped to 64.49\% and 67.85\%, respectively. For the motor stream, the time-only subset exceeded the full model, reaching 92.89\% balanced accuracy compared with 88.26\% for the full representation, while HF-only dropped to 63.76\% and HF+Time reached 94.11\%. Overall, the ablation confirms that PCC detection relies mainly on LF+Time information, motor-side detection is driven primarily by TD features, and HF features alone are less informative but complement TD features for motor sensing. This trend is consistent with the pruning results and supports reduced-feature inference in the tested pipeline. These ablations assess feature contributions and were not used to select a replacement primary model.
+A complementary LF/HF/TD ablation was performed on the \texttt{fdia2} task to identify which feature groups are most useful for binary anomaly detection in the PCC and motor streams. All seven combinations were retrained using the selected full-feature architecture within each stream and split. Detailed ablation results are reported in Table~\ref{tab:lfhf_ablation_anomaly2}. LF+Time nearly matches the full PCC model, while time-only and HF+Time outperform the full motor model (Table~\ref{tab:lfhf_ablation_anomaly2}). Overall, the ablation confirms that PCC detection relies mainly on LF+Time information, motor-side detection is driven primarily by TD features, and HF features alone are less informative but complement TD features for motor sensing. This trend is consistent with the pruning results and supports reduced-feature inference in the tested pipeline. These ablations assess feature contributions and were not used to select a replacement primary model.
 
 \begin{table}[t]
 \centering
