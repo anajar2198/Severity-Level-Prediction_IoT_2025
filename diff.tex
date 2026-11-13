@@ -1,7 +1,7 @@
-% Generated visual comparison of main.tex and main_revised.tex; base repository revision 9347cae85c50c390469d95ee130f759c8f8e74ea.
+% Generated visual comparison of main.tex and main_revised.tex; base repository revision c4b9880a74b0b0bb35a6c2115321ed459ecba9d3.
 % Compile diff.tex from this repository using pdfLaTeX and BibTeX.
 % Text uses latexdiff; complete original/revised floats preserve their respective values and artwork.
-% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "27bc6214494b69819b69fb212964ab735c42044957b975cd79e063b02895d2c2"}
+% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "ab17309650d253eff16203cd1c82ed19dd8b88ae765522e8067d3584a0449007"}
 \documentclass[letterpaper,journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main.tex (original)
@@ -169,14 +169,13 @@ The main gap is not FDIA detection in general, which has been widely studied in 
 \DIFadd{Fig.~\ref{fig:system_schematic} illustrates the experimental platform.
 The dataset contains }\DIFaddend 540 \DIFdelbegin \DIFdel{unique FDIA cases were collected, including }\DIFdelend \DIFaddbegin \DIFadd{scheduled attack episodes (}\DIFaddend 270 \DIFdelbegin \DIFdel{ACIM cases and 270 PMSM cases}\DIFdelend \DIFaddbegin \DIFadd{for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals}\DIFaddend . The experiments cover three speed operating points, namely 900, 1100, and 1300 \DIFdelbegin \DIFdel{rpm}\DIFdelend \DIFaddbegin \DIFadd{RPM}\DIFaddend .
 
-Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}.
-\DIFdelbegin \DIFdel{The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine. The measured signals and channel counts associated with the motor-side and PCC-side streams are summarized in Table~\ref{tab:measurement_streams}.
-}\DIFdelend \DIFaddbegin
 
 
 
-
-\begin{figure*}[p]
+\DIFdelbegin \DIFdel{Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as }\emph{\DIFdel{motor}} %DIFAUXCMD
+\DIFdel{in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as }\emph{\DIFdel{PCC}}%DIFAUXCMD
+\DIFdel{. The PCC stream is the primary deployment-oriented sensing location because it avoids dedicated sensors at each machine. The measured signals and channel counts associated with the motor-side and PCC-side streams are summarized in Table~\ref{tab:measurement_streams}.
+}\DIFdelend \DIFaddbegin \begin{figure*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -254,7 +253,7 @@ For }\DIFaddend four-class severity assessment, the label is defined as
 \end{cases}
 \label{eq:severity_bins}
 }\end{equation}\DIFaddend
-\DIFdelbegin \DIFdel{corresponding to normal,mild,}\DIFdelend \DIFaddbegin \DIFadd{Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 }\DIFaddend medium, and \DIFdelbegin \DIFdel{severe conditions,respectively}\DIFdelend \DIFaddbegin \DIFadd{14,400 high}\DIFaddend .
+\DIFdelbegin \DIFdel{corresponding to normal,mild, }\DIFdelend \DIFaddbegin \DIFadd{Cases 21--30 have $s=0.0050$ throughout because phase A remains fixed; all belong to the high-bias class. The resulting attack-window counts are 5,400 low, 7,200 }\DIFaddend medium, and \DIFdelbegin \DIFdel{severe conditions,respectively}\DIFdelend \DIFaddbegin \DIFadd{14,400 high}\DIFaddend .
 Table~\ref{tab:cyberattack_dataset_structure} summarizes the swept single-phase, equal two-phase, and fixed-plus-swept two-phase FDIA cases. \DIFdelbegin \DIFdel{Across three speeds, three load settings, and two motor types, the dataset contains 540 total attack cases. Each recording consists of }\DIFdelend \DIFaddbegin \DIFadd{Each recording contains }\DIFaddend 30 consecutive 20-s episodes, with 10~s normal operation followed by 10~s FDIA operation. \DIFaddbegin \DIFadd{In total, the dataset contains 33,054 normal and 27,000 attack windows.
 }
 
@@ -986,12 +985,11 @@ Table~\ref{tab:all_tasks_in_domain} reports mixed-domain in-domain performance w
 
 
 
-\DIFaddbegin \DIFadd{Exact-severity recall counts attacks assigned to the correct bias class. Severity-conditioned attack recall also counts attacks assigned to another nonzero bias class. Fig.~\ref{fig:severity_detection_decisions}(c), (d) presents this second view of the PCC severity model: it detects 88.1\% of high-bias attacks as some attack level, compared with 70.8\% assigned to the exact high-bias class. }\DIFaddend Thus, \DIFdelbegin \DIFdel{PCC-side severity estimates should be treated as coarse diagnostics, whereas motor-side measurements support finer severity discrimination. Overall, PCC monitoring is more challenging than motor-side monitoring, and severity assessment is harder than binary detection . These baseline findings motivate the subsequent cross-domain analysis, where the additional challenge of motor-type shift is introduced.}\DIFdelend \DIFaddbegin \DIFadd{an incorrect severity estimate can still provide an attack indication. The same model labels 37.3\% of normal windows as attacks, so this detection benefit must be considered together with false alarms. These decisions come from the four-class model; the separately trained binary detector in Fig.~\ref{fig:main_confusion_matrices}(b) has fewer false alarms.
-}
+\DIFaddbegin \DIFadd{Exact-severity recall counts attacks assigned to the correct bias class. Severity-conditioned attack recall also counts attacks assigned to another nonzero bias class. Fig.~\ref{fig:severity_detection_decisions}(c), (d) presents this second view of the PCC severity model: it detects 88.1\% of high-bias attacks as some attack level, compared with 70.8\% assigned to the exact high-bias class. }\DIFaddend Thus, \DIFdelbegin \DIFdel{PCC-side severity estimates should be treated as coarse diagnostics, whereas motor-side measurements support finer severity discrimination. Overall, PCC monitoring is more challenging than motor-side monitoring, and severity assessment is harder than binary detection . These baseline findings motivate the subsequent cross-domain analysis, where the additional challenge of motor-type shift is introduced}\DIFdelend \DIFaddbegin \DIFadd{an incorrect severity estimate can still provide an attack indication. The same model labels 37.3\% of normal windows as attacks, so this detection benefit must be considered together with false alarms. These decisions come from the four-class model; the separately trained binary detector in Fig.~\ref{fig:main_confusion_matrices}(b) has fewer false alarms}\DIFaddend .
 
 
 
-\begin{table*}[p]
+\DIFaddbegin \begin{table*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -1366,11 +1364,11 @@ Task & Acc. & BA & Prec. & Recall & F1 \\\hline
 \end{minipage}
 \end{adjustbox}
 \end{figure*}
-\DIFaddend
 
 
 
-\subsection{Comparison with Deep and Classical ML Baselines}
+
+\DIFaddend \subsection{Comparison with Deep and Classical ML Baselines}
 \label{sec:model_comparison}
 \DIFaddbegin
 
@@ -1598,11 +1596,12 @@ PMSM $\to$ ACIM & \mbox{56.00\,$\pm$\,5.69} & \mbox{77.43\,$\pm$\,10.43} & \mbox
 
 \DIFaddend Fig.~\ref{fig:main_confusion_matrices} compares the in-domain confusion matrices for \texttt{fdia2} and \texttt{\DIFdelbegin \DIFdel{severity4}\DIFdelend \DIFaddbegin \DIFadd{fdia3}\DIFaddend }. For \texttt{fdia2}, motor-side sensing yields a strongly diagonal confusion matrix \DIFdelbegin \DIFdel{with low }\DIFdelend \DIFaddbegin \DIFadd{for attack windows, with pooled }\DIFaddend false-positive \DIFaddbegin \DIFadd{(FP) }\DIFaddend and false-negative \DIFdelbegin \DIFdel{rates of 0.75\% and 1.56}\DIFdelend \DIFaddbegin \DIFadd{(FN) rates of 20.9\% and 2.3}\DIFaddend \%, respectively\DIFdelbegin \DIFdel{, whereas PCC sensing increases these rates to 6.55\% and 15.46\% because the attack is observed only through the aggregated current response}\DIFdelend \DIFaddbegin \DIFadd{. PCC sensing yields 14.7\% false positives and 24.6\% false negatives, showing fewer false alarms but more missed attacks. The }\texttt{\DIFadd{fdia3}} \DIFadd{matrices show that false alarms and missed attacks are more frequent than confusion between the attacked motor types. Mean normal false-alarm rates are 22.85\% for motor sensing and 33.12\% for PCC sensing}\DIFaddend . For \texttt{severity4} \DIFaddbegin \DIFadd{in Fig.~\ref{fig:severity_detection_decisions}(a), (b)}\DIFaddend , PCC errors \DIFdelbegin \DIFdel{concentrate between adjacent classes, especially }\DIFdelend \DIFaddbegin \DIFadd{include both }\DIFaddend normal/\DIFdelbegin \DIFdel{mild and mild/medium}\DIFdelend \DIFaddbegin \DIFadd{attack confusion and confusion among the nonzero bias classes}\DIFaddend , indicating that PCC measurements retain coarse attack information but blur finer severity distinctions.
 
-Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals. These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for fine severity discrimination}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack. Root-mean-square (RMS) traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5}\DIFaddend .
+Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate confusion-matrix results by showing a representative \DIFaddbegin \DIFadd{held-out }\DIFaddend ACIM detection sequence on a continuous experimental signal. \DIFdelbegin \DIFdel{Both sensing locations follow the }\DIFdelend \DIFaddbegin \DIFadd{The motor-side detector follows most }\DIFaddend scheduled normal/FDIA intervals, \DIFdelbegin \DIFdel{but the motor-side detector produces cleaner transitions than }\DIFdelend \DIFaddbegin \DIFadd{while }\DIFaddend the PCC-side detector \DIFaddbegin \DIFadd{exhibits missed attacks and false alarms}\DIFaddend , especially near the first \DIFdelbegin \DIFdel{attack onset and low-severity FDIA intervals. These results indicate that motor-side measurements are more separable, while PCC measurements remain useful but less reliable for fine severity discrimination}\DIFdelend \DIFaddbegin \DIFadd{low-bias attack}\DIFaddend . \DIFaddbegin \DIFadd{Root-mean-square (RMS) traces use 500-sample frames at stride 25, and predictions are placed at window ends. Green curves show attack probability, red curves show predicted labels, and dashed gray curves show true labels; the dotted threshold is 0.5.
+}
 
 
 
-\DIFaddbegin \begin{figure*}[p]
+\begin{figure*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
@@ -1741,11 +1740,11 @@ Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate c
 \end{minipage}
 \end{adjustbox}
 \end{figure*}
+\DIFaddend
 
 
 
-
-\DIFaddend \section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
+\section{LATENCY AND REDUCED-FEATURE INFERENCE ANALYSIS}
 \label{sec:realtime}
 \DIFaddbegin
 
@@ -1759,8 +1758,8 @@ Fig.~\ref{fig:case1_30_motor_pcc_detection_examples} complements the aggregate c
 
 \DIFaddend Runtime was benchmarked on an Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the selected \DIFaddbegin \DIFadd{seed-1234 }\DIFaddend LF/HF-Inception \DIFaddbegin \DIFadd{binary }\DIFaddend pipelines. The benchmark was split into three stages: (i) LF/HF feature extraction from one 2{,}000-sample raw window, (ii) \DIFaddbegin \DIFadd{normalization, host-to-device transfer, and }\DIFaddend model inference on the resulting feature tensor, and (iii) end-to-end per-window execution. \DIFdelbegin \DIFdel{GPU inference was measured with and without host-to-device transfer}\DIFdelend \DIFaddbegin \DIFadd{Each variant used 10 warm-up runs and 50 timed repetitions, with randomized variant order. Processing starts from an available measurement window; acquisition and disk I/O are excluded}\DIFaddend .
 
-Table~\ref{tab:runtime_latency} \DIFdelbegin \DIFdel{summarizes the measured per-window latencies. For the PCC stream, LF/HF feature extraction required 21.72~ms on CPU and the Inception model needs only 0.71~ms on GPU. When host-to-device transfer was included, the GPU inference stage remained sub-millisecond at 0.74~ms. As a result, the PCC }\DIFdelend \DIFaddbegin \DIFadd{shows that feature extraction dominates processing time. Median }\DIFaddend end-to-end latency \DIFdelbegin \DIFdel{was only 22.46}\DIFdelend \DIFaddbegin \DIFadd{is 23.03}\DIFaddend ~ms for \DIFdelbegin \DIFdel{End-to-End inference.
-A similar pattern was observed for the motor stream. Feature extraction required 65.25~ms on CPU, while model inference required 0.36~ms on GPU. Including transfer, the GPU inference stage was 0.38~ms, leading to an end-to-end latency of 65.63~ms. For the tested PCC pipeline, the measured end-to-end latency was 22.46 ms under the reported hardware configuration. In terms of throughput, the end-to-end PCC pipeline sustained 44.53 windows/s, while the corresponding motor pipeline sustained 15.24 windows/s}\DIFdelend \DIFaddbegin \DIFadd{PCC and 67.81~ms for motor sensing}\DIFaddend .
+Table~\ref{tab:runtime_latency} \DIFdelbegin \DIFdel{summarizes the measured per-window latencies. For the PCC stream, LF/HF feature extraction required 21.72~ms on CPU and the Inception model needs only 0.71~ms on GPU. When host-to-device transfer was included, the GPU inference stage remained sub-millisecond at 0.74~ms. As a result, the PCC end-to-end latency was only 22.46~ms for End-to-End inference.
+A similar pattern was observed for the motor stream. Feature extraction required 65.25~ms on CPU, while model inference required 0.36~ms on GPU. Including transfer, the GPU inference stage was 0.38~ms, leading to an end-to-end latency of 65.63~ms. For the tested PCC pipeline, the measured end-to-end latency was 22.46 ms under the reported hardware configuration. In terms of throughput, the end-to-end PCC pipeline sustained 44.53 windows/s, while the corresponding motor pipeline sustained 15.24 windows/s}\DIFdelend \DIFaddbegin \DIFadd{shows that feature extraction dominates processing time}\DIFaddend .
 
 
 

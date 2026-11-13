@@ -89,8 +89,6 @@ The experimental platform consists of a heterogeneous two-motor industrial setup
 Fig.~\ref{fig:system_schematic} illustrates the experimental platform.
 The dataset contains 540 scheduled attack episodes (270 for each motor), formed by repeating 30 bias patterns over nine speed/load combinations per motor. Both motors operated throughout: only the ACIM was attacked in ACIM-labeled recordings, and only the PMSM was attacked in PMSM-labeled recordings. Both motors were attack-free during normal intervals. The experiments cover three speed operating points, namely 900, 1100, and 1300 RPM.
 
-Two measurement streams were used throughout this study. The first stream corresponds to motor-side measurements, referred to as \emph{motor} in the remainder of the paper. The second stream corresponds to PCC-side measurements, referred to as \emph{PCC}.
-
 
 \begin{figure*}[t]
 \centering
@@ -1006,7 +1004,7 @@ Practical PCC monitoring requires low latency and stable online throughput. This
 
 Runtime was benchmarked on an Intel Core Ultra 9 285K CPU and NVIDIA RTX 5090 GPU using the selected seed-1234 LF/HF-Inception binary pipelines. The benchmark was split into three stages: (i) LF/HF feature extraction from one 2{,}000-sample raw window, (ii) normalization, host-to-device transfer, and model inference on the resulting feature tensor, and (iii) end-to-end per-window execution. Each variant used 10 warm-up runs and 50 timed repetitions, with randomized variant order. Processing starts from an available measurement window; acquisition and disk I/O are excluded.
 
-Table~\ref{tab:runtime_latency} shows that feature extraction dominates processing time. Median end-to-end latency is 23.03~ms for PCC and 67.81~ms for motor sensing.
+Table~\ref{tab:runtime_latency} shows that feature extraction dominates processing time.
 
 \begin{table}[t]
 \centering
