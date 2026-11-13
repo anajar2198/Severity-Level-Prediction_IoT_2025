@@ -1,7 +1,7 @@
-% Generated visual comparison of main.tex and main_revised.tex; base repository revision 2a3f9066181e6f0730375d46689ab01359e8be04.
+% Generated visual comparison of main.tex and main_revised.tex; base repository revision 6ccb62a22386d4b58185818276b578fe287de531.
 % Compile diff.tex from this repository using pdfLaTeX and BibTeX.
 % Text uses latexdiff; complete original/revised floats preserve their respective values and artwork.
-% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "1694f803e66cfe1dec8b975f5d2ec93781ba53b9dd11add7289aa1034f35d0bf"}
+% Source SHA256: {"main.tex": "b0b9547982490227a287f4f7301158663486f98b8e56e31edf82251abacfda3a", "main_revised.tex": "2ba1c17b55b3da19e49ed87a26663f2a74ac5a9455959069fd6dff1d4ebbad08"}
 \documentclass[letterpaper,journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main.tex (original)
@@ -150,9 +150,7 @@ Motor-drive-specific studies \DIFdelbegin \DIFdel{are more closely related to th
 
 
 
-\DIFdelbegin \DIFdel{The main gap is not FDIA detection in general, which has been widely studied in smart grids and cyber-physical systems, but nonintrusive PCC-based monitoring for heterogeneous inverter-fed motor-drive systems. }\DIFdelend In particular, the existing literature does not clearly establish: 1) how PCC sensing compares with motor-side sensing for low-severity current-feedback FDIAs, 2) whether PCC measurements support reliable multi-level severity assessment rather than only binary detection, given that attack signatures become weaker and less separable under signal aggregation and harmonic distortion, and 3) how detection performance transfers between heterogeneous ACIM and PMSM domains when labeled target-domain data are limited.
-\DIFdelbegin \DIFdel{This work addresses these three questions experimentally on a shared ACIM/PMSM platform using multi-scale features, in-domain evaluation, source-only cross-domain transfer, and few-shot target-domain adaptation.
-}\DIFdelend
+The main gap is not FDIA detection in general, which has been widely studied in smart grids and cyber-physical systems, but nonintrusive PCC-based monitoring for heterogeneous inverter-fed motor-drive systems. In particular, the existing literature does not clearly establish: 1) how PCC sensing compares with motor-side sensing for low-severity current-feedback FDIAs, 2) whether PCC measurements support reliable multi-level severity assessment rather than only binary detection, given that attack signatures become weaker and less separable under signal aggregation and harmonic distortion, and 3) how detection performance transfers between heterogeneous ACIM and PMSM domains when labeled target-domain data are limited. This work addresses these three questions experimentally on a shared ACIM/PMSM platform using multi-scale features, in-domain evaluation, source-only cross-domain transfer, and few-shot target-domain adaptation.
 
 \section{System and Data}
 \DIFaddbegin
@@ -742,7 +740,7 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \label{sec:AnomalyDetection}
 \DIFaddbegin
 
-\DIFaddend The proposed pipeline supports online monitoring from trusted motor-terminal \DIFdelbegin \DIFdel{or PCC }\DIFdelend \DIFaddbegin \DIFadd{currents or PCC voltage and }\DIFaddend current measurements. \DIFdelbegin \DIFdel{Figure}\DIFdelend \DIFaddbegin \DIFadd{Fig.}\DIFaddend ~\ref{fig:Online-algorithem} illustrates the overall architecture of the proposed monitoring pipeline. In the deployed setting, fixed-length windows of \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{measurement }\DIFaddend data are acquired from either the motor terminals or the PCC, passed through the LF/HF\DIFaddbegin \DIFadd{/TD }\DIFaddend feature-extraction stage, and then evaluated by the selected learning model to produce anomaly or severity decisions. The \DIFdelbegin \DIFdel{measurement, feature-extraction, and inference stages are modular, allowing the same pipeline to operate with motor-side or PCC inputs and supporting feature pruning, reduced-input models, and cross-motor adaptation. The }\DIFdelend framework provides alarms, severity indicators, and logs for supervisory systems; automatic mitigation is outside the scope. The same architecture is used for binary detection and severity classification\DIFdelbegin \DIFdel{. Binary detection is the primary PCC deployment task; severity estimates provide secondary diagnostic information. The experimental results in later sections show that motor-terminal sensing provides cleaner discriminative signatures, whereas PCC sensing offers a less intrusive sensing option for the tested setup}\DIFdelend \DIFaddbegin \DIFadd{, with separate normalization and trained models for motor-side and PCC inputs}\DIFaddend .
+\DIFaddend The proposed pipeline supports online monitoring from trusted motor-terminal \DIFdelbegin \DIFdel{or PCC }\DIFdelend \DIFaddbegin \DIFadd{currents or PCC voltage and }\DIFaddend current measurements. \DIFdelbegin \DIFdel{Figure}\DIFdelend \DIFaddbegin \DIFadd{Fig.}\DIFaddend ~\ref{fig:Online-algorithem} illustrates the overall architecture of the proposed monitoring pipeline. In the deployed setting, fixed-length windows of \DIFdelbegin \DIFdel{current }\DIFdelend \DIFaddbegin \DIFadd{measurement }\DIFaddend data are acquired from either the motor terminals or the PCC, passed through the LF/HF\DIFaddbegin \DIFadd{/TD }\DIFaddend feature-extraction stage, and then evaluated by the selected learning model to produce anomaly or severity decisions. The measurement, feature-extraction, and inference stages are modular, allowing the same pipeline to operate with motor-side or PCC inputs and supporting feature pruning, reduced-input models, and cross-motor adaptation. The framework provides alarms, severity indicators, and logs for supervisory systems; automatic mitigation is outside the scope. The same architecture is used for binary detection and severity classification\DIFdelbegin \DIFdel{. Binary detection is the primary PCC deployment task; severity estimates provide secondary diagnostic information. The experimental results in later sections show that motor-terminal sensing provides cleaner discriminative signatures, whereas PCC sensing offers a less intrusive sensing option for the tested setup}\DIFdelend \DIFaddbegin \DIFadd{, with separate normalization and trained models for motor-side and PCC inputs}\DIFaddend .
 
 
 
@@ -804,18 +802,27 @@ The extracted LF/HF tensors were modeled using a one-dimensional InceptionTime a
 \DIFaddend \subsection{Training Details and Hyperparameters}
 \label{sec:training_details}
 
-For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFdelbegin \DIFdel{. Table~IV summarizes the top-ranked configurations for both sensing streams}\DIFdelend \DIFaddbegin \DIFadd{(64/128). The top-ranked configurations are reported in Table~S1 of the supplementary material.
+For the InceptionTime-based models, hyperparameter selection was performed separately for \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFadd{and }\texttt{\DIFadd{severity4}} \DIFadd{in }\DIFaddend the motor and PCC streams using validation-set balanced accuracy. The search varied depth \DIFdelbegin \DIFdel{, filters, bottleneck size, dropout }\DIFdelend \DIFaddbegin \DIFadd{(3/4/6), filters (16/24/32/48), bottleneck width (8/16/32), dropout (0.20/0.35/0.50)}\DIFaddend , learning rate \DIFaddbegin \DIFadd{($5\times10^{-4}$/$10^{-3}$)}\DIFaddend , weight decay \DIFaddbegin \DIFadd{($5\times10^{-5}$/$10^{-4}$)}\DIFaddend , and batch size \DIFaddbegin \DIFadd{(64/128)}\DIFaddend . Table~\ref{tab:search_top5_combined} summarizes the top-ranked configurations for both sensing streams \DIFaddbegin \DIFadd{across all three seeds.
 }
 
-\DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs}\DIFaddend .
+\DIFadd{The same 100 candidate configurations were evaluated for two tasks, two sensing streams, and three recording partitions, totaling 1,200 training runs.
+}
 
-\DIFdelbegin \begin{table*}[p]
+\DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection. The }\texttt{\DIFadd{fdia3}} \DIFadd{model retained the }\texttt{\DIFadd{severity4}}\DIFadd{-selected configuration for each stream and holdout and was trained from fresh weights with three outputs. Its checkpoint was selected by three-class validation balanced accuracy.
+}
+
+\DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications}\DIFaddend .
+
+
+
+
+\DIFaddbegin \begin{table*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
 \centering
 % Complete old block: tab:search_top5_combined
-\begin{minipage}[t]{\DiffColumnWidth}
+\begin{minipage}[t]{0.48\textwidth}
 \centering
 \textcolor{red}{\textbf{ORIGINAL --- Table 4 (main.tex)}}\par\smallskip
 
@@ -851,15 +858,71 @@ Rank & D & F & BN & Dr & LR & WD & BS & test BA (\%) \\
 \scriptsize D: depth; F: filters; BN: bottleneck; Dr: dropout; LR: learning rate; WD: weight decay; BS: batch size; test BA: test balanced accuracy.
 \end{flushleft}
 
+\end{minipage}\hfill%
+% Complete new block: tab:search_top5_combined
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\textcolor{blue}{\textbf{REVISED --- Table 4 (main\_revised.tex)}}\par\smallskip
+
+\centering
+\footnotesize
+\caption{Top five \texttt{severity4} configurations
+ranked by mean validation balanced accuracy
+across three seeds (\%).}
+\label{tab:search_top5_combined}
+\renewcommand{\arraystretch}{1.10}
+\setlength{\tabcolsep}{3pt}
+
+\begin{tabular}{@{}cccccccc@{}}
+\hline
+Rank & D & F & BN & Dr & WD & BS &
+Mean $\pm$ SD \\
+\hline
+\multicolumn{8}{c}{\textit{Motor stream}} \\
+\hline
+1 & 6 & 48 & 32 & 0.35 & 5e-5 &
+64 & 93.09 $\pm$ 2.45 \\
+2 & 6 & 24 & 16 & 0.20 & 1e-4 &
+128 & 92.59 $\pm$ 0.99 \\
+3 & 3 & 16 & 16 & 0.50 & 5e-5 &
+64 & 92.19 $\pm$ 2.24 \\
+4 & 3 & 24 & 16 & 0.50 & 1e-4 &
+128 & 92.13 $\pm$ 2.97 \\
+5 & 3 & 16 & 16 & 0.50 & 1e-4 &
+64 & 92.02 $\pm$ 1.02 \\
+\hline
+\multicolumn{8}{c}{\textit{PCC stream}} \\
+\hline
+1 & 6 & 32 & 32 & 0.50 & 1e-4 &
+64 & 55.98 $\pm$ 3.31 \\
+2 & 4 & 48 & 32 & 0.20 & 5e-5 &
+64 & 55.82 $\pm$ 4.09 \\
+3 & 6 & 48 & 32 & 0.35 & 5e-5 &
+64 & 55.38 $\pm$ 3.17 \\
+4 & 6 & 24 & 16 & 0.50 & 5e-5 &
+128 & 55.31 $\pm$ 4.86 \\
+5 & 4 & 32 & 32 & 0.50 & 5e-5 &
+64 & 55.19 $\pm$ 4.42 \\
+\hline
+\end{tabular}
+
+\par\smallskip
+\begin{minipage}{\columnwidth}
+\scriptsize
+D: depth; F: filters; BN: bottleneck;
+Dr: dropout; WD: weight decay;
+BS: batch size. Learning rate is fixed
+at 0.001. SD denotes sample standard
+deviation across three seeds.
+The ranking summarizes validation performance;
+test models are selected independently
+within each seed.
+\end{minipage}
+
 \end{minipage}
 \end{minipage}
 \end{adjustbox}
 \end{table*}
-\DIFdelend \DIFaddbegin \DIFadd{Training used Adam and weighted cross-entropy, assigning larger weights to less frequent classes. Each run used up to 60 epochs, with early stopping after 10 epochs without improved validation balanced accuracy. The learning rate was halved after three unimproved epochs, down to $10^{-6}$. The best checkpoint and configuration were selected independently within each recording partition using validation balanced accuracy; ties followed the fixed candidate order. Test results were not used for selection. The }\texttt{\DIFadd{fdia3}} \DIFadd{model retained the }\texttt{\DIFadd{severity4}}\DIFadd{-selected configuration for each stream and holdout and was trained from fresh weights with three outputs. Its checkpoint was selected by three-class validation balanced accuracy.
-}
-
-\DIFadd{Reported test metrics are mean $\pm$ sample standard deviation over the three holdouts. Precision, recall, and F1 are macro-averaged, and balanced accuracy is the mean class recall. The standard deviations describe variation across recording assignments and model initializations, rather than independent physical replications.
-}\DIFaddend
 
 
 
@@ -891,7 +954,7 @@ Rank & D & F & BN & Dr & LR & WD & BS & test BA (\%) \\
 
 
 
-\subsection{Domain Adaptation Strategy: Source-Only vs Few-Shot Fine-Tuning}
+\DIFaddend \subsection{Domain Adaptation Strategy: Source-Only vs Few-Shot Fine-Tuning}
 \label{sec:domain_adaptation}
 \DIFaddbegin
 
@@ -968,7 +1031,7 @@ Motor type          & 100.00 & 100.00 & 100.00 & 100.00 & 100.00 \\
 % Complete new block: tab:all_tasks_in_domain
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 4 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 5 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
@@ -1355,7 +1418,7 @@ XGBoost       & 79.00 & 65.21 & 70.45 \\
 % Complete new block: tab:model_comparison_hard_tasks
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 5 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 6 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
@@ -1394,20 +1457,21 @@ MultiRocket & \mbox{58.41\,$\pm$\,3.34} & \mbox{44.92\,$\pm$\,3.46} & \mbox{44.2
 \subsection{Cross-Domain Transfer Without Adaptation}
 \label{sec:cross_domain}
 \DIFdelbegin \DIFdel{Source-only transfer was evaluated by training on one motor type and testing directly on the other. Two transfer directions were considered: ACIM $\rightarrow$ PMSM and PMSM $\rightarrow$ ACIM.
-Table~VII }\DIFdelend \DIFaddbegin
+}\DIFdelend \DIFaddbegin
 
-\DIFadd{Table~\ref{tab:domain_adaptation_anomaly2} }\DIFaddend shows that source-only \DIFdelbegin \DIFdel{fdia2 }\DIFdelend \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFaddend transfer falls near chance balanced accuracy for \DIFdelbegin \DIFdel{both sensingstreams}\DIFdelend \DIFaddbegin \DIFadd{ACIM-to-PMSM transfer, while the reverse direction falls below chance for motor sensing and reaches 56.00\% for PCC sensing}\DIFaddend . For \texttt{fdia2}, the source-only results in Table~\DIFdelbegin \DIFdel{VII }\DIFdelend \DIFaddbegin \DIFadd{\ref{tab:domain_adaptation_anomaly2} }\DIFaddend show a substantial degradation relative to the mixed-domain baselines. \DIFdelbegin \DIFdel{This confirms a substantial ACIM/PMSM domain shift in the tested transfer setting. Thus, reliable cross-motor FDIA detection in this setting benefits from target-domain adaptation}\DIFdelend \DIFaddbegin \DIFadd{Supplementary Table~S2 also reports accuracy and macro F1}\DIFaddend .
+\DIFaddend Table~\ref{tab:cross_domain_source_only} shows that source-only \DIFdelbegin \DIFdel{fdia2 }\DIFdelend \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFaddend transfer falls near chance balanced accuracy for \DIFdelbegin \DIFdel{both sensingstreams}\DIFdelend \DIFaddbegin \DIFadd{ACIM-to-PMSM transfer, while the reverse direction falls below chance for motor sensing and reaches 56.00\% for PCC sensing}\DIFaddend . For \texttt{fdia2}, the source-only results in Table~\ref{tab:cross_domain_source_only} show a substantial degradation relative to the mixed-domain baselines.
+\DIFdelbegin \DIFdel{This confirms a substantial ACIM/PMSM domain shift in the tested transfer setting. Thus, reliable cross-motor FDIA detection in this setting benefits from target-domain adaptation.
+}\DIFdelend \DIFaddbegin
 
 
 
-
-\DIFdelbegin \begin{table*}[p]
+\begin{table*}[p]
 \centering
 \begin{adjustbox}{max width=\textwidth,max totalheight=0.87\textheight}
 \begin{minipage}{\textwidth}
 \centering
 % Complete old block: tab:cross_domain_source_only
-\begin{minipage}[t]{\DiffColumnWidth}
+\begin{minipage}[t]{0.48\textwidth}
 \centering
 \textcolor{red}{\textbf{ORIGINAL --- Table 7 (main.tex)}}\par\smallskip
 
@@ -1426,19 +1490,48 @@ PCC   & PMSM $\rightarrow$ ACIM & 52.38 & 57.03 \\
 \hline
 \end{tabular}\end{adjustbox}
 
+\end{minipage}\hfill%
+% Complete new block: tab:cross_domain_source_only
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\textcolor{blue}{\textbf{REVISED --- Table 7 (main\_revised.tex)}}\par\smallskip
+
+\centering
+\footnotesize
+\caption{Source-only \texttt{fdia2} transfer without target adaptation (\%).}
+\label{tab:cross_domain_source_only}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lccc@{}}
+\hline
+Direction & Accuracy & BA & Macro F1 \\\hline
+\hline\multicolumn{4}{c}{\textit{MOTOR stream}} \\\hline
+ACIM $\to$ PMSM & \mbox{55.21\,$\pm$\,1.14} & \mbox{50.60\,$\pm$\,0.73} & \mbox{37.71\,$\pm$\,2.37} \\
+PMSM $\to$ ACIM & \mbox{36.22\,$\pm$\,4.23} & \mbox{36.08\,$\pm$\,4.11} & \mbox{33.89\,$\pm$\,4.62} \\
+\hline\multicolumn{4}{c}{\textit{PCC stream}} \\\hline
+ACIM $\to$ PMSM & \mbox{55.88\,$\pm$\,0.64} & \mbox{51.58\,$\pm$\,1.52} & \mbox{41.13\,$\pm$\,5.84} \\
+PMSM $\to$ ACIM & \mbox{51.94\,$\pm$\,6.54} & \mbox{56.00\,$\pm$\,5.69} & \mbox{43.62\,$\pm$\,11.38} \\
+\hline\end{tabular}
+\par\smallskip\begin{minipage}{\columnwidth}\scriptsize Mean $\pm$ sample SD over three holdouts. Directions are different target-domain tests, so no best direction is highlighted.\end{minipage}
+
 \end{minipage}
 \end{minipage}
 \end{adjustbox}
 \end{table*}
-%DIFDELCMD <
+\DIFaddend
 
-%DIFDELCMD < %%%
-\DIFdelend \subsection{Domain Adaptation Results: 1/5/10/20\%}
+
+
+
+\subsection{Domain Adaptation Results: 1/5/10/20\%}
 \label{sec:adaptation_results}
 \DIFaddbegin
 
 \DIFaddend Table~\ref{tab:domain_adaptation_anomaly2} reports \DIFdelbegin \DIFdel{fdia2 }\DIFdelend \DIFaddbegin \texttt{\DIFadd{fdia2}} \DIFaddend few-shot adaptation using \DIFaddbegin \DIFadd{nominal budgets of }\DIFaddend 1\%, 5\%, 10\%, and 20\% labeled target \DIFdelbegin \DIFdel{data. In all cases}\DIFdelend \DIFaddbegin \DIFadd{episode groups. At the 20\% budget}\DIFaddend , adaptation improved performance relative to the source-only setting \DIFaddbegin \DIFadd{in all cases}\DIFaddend , although the magnitude of the gain was strongly direction dependent. For ACIM-to-PMSM transfer, adaptation \DIFdelbegin \DIFdel{gives only modest gains, reaching 57.49}\DIFdelend \DIFaddbegin \DIFadd{reaches 75.99}\DIFaddend \% balanced accuracy for motor sensing and \DIFdelbegin \DIFdel{60.06}\DIFdelend \DIFaddbegin \DIFadd{56.30}\DIFaddend \% for PCC at 20\% target data. For PMSM-to-ACIM transfer, adaptation is much stronger, reaching \DIFdelbegin \DIFdel{86.10}\DIFdelend \DIFaddbegin \DIFadd{92.63}\DIFaddend \% balanced accuracy for motor sensing and \DIFdelbegin \DIFdel{91.16}\DIFdelend \DIFaddbegin \DIFadd{91.38}\DIFaddend \% for PCC at 20\% target data.
-\DIFdelbegin \DIFdel{Overall, the adaptation results show that few-shot target-domain fine-tuning can improve transfer performance, but the gains are strongly direction dependent and are much larger in the PMSM $\rightarrow$ ACIM direction. This asymmetry indicates that cross-motor FDIA adaptation cannot be treated as a symmetric transfer problem; in practice, the pretraining motor domain materially affects PCC deployment performance}\DIFdelend \DIFaddbegin \DIFadd{With only the nominal 1\% budget, PMSM-to-ACIM balanced accuracy rises from 36.08\% to 64.35\% for motor sensing and from 56.00\% to 77.43\% for PCC sensing, gains of 28.27 and 21.43 percentage points}\DIFaddend .
+\DIFaddbegin \DIFadd{With only the nominal 1\% budget, PMSM-to-ACIM balanced accuracy rises from 36.08\% to 64.35\% for motor sensing and from 56.00\% to 77.43\% for PCC sensing, gains of 28.27 and 21.43 percentage points.
+}
+
+\DIFaddend Overall, the adaptation results show that few-shot target-domain fine-tuning can improve transfer performance, but the gains are strongly direction dependent and are much larger in the PMSM $\rightarrow$ ACIM direction. This asymmetry indicates that cross-motor FDIA adaptation cannot be treated as a symmetric transfer problem; in practice, the pretraining motor domain materially affects PCC deployment performance.
 
 
 
@@ -1474,7 +1567,7 @@ PCC   & PMSM $\rightarrow$ ACIM & 57.03 & 70.10 & 84.56 & 89.12 & 91.16 \\
 % Complete new block: tab:domain_adaptation_anomaly2
 \begin{minipage}[t]{\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 6 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 8 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
@@ -1704,7 +1797,7 @@ Motor & 65.25 & 0.36 & 0.38 & 65.63 & 15.24 \\
 % Complete new block: tab:runtime_latency
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 7 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 9 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
@@ -1834,7 +1927,7 @@ Full   & 222 & 98.85 & 98.88 & 108.65 & 109.07 & 1.00 & 0 \\
 % Complete new block: tab:feature_pruning_anomaly2_runtime
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 8 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 10 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \scriptsize
@@ -1924,7 +2017,7 @@ HF + Time & 114 & 99.07 & 99.00 & 99.06 \\
 % Complete new block: tab:lfhf_ablation_anomaly2
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 9 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 11 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
@@ -2025,7 +2118,7 @@ Finally, \DIFdelbegin \DIFdel{some baselines were competitive under macro-F1; th
 \label{app:additional_results}
 
 
-This appendix provides \DIFdelbegin \DIFdel{supplementary material supporting the main results, including representative FDIA episodes and the extracted LF/HF/TD feature set}\DIFdelend \DIFaddbegin \DIFadd{representative FDIA recordings, the extracted feature definitions, and severity-conditioned detection metrics. Hyperparameter sensitivity and auxiliary bias regression are reported in the supplementary material}\DIFaddend .
+This appendix provides \DIFdelbegin \DIFdel{supplementary material supporting the main results, including representative FDIA episodes and the extracted LF/HF/TD feature set}\DIFdelend \DIFaddbegin \DIFadd{representative FDIA recordings, the extracted feature definitions, and severity-conditioned detection metrics}\DIFaddend .
 
 \subsection{Representative FDIA Episodes}
 \label{app:fdia_episode_examples}
@@ -2221,7 +2314,7 @@ Total & 37 & -- & LF (18), HF (11), TD (8) \\
 % Complete new block: tab:app_extracted_features
 \begin{minipage}[t]{0.48\textwidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 10 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 12 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \scriptsize
@@ -2281,7 +2374,7 @@ THD: total harmonic distortion; MAV: mean absolute value. Subscripts of $E$ give
 % Complete new block: tab:severity_detection_recall
 \begin{minipage}[t]{\DiffColumnWidth}
 \centering
-\textcolor{blue}{\textbf{REVISED --- Table 11 (main\_revised.tex)}}\par\smallskip
+\textcolor{blue}{\textbf{REVISED --- Table 13 (main\_revised.tex)}}\par\smallskip
 
 \centering
 \footnotesize
